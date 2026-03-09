@@ -1,0 +1,812 @@
+UIKitCore`-[UIScrollView handlePan:]:
+    0x19aa54618 <+0>:   pacibsp 
+    0x19aa5461c <+4>:   sub    sp, sp, #0x70
+    0x19aa54620 <+8>:   stp    x28, x27, [sp, #0x10]
+    0x19aa54624 <+12>:  stp    x26, x25, [sp, #0x20]
+    0x19aa54628 <+16>:  stp    x24, x23, [sp, #0x30]
+    0x19aa5462c <+20>:  stp    x22, x21, [sp, #0x40]
+    0x19aa54630 <+24>:  stp    x20, x19, [sp, #0x50]
+    0x19aa54634 <+28>:  stp    x29, x30, [sp, #0x60]
+    0x19aa54638 <+32>:  add    x29, sp, #0x60
+    0x19aa5463c <+36>:  mov    x19, x0
+    0x19aa54640 <+40>:  bl     0x1a02849c0
+    0x19aa54644 <+44>:  str    x0, [sp, #0x8]
+    0x19aa54648 <+48>:  bl     0x19b3ffaa0               ; objc_msgSend$state
+    0x19aa5464c <+52>:  cmp    x0, #0x1
+    0x19aa54650 <+56>:  b.eq   0x19aa54784               ; <+364>
+    0x19aa54654 <+60>:  cmp    x0, #0x3
+    0x19aa54658 <+64>:  b.eq   0x19aa54690               ; <+120>
+    0x19aa5465c <+68>:  cmp    x0, #0x4
+    0x19aa54660 <+72>:  b.ne   0x19aa547f0               ; <+472>
+    0x19aa54664 <+76>:  adrp   x8, 396078
+    0x19aa54668 <+80>:  ldr    x0, [x8, #0x7d8]
+    0x19aa5466c <+84>:  bl     0x19b3f4d00               ; objc_msgSend$sharedInstance
+    0x19aa54670 <+88>:  bl     0x1a0284650
+    0x19aa54674 <+92>:  mov    x20, x0
+    0x19aa54678 <+96>:  adrp   x8, 412416
+    0x19aa5467c <+100>: ldrsw  x8, [x8, #0xdd0]
+    0x19aa54680 <+104>: ldr    x3, [x19, x8]
+    0x19aa54684 <+108>: mov    x2, x19
+    0x19aa54688 <+112>: bl     0x19b3aba60               ; objc_msgSend$scrollView:didFinishPanGesture:
+    0x19aa5468c <+116>: bl     0x1a0284850
+    0x19aa54690 <+120>: adrp   x8, 412416
+    0x19aa54694 <+124>: add    x8, x8, #0xe98            ; _MergedGlobals.115 + 300
+    0x19aa54698 <+128>: ldrsw  x9, [x8]
+    0x19aa5469c <+132>: ldr    d0, [x19, x9]
+    0x19aa546a0 <+136>: ldrsw  x8, [x8, #0x8]
+    0x19aa546a4 <+140>: ldr    d1, [x19, x8]
+    0x19aa546a8 <+144>: mov    x0, x19
+    0x19aa546ac <+148>: bl     0x19b2b94e0               ; objc_msgSend$_prepareToPageWithHorizontalVelocity:verticalVelocity:
+    0x19aa546b0 <+152>: mov    x0, x19
+    0x19aa546b4 <+156>: mov    w2, #0x1                  ; =1 
+    0x19aa546b8 <+160>: bl     0x19b28bc00               ; objc_msgSend$_endPanNormal:
+->  0x19aa546bc <+164>: mov    x0, x19
+    0x19aa546c0 <+168>: bl     0x19b2ec6a0               ; objc_msgSend$_trackingDidEnd
+    0x19aa546c4 <+172>: ldr    x0, [sp, #0x8]
+    0x19aa546c8 <+176>: mov    x2, #0x0                  ; =0 
+    0x19aa546cc <+180>: bl     0x19b263140               ; objc_msgSend$_activeEventOfType:
+    0x19aa546d0 <+184>: bl     0x1a0284650
+    0x19aa546d4 <+188>: mov    x21, x0
+    0x19aa546d8 <+192>: ldr    x0, [sp, #0x8]
+    0x19aa546dc <+196>: mov    w2, #0xa                  ; =10 
+    0x19aa546e0 <+200>: bl     0x19b263140               ; objc_msgSend$_activeEventOfType:
+    0x19aa546e4 <+204>: bl     0x1a0284650
+    0x19aa546e8 <+208>: mov    x20, x0
+    0x19aa546ec <+212>: cbz    x21, 0x19aa547fc          ; <+484>
+    0x19aa546f0 <+216>: mov    x0, x21
+    0x19aa546f4 <+220>: bl     0x19b309b40               ; objc_msgSend$allTouches
+    0x19aa546f8 <+224>: bl     0x1a0284650
+    0x19aa546fc <+228>: mov    x22, x0
+    0x19aa54700 <+232>: bl     0x19b30d840               ; objc_msgSend$anyObject
+    0x19aa54704 <+236>: bl     0x1a0284650
+    0x19aa54708 <+240>: mov    x23, x0
+    0x19aa5470c <+244>: adrp   x8, 421718
+    0x19aa54710 <+248>: add    x0, x8, #0x5e8            ; (void *)0x00000002019aa5c0: UIEventSessionActionAnalytics
+    0x19aa54714 <+252>: bl     0x19b3f4d00               ; objc_msgSend$sharedInstance
+    0x19aa54718 <+256>: bl     0x1a0284650
+    0x19aa5471c <+260>: mov    x24, x0
+    0x19aa54720 <+264>: adrp   x8, 421715
+    0x19aa54724 <+268>: add    x25, x8, #0x730           ; (void *)0x00000002019a7aa0: _UIEventSessionAction
+    0x19aa54728 <+272>: mov    x0, x22
+    0x19aa5472c <+276>: bl     0x19b309a60               ; objc_msgSend$allObjects
+    0x19aa54730 <+280>: bl     0x1a0284650
+    0x19aa54734 <+284>: mov    x26, x0
+    0x19aa54738 <+288>: bl     0x19b34a320               ; objc_msgSend$firstObject
+    0x19aa5473c <+292>: bl     0x1a0284650
+    0x19aa54740 <+296>: mov    x27, x0
+    0x19aa54744 <+300>: bl     0x19b413720               ; objc_msgSend$type
+    0x19aa54748 <+304>: mov    x2, x0
+    0x19aa5474c <+308>: mov    x0, x25
+    0x19aa54750 <+312>: bl     0x19b3503e0               ; objc_msgSend$getUIEventSourceForUITouchType:
+    0x19aa54754 <+316>: mov    x3, x0
+    0x19aa54758 <+320>: mov    x0, x24
+    0x19aa5475c <+324>: mov    x2, x19
+    0x19aa54760 <+328>: bl     0x19b339120               ; objc_msgSend$didScroll:withSource:
+    0x19aa54764 <+332>: bl     0x1a02848c0
+    0x19aa54768 <+336>: bl     0x1a02848b0
+    0x19aa5476c <+340>: bl     0x1a0284890
+    0x19aa54770 <+344>: bl     0x1a0284880
+    0x19aa54774 <+348>: bl     0x1a0284870
+    0x19aa54778 <+352>: bl     0x1a0284850
+    0x19aa5477c <+356>: bl     0x1a0284860
+    0x19aa54780 <+360>: b      0x19aa54840               ; <+552>
+    0x19aa54784 <+364>: adrp   x8, 421757
+    0x19aa54788 <+368>: add    x8, x8, #0xa90            ; UIApp
+    0x19aa5478c <+372>: ldr    x20, [x8]
+    0x19aa54790 <+376>: mov    x0, x19
+    0x19aa54794 <+380>: bl     0x19b424720               ; objc_msgSend$window
+    0x19aa54798 <+384>: bl     0x1a0284650
+    0x19aa5479c <+388>: mov    x21, x0
+    0x19aa547a0 <+392>: mov    x0, x20
+    0x19aa547a4 <+396>: mov    x2, x21
+    0x19aa547a8 <+400>: bl     0x19b2ec160               ; objc_msgSend$_touchesEventForWindow:
+    0x19aa547ac <+404>: mov    x29, x29
+    0x19aa547b0 <+408>: bl     0x1a0284b80
+    0x19aa547b4 <+412>: mov    x20, x0
+    0x19aa547b8 <+416>: bl     0x1a0284860
+    0x19aa547bc <+420>: mov    x0, x19
+    0x19aa547c0 <+424>: mov    x2, x20
+    0x19aa547c4 <+428>: bl     0x19b2c38a0               ; objc_msgSend$_resetScrollingWithUIEvent:
+    0x19aa547c8 <+432>: adrp   x8, 412416
+    0x19aa547cc <+436>: add    x8, x8, #0xe98            ; _MergedGlobals.115 + 300
+    0x19aa547d0 <+440>: ldrsw  x9, [x8]
+    0x19aa547d4 <+444>: str    xzr, [x19, x9]
+    0x19aa547d8 <+448>: ldrsw  x9, [x8, #0x8]
+    0x19aa547dc <+452>: str    xzr, [x19, x9]
+    0x19aa547e0 <+456>: ldrsw  x9, [x8, #0x4]
+    0x19aa547e4 <+460>: str    xzr, [x19, x9]
+    0x19aa547e8 <+464>: ldrsw  x8, [x8, #0xc]
+    0x19aa547ec <+468>: str    xzr, [x19, x8]
+    0x19aa547f0 <+472>: mov    x0, x19
+    0x19aa547f4 <+476>: bl     0x19b2f6f00               ; objc_msgSend$_updatePanGesture
+    0x19aa547f8 <+480>: b      0x19aa54840               ; <+552>
+    0x19aa547fc <+484>: mov    x0, x20
+    0x19aa54800 <+488>: bl     0x19b2ec760               ; objc_msgSend$_trackpadFingerDownCount
+    0x19aa54804 <+492>: mov    x22, x0
+    0x19aa54808 <+496>: adrp   x8, 421718
+    0x19aa5480c <+500>: add    x0, x8, #0x5e8            ; (void *)0x00000002019aa5c0: UIEventSessionActionAnalytics
+    0x19aa54810 <+504>: bl     0x19b3f4d00               ; objc_msgSend$sharedInstance
+    0x19aa54814 <+508>: bl     0x1a0284650
+    0x19aa54818 <+512>: mov    x21, x0
+    0x19aa5481c <+516>: mov    x2, x19
+    0x19aa54820 <+520>: cmp    x22, #0x1
+    0x19aa54824 <+524>: b.lt   0x19aa54830               ; <+536>
+    0x19aa54828 <+528>: mov    w3, #0x4                  ; =4 
+    0x19aa5482c <+532>: b      0x19aa54834               ; <+540>
+    0x19aa54830 <+536>: mov    x3, #0x0                  ; =0 
+    0x19aa54834 <+540>: bl     0x19b339120               ; objc_msgSend$didScroll:withSource:
+    0x19aa54838 <+544>: bl     0x1a0284860
+    0x19aa5483c <+548>: bl     0x1a0284850
+    0x19aa54840 <+552>: ldr    x0, [sp, #0x8]
+    0x19aa54844 <+556>: ldp    x29, x30, [sp, #0x60]
+    0x19aa54848 <+560>: ldp    x20, x19, [sp, #0x50]
+    0x19aa5484c <+564>: ldp    x22, x21, [sp, #0x40]
+    0x19aa54850 <+568>: ldp    x24, x23, [sp, #0x30]
+    0x19aa54854 <+572>: ldp    x26, x25, [sp, #0x20]
+    0x19aa54858 <+576>: ldp    x28, x27, [sp, #0x10]
+    0x19aa5485c <+580>: add    sp, sp, #0x70
+    0x19aa54860 <+584>: autibsp 
+    0x19aa54864 <+588>: eor    x16, x30, x30, lsl #1
+    0x19aa54868 <+592>: tbz    x16, #0x3e, 0x19aa54870   ; <+600>
+    0x19aa5486c <+596>: brk    #0xc471
+    0x19aa54870 <+600>: b      0x1a0284800
+
+UIKitCore`-[UIScrollView _endPanNormal:]:
+    0x1995886f8 <+0>:    pacibsp 
+    0x1995886fc <+4>:    sub    sp, sp, #0x110
+    0x199588700 <+8>:    stp    d11, d10, [sp, #0x90]
+    0x199588704 <+12>:   stp    d9, d8, [sp, #0xa0]
+    0x199588708 <+16>:   stp    x28, x27, [sp, #0xb0]
+    0x19958870c <+20>:   stp    x26, x25, [sp, #0xc0]
+    0x199588710 <+24>:   stp    x24, x23, [sp, #0xd0]
+    0x199588714 <+28>:   stp    x22, x21, [sp, #0xe0]
+    0x199588718 <+32>:   stp    x20, x19, [sp, #0xf0]
+    0x19958871c <+36>:   stp    x29, x30, [sp, #0x100]
+    0x199588720 <+40>:   add    x29, sp, #0x100
+    0x199588724 <+44>:   mov    x20, x2
+    0x199588728 <+48>:   mov    x19, x0
+    0x19958872c <+52>:   cbz    w2, 0x199588788           ; <+144>
+    0x199588730 <+56>:   bl     0x1a027f410
+    0x199588734 <+60>:   adrp   x8, 417740
+    0x199588738 <+64>:   ldrsw  x8, [x8, #0xec4]
+    0x19958873c <+68>:   ldr    d1, [x19, x8]
+    0x199588740 <+72>:   fsub   d8, d0, d1
+    0x199588744 <+76>:   mov    x0, x19
+    0x199588748 <+80>:   bl     0x19b2c72a0               ; objc_msgSend$_screen
+    0x19958874c <+84>:   bl     0x1a0284650
+    0x199588750 <+88>:   mov    x21, x0
+    0x199588754 <+92>:   bl     0x19b2ab6e0               ; objc_msgSend$_maximumFramesPerSecond
+    0x199588758 <+96>:   scvtf  d0, x0
+    0x19958875c <+100>:  fmov   d1, #1.00000000
+    0x199588760 <+104>:  fdiv   d0, d1, d0
+    0x199588764 <+108>:  adrp   x8, 5973
+    0x199588768 <+112>:  ldr    d1, [x8, #0xad8]
+    0x19958876c <+116>:  fmul   d9, d0, d1
+    0x199588770 <+120>:  bl     0x1a0284860
+    0x199588774 <+124>:  fmov   d0, #3.00000000
+    0x199588778 <+128>:  fmul   d0, d9, d0
+    0x19958877c <+132>:  fcmp   d8, d9
+    0x199588780 <+136>:  fccmp  d8, d0, #0x0, gt
+    0x199588784 <+140>:  b.mi   0x199588790               ; <+152>
+    0x199588788 <+144>:  str    wzr, [sp, #0x7c]
+    0x19958878c <+148>:  b      0x1995887b4               ; <+188>
+    0x199588790 <+152>:  mov    w0, #0x124                ; =292 
+    0x199588794 <+156>:  movk   w0, #0x2b87, lsl #16
+    0x199588798 <+160>:  mov    x1, #0x0                  ; =0 
+    0x19958879c <+164>:  mov    x2, #0x0                  ; =0 
+    0x1995887a0 <+168>:  mov    x3, #0x0                  ; =0 
+    0x1995887a4 <+172>:  mov    x4, #0x0                  ; =0 
+    0x1995887a8 <+176>:  bl     0x1a0284290
+    0x1995887ac <+180>:  mov    w8, #0x1                  ; =1 
+    0x1995887b0 <+184>:  str    w8, [sp, #0x7c]
+    0x1995887b4 <+188>:  mov    x0, x19
+    0x1995887b8 <+192>:  bl     0x19b318a00               ; objc_msgSend$bounds
+    0x1995887bc <+196>:  stp    q2, q3, [sp, #0x50]
+    0x1995887c0 <+200>:  mov    x0, x19
+    0x1995887c4 <+204>:  bl     0x19b328c00               ; objc_msgSend$contentOffset
+    0x1995887c8 <+208>:  fmov   d8, d0
+    0x1995887cc <+212>:  fmov   d9, d1
+    0x1995887d0 <+216>:  mov    x0, x19
+    0x1995887d4 <+220>:  bl     0x19b2f2f20               ; objc_msgSend$_updateDecelerationLastOffsetScrollViewPoint:
+    0x1995887d8 <+224>:  adrp   x8, 417740
+    0x1995887dc <+228>:  ldrsw  x8, [x8, #0xd8c]
+    0x1995887e0 <+232>:  add    x25, x19, x8
+    0x1995887e4 <+236>:  ldr    x26, [x25]
+    0x1995887e8 <+240>:  adrp   x23, 417740
+    0x1995887ec <+244>:  add    x23, x23, #0xe9c          ; _MergedGlobals.115 + 304
+    0x1995887f0 <+248>:  adrp   x28, 427081
+    0x1995887f4 <+252>:  add    x28, x28, #0xa90          ; UIApp
+    0x1995887f8 <+256>:  adrp   x22, 417740
+    0x1995887fc <+260>:  add    x22, x22, #0xe98          ; _MergedGlobals.115 + 300
+    0x199588800 <+264>:  tbz    w26, #0x17, 0x199588bb0   ; <+1208>
+    0x199588804 <+268>:  mov    x0, x19
+    0x199588808 <+272>:  bl     0x19b328c00               ; objc_msgSend$contentOffset
+    0x19958880c <+276>:  stp    q1, q0, [sp, #0x20]
+    0x199588810 <+280>:  mov    x0, x19
+    0x199588814 <+284>:  bl     0x19b289a80               ; objc_msgSend$_effectiveContentInset
+    0x199588818 <+288>:  fmov   d10, d0
+    0x19958881c <+292>:  adrp   x8, 417740
+    0x199588820 <+296>:  add    x8, x8, #0xdb0            ; _MergedGlobals.115 + 68
+    0x199588824 <+300>:  ldrsw  x23, [x8]
+    0x199588828 <+304>:  ldr    d0, [x19, x23]
+    0x19958882c <+308>:  ldrsw  x8, [x8, #0x80]
+    0x199588830 <+312>:  add    x8, x19, x8
+    0x199588834 <+316>:  ldp    d5, d4, [x8]
+    0x199588838 <+320>:  fsub   d1, d5, d1
+    0x19958883c <+324>:  fsub   d5, d4, d10
+    0x199588840 <+328>:  fmov   d4, #1.00000000
+    0x199588844 <+332>:  fcmp   d0, d4
+    0x199588848 <+336>:  adrp   x8, 417740
+    0x19958884c <+340>:  str    q2, [sp, #0x40]
+    0x199588850 <+344>:  b.eq   0x1995888a4               ; <+428>
+    0x199588854 <+348>:  ldrsw  x24, [x8, #0xdc8]
+    0x199588858 <+352>:  mov.d  v1[1], v5[0]
+    0x19958885c <+356>:  frintm.2d v5, v1
+    0x199588860 <+360>:  fsub.2d v1, v1, v5
+    0x199588864 <+364>:  dup.2d v4, v0[0]
+    0x199588868 <+368>:  fmul.2d v1, v1, v0[0]
+    0x19958886c <+372>:  frinta.2d v1, v1
+    0x199588870 <+376>:  fdiv.2d v1, v1, v4
+    0x199588874 <+380>:  fadd.2d v6, v5, v1
+    0x199588878 <+384>:  ldr    q1, [x19, x24]
+    0x19958887c <+388>:  mov.d  v3[1], v2[0]
+    0x199588880 <+392>:  fadd.2d v1, v3, v1
+    0x199588884 <+396>:  frintm.2d v2, v1
+    0x199588888 <+400>:  fsub.2d v1, v1, v2
+    0x19958888c <+404>:  fmul.2d v0, v1, v0[0]
+    0x199588890 <+408>:  frinta.2d v0, v0
+    0x199588894 <+412>:  fdiv.2d v0, v0, v4
+    0x199588898 <+416>:  fadd.2d v0, v2, v0
+    0x19958889c <+420>:  stp    q0, q6, [sp]
+    0x1995888a0 <+424>:  b      0x1995888c4               ; <+460>
+    0x1995888a4 <+428>:  mov.d  v1[1], v5[0]
+    0x1995888a8 <+432>:  ldrsw  x24, [x8, #0xdc8]
+    0x1995888ac <+436>:  ldr    q0, [x19, x24]
+    0x1995888b0 <+440>:  frinta.2d v1, v1
+    0x1995888b4 <+444>:  mov.d  v3[1], v2[0]
+    0x1995888b8 <+448>:  fadd.2d v0, v3, v0
+    0x1995888bc <+452>:  frinta.2d v0, v0
+    0x1995888c0 <+456>:  stp    q0, q1, [sp]
+    0x1995888c4 <+460>:  adrp   x8, 417740
+    0x1995888c8 <+464>:  ldrsw  x22, [x8, #0xdd0]
+    0x1995888cc <+468>:  ldr    x0, [x19, x22]
+    0x1995888d0 <+472>:  mov    x2, x19
+    0x1995888d4 <+476>:  bl     0x19b41f160               ; objc_msgSend$velocityInView:
+    0x1995888d8 <+480>:  adrp   x8, 400383
+    0x1995888dc <+484>:  ldr    x8, [x8, #0xb90]
+    0x1995888e0 <+488>:  ldp    d2, d3, [x8]
+    0x1995888e4 <+492>:  fcmp   d0, d2
+    0x1995888e8 <+496>:  fccmp  d1, d3, #0x0, eq
+    0x1995888ec <+500>:  b.ne   0x199588908               ; <+528>
+    0x1995888f0 <+504>:  adrp   x9, 417740
+    0x1995888f4 <+508>:  add    x9, x9, #0xe98            ; _MergedGlobals.115 + 300
+    0x1995888f8 <+512>:  ldrsw  x8, [x9, #0x8]
+    0x1995888fc <+516>:  str    xzr, [x19, x8]
+    0x199588900 <+520>:  ldrsw  x8, [x9]
+    0x199588904 <+524>:  str    xzr, [x19, x8]
+    0x199588908 <+528>:  ldp    q5, q4, [sp, #0x10]
+    0x19958890c <+532>:  mov    d0, v5[1]
+    0x199588910 <+536>:  ldr    x9, [x25]
+    0x199588914 <+540>:  ldp    q2, q3, [sp, #0x30]
+    0x199588918 <+544>:  fcmp   d2, d5
+    0x19958891c <+548>:  fccmp  d4, d0, #0x8, pl
+    0x199588920 <+552>:  b.mi   0x19958897c               ; <+644>
+    0x199588924 <+556>:  ldp    q1, q0, [sp, #0x50]
+    0x199588928 <+560>:  mov.d  v1[1], v0[0]
+    0x19958892c <+564>:  ldr    q0, [sp]
+    0x199588930 <+568>:  fsub.2d v0, v0, v1
+    0x199588934 <+572>:  fcmgt.2d v1, v0, v5
+    0x199588938 <+576>:  bif.16b v0, v5, v1
+    0x19958893c <+580>:  mov.d  v2[1], v4[0]
+    0x199588940 <+584>:  fcmgt.2d v0, v2, v0
+    0x199588944 <+588>:  xtn.2s v0, v0
+    0x199588948 <+592>:  fmov   w8, s0
+    0x19958894c <+596>:  tbnz   w8, #0x0, 0x19958897c     ; <+644>
+    0x199588950 <+600>:  mov.s  w8, v0[1]
+    0x199588954 <+604>:  tbnz   w8, #0x0, 0x19958897c     ; <+644>
+    0x199588958 <+608>:  adrp   x8, 417740
+    0x19958895c <+612>:  ldrsw  x8, [x8, #0xea0]
+    0x199588960 <+616>:  tbnz   w9, #0x1, 0x1995889b0     ; <+696>
+    0x199588964 <+620>:  mov    w27, #0x0                 ; =0 
+    0x199588968 <+624>:  str    xzr, [x19, x8]
+    0x19958896c <+628>:  adrp   x8, 417740
+    0x199588970 <+632>:  add    x8, x8, #0xda4            ; _MergedGlobals.115 + 56
+    0x199588974 <+636>:  ldrsw  x9, [x8, #0xf4]
+    0x199588978 <+640>:  b      0x199588a10               ; <+792>
+    0x19958897c <+644>:  and    x8, x9, #0xffffffffff7fffff
+    0x199588980 <+648>:  str    x8, [x25]
+    0x199588984 <+652>:  adrp   x8, 417740
+    0x199588988 <+656>:  add    x8, x8, #0xda4            ; _MergedGlobals.115 + 56
+    0x19958898c <+660>:  ldrsw  x9, [x8, #0x104]
+    0x199588990 <+664>:  str    xzr, [x19, x9]
+    0x199588994 <+668>:  ldrsw  x8, [x8]
+    0x199588998 <+672>:  mov    x9, #0x3ff0000000000000   ; =4607182418800017408 
+    0x19958899c <+676>:  str    x9, [x19, x8]
+    0x1995889a0 <+680>:  ldrb   w8, [x25, #0x3]
+    0x1995889a4 <+684>:  tst    w8, #0x40
+    0x1995889a8 <+688>:  cset   w27, eq
+    0x1995889ac <+692>:  b      0x199588a34               ; <+828>
+    0x1995889b0 <+696>:  adrp   x9, 417740
+    0x1995889b4 <+700>:  ldrsw  x9, [x9, #0xe94]
+    0x1995889b8 <+704>:  ldr    x10, [x19, x9]
+    0x1995889bc <+708>:  adrp   x9, 417740
+    0x1995889c0 <+712>:  ldrsw  x9, [x9, #0xe98]
+    0x1995889c4 <+716>:  cmp    x10, #0x6
+    0x1995889c8 <+720>:  b.eq   0x1995889f0               ; <+760>
+    0x1995889cc <+724>:  ldr    d0, [x19, x9]
+    0x1995889d0 <+728>:  ldr    d1, [x19, x8]
+    0x1995889d4 <+732>:  fmul   d0, d0, d0
+    0x1995889d8 <+736>:  fmul   d1, d1, d1
+    0x1995889dc <+740>:  fadd   d0, d0, d1
+    0x1995889e0 <+744>:  mov    x10, #0x3fb0000000000000  ; =4589168020290535424 
+    0x1995889e4 <+748>:  fmov   d1, x10
+    0x1995889e8 <+752>:  fcmp   d0, d1
+    0x1995889ec <+756>:  b.pl   0x199588f3c               ; <+2116>
+    0x1995889f0 <+760>:  mov    w27, #0x0                 ; =0 
+    0x1995889f4 <+764>:  str    xzr, [x19, x8]
+    0x1995889f8 <+768>:  str    xzr, [x19, x9]
+    0x1995889fc <+772>:  adrp   x8, 417740
+    0x199588a00 <+776>:  add    x8, x8, #0xda4            ; _MergedGlobals.115 + 56
+    0x199588a04 <+780>:  ldrsw  x9, [x8, #0x100]
+    0x199588a08 <+784>:  str    xzr, [x19, x9]
+    0x199588a0c <+788>:  ldrsw  x9, [x8, #0xf8]
+    0x199588a10 <+792>:  str    xzr, [x19, x9]
+    0x199588a14 <+796>:  ldr    x9, [x25]
+    0x199588a18 <+800>:  and    x9, x9, #0xffffffffff7fffff
+    0x199588a1c <+804>:  str    x9, [x25]
+    0x199588a20 <+808>:  ldrsw  x9, [x8, #0x104]
+    0x199588a24 <+812>:  str    xzr, [x19, x9]
+    0x199588a28 <+816>:  ldrsw  x8, [x8]
+    0x199588a2c <+820>:  mov    x9, #0x3ff0000000000000   ; =4607182418800017408 
+    0x199588a30 <+824>:  str    x9, [x19, x8]
+    0x199588a34 <+828>:  ldr    w8, [x25, #0x14]
+    0x199588a38 <+832>:  ubfx   x28, x8, #11, #4
+    0x199588a3c <+836>:  sub    x8, x28, #0x1
+    0x199588a40 <+840>:  cmp    x8, #0x3
+    0x199588a44 <+844>:  b.hi   0x199588aa4               ; <+940>
+    0x199588a48 <+848>:  tbnz   w27, #0x0, 0x199588a70    ; <+888>
+    0x199588a4c <+852>:  adrp   x8, 417740
+    0x199588a50 <+856>:  ldrsw  x8, [x8, #0xed8]
+    0x199588a54 <+860>:  ldr    x21, [x19, x8]
+    0x199588a58 <+864>:  ldr    x0, [x19, x22]
+    0x199588a5c <+868>:  mov    x2, x19
+    0x199588a60 <+872>:  bl     0x19b37e520               ; objc_msgSend$locationInView:
+    0x199588a64 <+876>:  mov    x0, x21
+    0x199588a68 <+880>:  bl     0x19b398940               ; objc_msgSend$pressedUpAtLocation:
+    0x199588a6c <+884>:  ldr    q3, [sp, #0x40]
+    0x199588a70 <+888>:  add    x8, x19, w24, sxtw
+    0x199588a74 <+892>:  ldr    d0, [x19, x23]
+    0x199588a78 <+896>:  fmov   d1, #1.00000000
+    0x199588a7c <+900>:  fcmp   d0, d1
+    0x199588a80 <+904>:  b.eq   0x199588ab8               ; <+960>
+    0x199588a84 <+908>:  ldr    q2, [sp, #0x60]
+    0x199588a88 <+912>:  frintm d1, d2
+    0x199588a8c <+916>:  fsub   d2, d2, d1
+    0x199588a90 <+920>:  fmul   d2, d2, d0
+    0x199588a94 <+924>:  frinta d2, d2
+    0x199588a98 <+928>:  fdiv   d0, d2, d0
+    0x199588a9c <+932>:  fadd   d0, d1, d0
+    0x199588aa0 <+936>:  b      0x199588ac0               ; <+968>
+    0x199588aa4 <+940>:  adrp   x28, 427081
+    0x199588aa8 <+944>:  add    x28, x28, #0xa90          ; UIApp
+    0x199588aac <+948>:  adrp   x23, 417740
+    0x199588ab0 <+952>:  add    x23, x23, #0xe9c          ; _MergedGlobals.115 + 304
+    0x199588ab4 <+956>:  b      0x199588b60               ; <+1128>
+    0x199588ab8 <+960>:  ldr    q0, [sp, #0x60]
+    0x199588abc <+964>:  frinta d0, d0
+    0x199588ac0 <+968>:  adrp   x23, 417740
+    0x199588ac4 <+972>:  add    x23, x23, #0xe9c          ; _MergedGlobals.115 + 304
+    0x199588ac8 <+976>:  ldr    d1, [x8, #0x8]
+    0x199588acc <+980>:  and    x8, x28, #0x5555555555555555
+    0x199588ad0 <+984>:  cmp    x8, #0x1
+    0x199588ad4 <+988>:  b.ne   0x199588ae4               ; <+1004>
+    0x199588ad8 <+992>:  adrp   x8, 417740
+    0x199588adc <+996>:  add    x8, x8, #0xea0            ; _MergedGlobals.115 + 308
+    0x199588ae0 <+1000>: b      0x199588afc               ; <+1028>
+    0x199588ae4 <+1004>: adrp   x8, 417740
+    0x199588ae8 <+1008>: add    x8, x8, #0xe98            ; _MergedGlobals.115 + 300
+    0x199588aec <+1012>: cmp    w28, #0x4
+    0x199588af0 <+1016>: b.eq   0x199588afc               ; <+1028>
+    0x199588af4 <+1020>: cmp    w28, #0x2
+    0x199588af8 <+1024>: b.ne   0x199588f34               ; <+2108>
+    0x199588afc <+1028>: fadd   d1, d10, d1
+    0x199588b00 <+1032>: fadd   d1, d3, d1
+    0x199588b04 <+1036>: fdiv   d0, d1, d0
+    0x199588b08 <+1040>: ldr    w9, [x25, #0x14]
+    0x199588b0c <+1044>: orr    w9, w9, #0x40000
+    0x199588b10 <+1048>: str    w9, [x25, #0x14]
+    0x199588b14 <+1052>: ldrsw  x8, [x8]
+    0x199588b18 <+1056>: ldr    d1, [x19, x8]
+    0x199588b1c <+1060>: fmov   d2, #3.00000000
+    0x199588b20 <+1064>: fcmp   d1, d2
+    0x199588b24 <+1068>: fcsel  d1, d2, d1, gt
+    0x199588b28 <+1072>: fmov   d2, #-3.00000000
+    0x199588b2c <+1076>: fmaxnm d1, d1, d2
+    0x199588b30 <+1080>: adrp   x9, 5996
+    0x199588b34 <+1084>: ldr    d2, [x9, #0x888]
+    0x199588b38 <+1088>: fmul   d0, d0, d2
+    0x199588b3c <+1092>: fmul   d0, d0, d1
+    0x199588b40 <+1096>: str    d0, [x19, x8]
+    0x199588b44 <+1100>: ldrsw  x8, [x23, #0x8]
+    0x199588b48 <+1104>: str    xzr, [x19, x8]
+    0x199588b4c <+1108>: ldrsw  x8, [x23]
+    0x199588b50 <+1112>: str    xzr, [x19, x8]
+    0x199588b54 <+1116>: mov    w27, #0x1                 ; =1 
+    0x199588b58 <+1120>: adrp   x28, 427081
+    0x199588b5c <+1124>: add    x28, x28, #0xa90          ; UIApp
+    0x199588b60 <+1128>: mov    x0, x19
+    0x199588b64 <+1132>: bl     0x19b377420               ; objc_msgSend$keyboardDismissMode
+    0x199588b68 <+1136>: cmp    x0, #0x4
+    0x199588b6c <+1140>: b.eq   0x199588b78               ; <+1152>
+    0x199588b70 <+1144>: cmp    x0, #0x2
+    0x199588b74 <+1148>: b.ne   0x199588b9c               ; <+1188>
+    0x199588b78 <+1152>: adrp   x8, 401402
+    0x199588b7c <+1156>: ldr    x0, [x8, #0x7d8]
+    0x199588b80 <+1160>: bl     0x19b3f4d00               ; objc_msgSend$sharedInstance
+    0x199588b84 <+1164>: bl     0x1a0284650
+    0x199588b88 <+1168>: mov    x21, x0
+    0x199588b8c <+1172>: ldr    x3, [x19, x22]
+    0x199588b90 <+1176>: mov    x2, x19
+    0x199588b94 <+1180>: bl     0x19b3aba60               ; objc_msgSend$scrollView:didFinishPanGesture:
+    0x199588b98 <+1184>: bl     0x1a0284860
+    0x199588b9c <+1188>: adrp   x22, 417740
+    0x199588ba0 <+1192>: add    x22, x22, #0xe98          ; _MergedGlobals.115 + 300
+    0x199588ba4 <+1196>: tbz    w27, #0x0, 0x199588bb0    ; <+1208>
+    0x199588ba8 <+1200>: mov    w21, #0x1                 ; =1 
+    0x199588bac <+1204>: b      0x199588c18               ; <+1312>
+    0x199588bb0 <+1208>: ldrb   w8, [x25, #0xc]
+    0x199588bb4 <+1212>: tbnz   w8, #0x5, 0x199588bd4     ; <+1244>
+    0x199588bb8 <+1216>: mov    x0, x19
+    0x199588bbc <+1220>: bl     0x19b2a0460               ; objc_msgSend$_isBouncing
+    0x199588bc0 <+1224>: cbz    w0, 0x199588bcc           ; <+1236>
+    0x199588bc4 <+1228>: ldrb   w8, [x25, #0x3]
+    0x199588bc8 <+1232>: tbz    w8, #0x6, 0x199588be8     ; <+1264>
+    0x199588bcc <+1236>: mov    w21, #0x0                 ; =0 
+    0x199588bd0 <+1240>: b      0x199588c18               ; <+1312>
+    0x199588bd4 <+1244>: mov    x0, x19
+    0x199588bd8 <+1248>: fmov   d0, d8
+    0x199588bdc <+1252>: fmov   d1, d9
+    0x199588be0 <+1256>: bl     0x19b27a820               ; objc_msgSend$_contentOffsetIsAtPagingBoundary:
+    0x199588be4 <+1260>: tbnz   w0, #0x0, 0x199588bcc     ; <+1236>
+    0x199588be8 <+1264>: ldur   x8, [x25, #0xc]
+    0x199588bec <+1268>: tst    x8, #0x100000000000
+    0x199588bf0 <+1272>: cset   w21, eq
+    0x199588bf4 <+1276>: tbnz   x8, #0x2c, 0x199588c18    ; <+1312>
+    0x199588bf8 <+1280>: tbnz   w20, #0x0, 0x199588c18    ; <+1312>
+    0x199588bfc <+1284>: adrp   x8, 417740
+    0x199588c00 <+1288>: ldrsw  x8, [x8, #0xe4c]
+    0x199588c04 <+1292>: add    x0, x19, x8
+    0x199588c08 <+1296>: bl     0x1a0284750
+    0x199588c0c <+1300>: cmp    x0, #0x0
+    0x199588c10 <+1304>: cset   w21, eq
+    0x199588c14 <+1308>: bl     0x1a0284800
+    0x199588c18 <+1312>: ldrsw  x8, [x23]
+    0x199588c1c <+1316>: ldr    d0, [x19, x8]
+    0x199588c20 <+1320>: ldrsw  x8, [x23, #0x8]
+    0x199588c24 <+1324>: fcmp   d0, #0.0
+    0x199588c28 <+1328>: b.ne   0x199588c38               ; <+1344>
+    0x199588c2c <+1332>: ldr    d1, [x19, x8]
+    0x199588c30 <+1336>: fcmp   d1, #0.0
+    0x199588c34 <+1340>: b.eq   0x199588c74               ; <+1404>
+    0x199588c38 <+1344>: ldrsw  x9, [x22]
+    0x199588c3c <+1348>: ldr    d1, [x19, x9]
+    0x199588c40 <+1352>: fmov   d2, #0.25000000
+    0x199588c44 <+1356>: fmul   d1, d1, d2
+    0x199588c48 <+1360>: fmov   d3, #0.75000000
+    0x199588c4c <+1364>: fmul   d0, d0, d3
+    0x199588c50 <+1368>: fadd   d0, d0, d1
+    0x199588c54 <+1372>: str    d0, [x19, x9]
+    0x199588c58 <+1376>: ldrsw  x9, [x22, #0x8]
+    0x199588c5c <+1380>: ldr    d0, [x19, x9]
+    0x199588c60 <+1384>: fmul   d0, d0, d2
+    0x199588c64 <+1388>: ldr    d1, [x19, x8]
+    0x199588c68 <+1392>: fmul   d1, d1, d3
+    0x199588c6c <+1396>: fadd   d0, d0, d1
+    0x199588c70 <+1400>: str    d0, [x19, x9]
+    0x199588c74 <+1404>: adrp   x8, 417740
+    0x199588c78 <+1408>: ldrsw  x8, [x8, #0xed0]
+    0x199588c7c <+1412>: adrp   x9, 400383
+    0x199588c80 <+1416>: ldr    x9, [x9, #0xbf0]
+    0x199588c84 <+1420>: ldr    q0, [x9]
+    0x199588c88 <+1424>: str    q0, [sp, #0x60]
+    0x199588c8c <+1428>: str    q0, [x19, x8]
+    0x199588c90 <+1432>: ldur   x8, [x25, #0xc]
+    0x199588c94 <+1436>: and    x8, x8, #0xffffff3fffffffff
+    0x199588c98 <+1440>: stur   x8, [x25, #0xc]
+    0x199588c9c <+1444>: adrp   x23, 417740
+    0x199588ca0 <+1448>: tbnz   w26, #0x17, 0x199588db8   ; <+1728>
+    0x199588ca4 <+1452>: adrp   x8, 417740
+    0x199588ca8 <+1456>: ldrsw  x8, [x8, #0xe50]
+    0x199588cac <+1460>: ldr    x0, [x19, x8]
+    0x199588cb0 <+1464>: mov    x2, x19
+    0x199588cb4 <+1468>: bl     0x19b283200               ; objc_msgSend$_descendentScrollViewDidCancelDragging:
+    0x199588cb8 <+1472>: cbnz   w21, 0x199588dd8          ; <+1760>
+    0x199588cbc <+1476>: ldrsw  x24, [x23, #0xd48]
+    0x199588cc0 <+1480>: ldr    x8, [x19, x24]
+    0x199588cc4 <+1484>: cbz    x8, 0x199588d7c           ; <+1668>
+    0x199588cc8 <+1488>: adrp   x8, 417740
+    0x199588ccc <+1492>: add    x8, x8, #0xf58            ; _MergedGlobals.115 + 492
+    0x199588cd0 <+1496>: ldrsw  x9, [x8, #0x4]
+    0x199588cd4 <+1500>: str    xzr, [x19, x9]
+    0x199588cd8 <+1504>: ldrsw  x9, [x8]
+    0x199588cdc <+1508>: str    xzr, [x19, x9]
+    0x199588ce0 <+1512>: ldrsw  x8, [x8, #0x8]
+    0x199588ce4 <+1516>: ldr    q0, [sp, #0x60]
+    0x199588ce8 <+1520>: str    q0, [x19, x8]
+    0x199588cec <+1524>: adrp   x0, 6069
+    0x199588cf0 <+1528>: add    x0, x0, #0x9cf            ; "ScrollView"
+    0x199588cf4 <+1532>: adrp   x1, 417786
+    0x199588cf8 <+1536>: add    x1, x1, #0x780            ; _endPanNormal:.__s_category
+    0x199588cfc <+1540>: bl     0x1994ea45c               ; __UILogGetCategoryCachedImpl
+    0x199588d00 <+1544>: mov    x22, x0
+    0x199588d04 <+1548>: ldr    x8, [x0, #0x8]
+    0x199588d08 <+1552>: bl     0x1a0284ab0
+    0x199588d0c <+1556>: mov    x21, x0
+    0x199588d10 <+1560>: ldr    x0, [x22, #0x8]
+    0x199588d14 <+1564>: mov    x1, x19
+    0x199588d18 <+1568>: bl     0x1a0284c50
+    0x199588d1c <+1572>: sub    x8, x0, #0x1
+    0x199588d20 <+1576>: cmn    x8, #0x3
+    0x199588d24 <+1580>: b.hi   0x199588d6c               ; <+1652>
+    0x199588d28 <+1584>: mov    x22, x0
+    0x199588d2c <+1588>: mov    x0, x21
+    0x199588d30 <+1592>: bl     0x1a0284c30
+    0x199588d34 <+1596>: cbz    w0, 0x199588d6c           ; <+1652>
+    0x199588d38 <+1600>: strh   wzr, [sp, #0x80]
+    0x199588d3c <+1604>: adrp   x0, -164
+    0x199588d40 <+1608>: add    x0, x0, #0x0
+    0x199588d44 <+1612>: adrp   x4, 6337
+    0x199588d48 <+1616>: add    x4, x4, #0xd91            ; "Scroll_Deceleration"
+    0x199588d4c <+1620>: adrp   x5, 6337
+    0x199588d50 <+1624>: add    x5, x5, #0xd6a            ; " enableTelemetry=YES  isAnimation=YES "
+    0x199588d54 <+1628>: add    x6, sp, #0x80
+    0x199588d58 <+1632>: mov    x1, x21
+    0x199588d5c <+1636>: mov    w2, #0x1                  ; =1 
+    0x199588d60 <+1640>: mov    x3, x22
+    0x199588d64 <+1644>: mov    w7, #0x2                  ; =2 
+    0x199588d68 <+1648>: bl     0x1a0283940
+    0x199588d6c <+1652>: bl     0x1a0284860
+    0x199588d70 <+1656>: ldr    x0, [x19, x24]
+    0x199588d74 <+1660>: mov    w2, #0x0                  ; =0 
+    0x199588d78 <+1664>: bl     0x19b3d9480               ; objc_msgSend$setPaused:
+    0x199588d7c <+1668>: ldr    x8, [x25]
+    0x199588d80 <+1672>: and    x8, x8, #0xffffffffff7fffff
+    0x199588d84 <+1676>: str    x8, [x25]
+    0x199588d88 <+1680>: mov    x0, x19
+    0x199588d8c <+1684>: bl     0x199529fbc               ; -[UIScrollView _effectiveShowsVerticalScrollIndicator]
+    0x199588d90 <+1688>: tbnz   w0, #0x0, 0x199588da0     ; <+1704>
+    0x199588d94 <+1692>: mov    x0, x19
+    0x199588d98 <+1696>: bl     0x19952a0dc               ; -[UIScrollView _effectiveShowsHorizontalScrollIndicator]
+    0x199588d9c <+1700>: cbz    w0, 0x199588db0           ; <+1720>
+    0x199588da0 <+1704>: mov    x0, x19
+    0x199588da4 <+1708>: mov    w2, #0x0                  ; =0 
+    0x199588da8 <+1712>: mov    w3, #0x0                  ; =0 
+    0x199588dac <+1716>: bl     0x19b265620               ; objc_msgSend$_adjustScrollerIndicators:alwaysShowingThem:
+    0x199588db0 <+1720>: mov    w21, #0x0                 ; =0 
+    0x199588db4 <+1724>: b      0x199588e08               ; <+1808>
+    0x199588db8 <+1728>: mov    x0, x19
+    0x199588dbc <+1732>: mov    x2, x21
+    0x199588dc0 <+1736>: bl     0x19b2c7e80               ; objc_msgSend$_scrollViewWillEndDraggingWithDeceleration:
+    0x199588dc4 <+1740>: mov    x21, x0
+    0x199588dc8 <+1744>: mov    x0, x19
+    0x199588dcc <+1748>: mov    x2, x21
+    0x199588dd0 <+1752>: bl     0x19b2c7b80               ; objc_msgSend$_scrollViewDidEndDraggingForDelegateWithDeceleration:
+->  0x199588dd4 <+1756>: tbz    w21, #0x0, 0x199588cbc    ; <+1476>
+    0x199588dd8 <+1760>: adrp   x8, 436017
+    0x199588ddc <+1764>: add    x8, x8, #0xd88            ; @"endPanNormal:NO will smooth scroll"
+    0x199588de0 <+1768>: adrp   x9, 436017
+    0x199588de4 <+1772>: add    x9, x9, #0xd68            ; @"endPanNormal:YES will smooth scroll"
+    0x199588de8 <+1776>: cmp    w20, #0x0
+    0x199588dec <+1780>: csel   x2, x9, x8, ne
+    0x199588df0 <+1784>: mov    x0, x19
+    0x199588df4 <+1788>: bl     0x19b2bc5a0               ; objc_msgSend$_pushTrackingRunLoopModeIfNecessaryForReason:
+    0x199588df8 <+1792>: mov    w21, #0x1                 ; =1 
+    0x199588dfc <+1796>: mov    x0, x19
+    0x199588e00 <+1800>: mov    w2, #0x1                  ; =1 
+    0x199588e04 <+1804>: bl     0x19b2e41e0               ; objc_msgSend$_startTimer:
+    0x199588e08 <+1808>: mov    x0, x19
+    0x199588e0c <+1812>: bl     0x19b2f03e0               ; objc_msgSend$_updateAccessories
+    0x199588e10 <+1816>: ldrsw  x22, [x23, #0xd48]
+    0x199588e14 <+1820>: ldr    x8, [x19, x22]
+    0x199588e18 <+1824>: cbnz   x8, 0x199588e3c           ; <+1860>
+    0x199588e1c <+1828>: adrp   x8, 436017
+    0x199588e20 <+1832>: add    x8, x8, #0xdc8            ; @"endPanNormal:NO has no timer"
+    0x199588e24 <+1836>: adrp   x9, 436017
+    0x199588e28 <+1840>: add    x9, x9, #0xda8            ; @"endPanNormal:YES has no timer"
+    0x199588e2c <+1844>: cmp    w20, #0x0
+    0x199588e30 <+1848>: csel   x2, x9, x8, ne
+    0x199588e34 <+1852>: mov    x0, x19
+    0x199588e38 <+1856>: bl     0x19b2b6160               ; objc_msgSend$_popTrackingRunLoopModeIfNecessaryForReason:
+    0x199588e3c <+1860>: ldr    w8, [sp, #0x7c]
+    0x199588e40 <+1864>: and    w8, w8, w21
+    0x199588e44 <+1868>: cmp    w8, #0x1
+    0x199588e48 <+1872>: b.ne   0x199588eb8               ; <+1984>
+    0x199588e4c <+1876>: ldr    x8, [x19, x22]
+    0x199588e50 <+1880>: cbz    x8, 0x199588eb8           ; <+1984>
+    0x199588e54 <+1884>: mov    x0, x19
+    0x199588e58 <+1888>: bl     0x19b2c72a0               ; objc_msgSend$_screen
+    0x199588e5c <+1892>: bl     0x1a0284650
+    0x199588e60 <+1896>: mov    x20, x0
+    0x199588e64 <+1900>: bl     0x19b2ab6e0               ; objc_msgSend$_maximumFramesPerSecond
+    0x199588e68 <+1904>: scvtf  d0, x0
+    0x199588e6c <+1908>: fmov   d1, #-1.00000000
+    0x199588e70 <+1912>: fdiv   d9, d1, d0
+    0x199588e74 <+1916>: bl     0x1a0284850
+    0x199588e78 <+1920>: bl     0x1a027f410
+    0x199588e7c <+1924>: fmov   d8, d0
+    0x199588e80 <+1928>: fadd   d0, d0, d9
+    0x199588e84 <+1932>: adrp   x8, 417740
+    0x199588e88 <+1936>: add    x8, x8, #0xec4            ; _MergedGlobals.115 + 344
+    0x199588e8c <+1940>: ldrsw  x9, [x8]
+    0x199588e90 <+1944>: str    d0, [x19, x9]
+    0x199588e94 <+1948>: ldrsw  x8, [x8, #0x18]
+    0x199588e98 <+1952>: ldr    x8, [x19, x8]
+    0x199588e9c <+1956>: cbz    x8, 0x199588ea4           ; <+1964>
+    0x199588ea0 <+1960>: str    d0, [x8, #0x8]
+    0x199588ea4 <+1964>: mov    x0, x19
+    0x199588ea8 <+1968>: bl     0x19b2ec6a0               ; objc_msgSend$_trackingDidEnd
+    0x199588eac <+1972>: mov    x0, x19
+    0x199588eb0 <+1976>: fmov   d0, d8
+    0x199588eb4 <+1980>: bl     0x19b2e27c0               ; objc_msgSend$_smoothScrollWithUpdateTime:
+    0x199588eb8 <+1984>: tbnz   w21, #0x0, 0x199588ec8    ; <+2000>
+    0x199588ebc <+1988>: mov    x0, x19
+    0x199588ec0 <+1992>: mov    w2, #0x0                  ; =0 
+    0x199588ec4 <+1996>: bl     0x19b2d2dc0               ; objc_msgSend$_setKnobInteractionGestureDelayed:
+    0x199588ec8 <+2000>: ldr    x20, [x28]
+    0x199588ecc <+2004>: mov    x0, x19
+    0x199588ed0 <+2008>: bl     0x19b424720               ; objc_msgSend$window
+    0x199588ed4 <+2012>: bl     0x1a0284650
+    0x199588ed8 <+2016>: mov    x21, x0
+    0x199588edc <+2020>: mov    x0, x20
+    0x199588ee0 <+2024>: mov    x2, x21
+    0x199588ee4 <+2028>: bl     0x19b2ec160               ; objc_msgSend$_touchesEventForWindow:
+    0x199588ee8 <+2032>: mov    x29, x29
+    0x199588eec <+2036>: bl     0x1a0284b80
+    0x199588ef0 <+2040>: mov    x20, x0
+    0x199588ef4 <+2044>: bl     0x1a0284860
+    0x199588ef8 <+2048>: mov    x0, x20
+    0x199588efc <+2052>: bl     0x19b40d220               ; objc_msgSend$timestamp
+    0x199588f00 <+2056>: adrp   x8, 417740
+    0x199588f04 <+2060>: ldrsw  x8, [x8, #0xee0]
+    0x199588f08 <+2064>: str    d0, [x19, x8]
+    0x199588f0c <+2068>: ldp    x29, x30, [sp, #0x100]
+    0x199588f10 <+2072>: ldp    x20, x19, [sp, #0xf0]
+    0x199588f14 <+2076>: ldp    x22, x21, [sp, #0xe0]
+    0x199588f18 <+2080>: ldp    x24, x23, [sp, #0xd0]
+    0x199588f1c <+2084>: ldp    x26, x25, [sp, #0xc0]
+    0x199588f20 <+2088>: ldp    x28, x27, [sp, #0xb0]
+    0x199588f24 <+2092>: ldp    d9, d8, [sp, #0xa0]
+    0x199588f28 <+2096>: ldp    d11, d10, [sp, #0x90]
+    0x199588f2c <+2100>: add    sp, sp, #0x110
+    0x199588f30 <+2104>: retab  
+    0x199588f34 <+2108>: mov    w27, #0x0                 ; =0 
+    0x199588f38 <+2112>: b      0x199588b58               ; <+1120>
+    0x199588f3c <+2116>: adrp   x8, 5989
+    0x199588f40 <+2120>: ldr    d1, [x8, #0x868]
+    0x199588f44 <+2124>: fcmp   d0, d1
+    0x199588f48 <+2128>: b.pl   0x199588f6c               ; <+2164>
+    0x199588f4c <+2132>: adrp   x8, 417740
+    0x199588f50 <+2136>: add    x8, x8, #0xda4            ; _MergedGlobals.115 + 56
+    0x199588f54 <+2140>: ldrsw  x9, [x8, #0x104]
+    0x199588f58 <+2144>: str    xzr, [x19, x9]
+    0x199588f5c <+2148>: ldrsw  x8, [x8]
+    0x199588f60 <+2152>: mov    x9, #0x3ff0000000000000   ; =4607182418800017408 
+    0x199588f64 <+2156>: str    x9, [x19, x8]
+    0x199588f68 <+2160>: b      0x199588fe0               ; <+2280>
+    0x199588f6c <+2164>: ldrb   w8, [x25, #0xc]
+    0x199588f70 <+2168>: tbnz   w8, #0x5, 0x199588fe0     ; <+2280>
+    0x199588f74 <+2172>: adrp   x8, 417740
+    0x199588f78 <+2176>: ldrsw  x8, [x8, #0xea8]
+    0x199588f7c <+2180>: ldr    x9, [x19, x8]
+    0x199588f80 <+2184>: add    x9, x9, #0x1
+    0x199588f84 <+2188>: str    x9, [x19, x8]
+    0x199588f88 <+2192>: ldr    x0, [x19, x22]
+    0x199588f8c <+2196>: mov    w2, #0xa                  ; =10 
+    0x199588f90 <+2200>: bl     0x19b263140               ; objc_msgSend$_activeEventOfType:
+    0x199588f94 <+2204>: bl     0x1a0284650
+    0x199588f98 <+2208>: adrp   x27, 427081
+    0x199588f9c <+2212>: add    x27, x27, #0xa90          ; UIApp
+    0x199588fa0 <+2216>: cbnz   x0, 0x199588fb8           ; <+2240>
+    0x199588fa4 <+2220>: ldr    x0, [x19, x22]
+    0x199588fa8 <+2224>: mov    x2, #0x0                  ; =0 
+    0x199588fac <+2228>: bl     0x19b263140               ; objc_msgSend$_activeEventOfType:
+    0x199588fb0 <+2232>: bl     0x1a0284650
+    0x199588fb4 <+2236>: cbz    x0, 0x199588fe8           ; <+2288>
+    0x199588fb8 <+2240>: mov    x21, x0
+    0x199588fbc <+2244>: mov    x0, x21
+    0x199588fc0 <+2248>: bl     0x19b40d220               ; objc_msgSend$timestamp
+    0x199588fc4 <+2252>: adrp   x8, 417740
+    0x199588fc8 <+2256>: ldrsw  x8, [x8, #0xed4]
+    0x199588fcc <+2260>: str    d0, [x19, x8]
+    0x199588fd0 <+2264>: bl     0x1a0284860
+    0x199588fd4 <+2268>: mov    w27, #0x1                 ; =1 
+    0x199588fd8 <+2272>: ldr    q3, [sp, #0x40]
+    0x199588fdc <+2276>: b      0x199588a34               ; <+828>
+    0x199588fe0 <+2280>: mov    w27, #0x1                 ; =1 
+    0x199588fe4 <+2284>: b      0x199588a34               ; <+828>
+    0x199588fe8 <+2288>: ldr    x21, [x27]
+    0x199588fec <+2292>: mov    x0, x19
+    0x199588ff0 <+2296>: bl     0x19b424720               ; objc_msgSend$window
+    0x199588ff4 <+2300>: bl     0x1a0284650
+    0x199588ff8 <+2304>: mov    x27, x0
+    0x199588ffc <+2308>: mov    x0, x21
+    0x199589000 <+2312>: mov    x2, x27
+    0x199589004 <+2316>: bl     0x19b2ec160               ; objc_msgSend$_touchesEventForWindow:
+    0x199589008 <+2320>: bl     0x1a0284650
+    0x19958900c <+2324>: mov    x21, x0
+    0x199589010 <+2328>: bl     0x1a02848c0
+    0x199589014 <+2332>: b      0x199588fbc               ; <+2244>
+
+UIKitCore`-[UIScrollView _scrollViewDidEndDraggingForDelegateWithDeceleration:]:
+    0x19aa5f024 <+0>:   pacibsp 
+    0x19aa5f028 <+4>:   sub    sp, sp, #0x60
+    0x19aa5f02c <+8>:   stp    x22, x21, [sp, #0x30]
+    0x19aa5f030 <+12>:  stp    x20, x19, [sp, #0x40]
+    0x19aa5f034 <+16>:  stp    x29, x30, [sp, #0x50]
+    0x19aa5f038 <+20>:  add    x29, sp, #0x50
+    0x19aa5f03c <+24>:  mov    x20, x2
+    0x19aa5f040 <+28>:  mov    x19, x0
+    0x19aa5f044 <+32>:  bl     0x19b2a0260               ; objc_msgSend$_isAutomaticContentOffsetAdjustmentEnabled
+    0x19aa5f048 <+36>:  mov    x21, x0
+    0x19aa5f04c <+40>:  cbz    w20, 0x19aa5f05c          ; <+56>
+    0x19aa5f050 <+44>:  mov    x0, x19
+    0x19aa5f054 <+48>:  mov    w2, #0x0                  ; =0 
+    0x19aa5f058 <+52>:  bl     0x19b2cc1c0               ; objc_msgSend$_setAutomaticContentOffsetAdjustmentEnabled:
+    0x19aa5f05c <+56>:  mov    x0, x19
+    0x19aa5f060 <+60>:  mov    x2, x20
+    0x19aa5f064 <+64>:  bl     0x19b2c7ba0               ; objc_msgSend$_scrollViewDidEndDraggingWithDeceleration:
+    0x19aa5f068 <+68>:  mov    x8, sp
+    0x19aa5f06c <+72>:  adrp   x16, 395210
+    0x19aa5f070 <+76>:  ldr    x16, [x16, #0xe00]
+    0x19aa5f074 <+80>:  mov    x17, x8
+    0x19aa5f078 <+84>:  movk   x17, #0x6ae1, lsl #48
+    0x19aa5f07c <+88>:  pacda  x16, x17
+    0x19aa5f080 <+92>:  str    x16, [sp]
+    0x19aa5f084 <+96>:  adrp   x9, 649
+    0x19aa5f088 <+100>: ldr    d0, [x9, #0xb78]
+    0x19aa5f08c <+104>: str    d0, [sp, #0x8]
+    0x19aa5f090 <+108>: add    x8, x8, #0x10
+    0x19aa5f094 <+112>: adrp   x9, 396128
+    0x19aa5f098 <+116>: add    x9, x9, #0xc50            ; __block_descriptor_41_e8_32s_e43_v24?0"<_UIScrollViewScrollObserver>"8^B16ls32l8 + 8
+    0x19aa5f09c <+120>: adrp   x16, 0
+    0x19aa5f0a0 <+124>: add    x16, x16, #0x134          ; __69-[UIScrollView _scrollViewDidEndDraggingForDelegateWithDeceleration:]_block_invoke
+    0x19aa5f0a4 <+128>: pacia  x16, x8
+    0x19aa5f0a8 <+132>: stp    x16, x9, [sp, #0x10]
+    0x19aa5f0ac <+136>: str    x19, [sp, #0x20]
+    0x19aa5f0b0 <+140>: strb   w20, [sp, #0x28]
+    0x19aa5f0b4 <+144>: mov    x1, sp
+    0x19aa5f0b8 <+148>: mov    x0, x19
+    0x19aa5f0bc <+152>: bl     0x19956de98               ; -[UIScrollView _enumerateAllScrollObserversWithBlock:]
+    0x19aa5f0c0 <+156>: adrp   x8, 412405
+    0x19aa5f0c4 <+160>: ldrsw  x8, [x8, #0xe50]
+    0x19aa5f0c8 <+164>: ldr    x0, [x19, x8]
+    0x19aa5f0cc <+168>: cbz    x0, 0x19aa5f0d8           ; <+180>
+    0x19aa5f0d0 <+172>: mov    x2, x19
+    0x19aa5f0d4 <+176>: bl     0x19b283220               ; objc_msgSend$_descendentScrollViewDidEndDragging:
+->  0x19aa5f0d8 <+180>: adrp   x8, 412405
+    0x19aa5f0dc <+184>: ldrsw  x8, [x8, #0xd40]
+    0x19aa5f0e0 <+188>: add    x0, x19, x8
+    0x19aa5f0e4 <+192>: bl     0x1a0284750
+    0x19aa5f0e8 <+196>: mov    x22, x0
+    0x19aa5f0ec <+200>: adrp   x8, 479055
+    0x19aa5f0f0 <+204>: add    x1, x8, #0x10
+    0x19aa5f0f4 <+208>: bl     0x1a02847d0
+    0x19aa5f0f8 <+212>: tbz    w0, #0x0, 0x19aa5f10c     ; <+232>
+    0x19aa5f0fc <+216>: mov    x0, x22
+    0x19aa5f100 <+220>: mov    x2, x19
+    0x19aa5f104 <+224>: mov    x3, x20
+    0x19aa5f108 <+228>: bl     0x19b3abb00               ; objc_msgSend$scrollViewDidEndDragging:willDecelerate:
+    0x19aa5f10c <+232>: cbz    w20, 0x19aa5f11c          ; <+248>
+    0x19aa5f110 <+236>: mov    x0, x19
+    0x19aa5f114 <+240>: mov    x2, x21
+    0x19aa5f118 <+244>: bl     0x19b2cc1c0               ; objc_msgSend$_setAutomaticContentOffsetAdjustmentEnabled:
+    0x19aa5f11c <+248>: bl     0x1a0284870
+    0x19aa5f120 <+252>: ldp    x29, x30, [sp, #0x50]
+    0x19aa5f124 <+256>: ldp    x20, x19, [sp, #0x40]
+    0x19aa5f128 <+260>: ldp    x22, x21, [sp, #0x30]
+    0x19aa5f12c <+264>: add    sp, sp, #0x60
+    0x19aa5f130 <+268>: retab  
+
+UIKitCore`-[_UISheetInteraction draggingEndedInSource:]:
+后面同handlePan_end汇编.txt文件
+

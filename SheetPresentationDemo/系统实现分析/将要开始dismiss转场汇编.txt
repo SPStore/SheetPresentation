@@ -1,0 +1,1169 @@
+UIKitCore`-[_UISheetInteraction handlePan:]:
+    0x1997a36ac <+0>:   pacibsp 
+    0x1997a36b0 <+4>:   sub    sp, sp, #0x40
+    0x1997a36b4 <+8>:   stp    d9, d8, [sp, #0x10]
+    0x1997a36b8 <+12>:  stp    x20, x19, [sp, #0x20]
+    0x1997a36bc <+16>:  stp    x29, x30, [sp, #0x30]
+    0x1997a36c0 <+20>:  add    x29, sp, #0x30
+    0x1997a36c4 <+24>:  mov    x19, x0
+    0x1997a36c8 <+28>:  bl     0x1a02849c0
+    0x1997a36cc <+32>:  str    x0, [sp, #0x8]
+    0x1997a36d0 <+36>:  bl     0x19b3ffaa0               ; objc_msgSend$state
+    0x1997a36d4 <+40>:  cmp    x0, #0x2
+    0x1997a36d8 <+44>:  b.gt   0x1997a3730               ; <+132>
+    0x1997a36dc <+48>:  cmp    x0, #0x1
+    0x1997a36e0 <+52>:  b.eq   0x1997a3754               ; <+168>
+    0x1997a36e4 <+56>:  cmp    x0, #0x2
+    0x1997a36e8 <+60>:  ldr    x0, [sp, #0x8]
+    0x1997a36ec <+64>:  b.ne   0x1997a3780               ; <+212>
+    0x1997a36f0 <+68>:  mov    x2, #0x0                  ; =0 
+    0x1997a36f4 <+72>:  bl     0x19b413020               ; objc_msgSend$translationInView:
+    0x1997a36f8 <+76>:  fmov   d8, d0
+    0x1997a36fc <+80>:  fmov   d9, d1
+    0x1997a3700 <+84>:  ldr    x0, [sp, #0x8]
+    0x1997a3704 <+88>:  mov    x2, #0x0                  ; =0 
+    0x1997a3708 <+92>:  bl     0x19b41f160               ; objc_msgSend$velocityInView:
+    0x1997a370c <+96>:  fmov   d2, d0
+    0x1997a3710 <+100>: fmov   d3, d1
+    0x1997a3714 <+104>: mov    x0, x19
+    0x1997a3718 <+108>: ldr    x2, [sp, #0x8]
+    0x1997a371c <+112>: fmov   d0, d8
+    0x1997a3720 <+116>: fmov   d1, d9
+    0x1997a3724 <+120>: mov    w3, #0x0                  ; =0 
+    0x1997a3728 <+124>: bl     0x19b33ed40               ; objc_msgSend$draggingChangedInSource:withTranslation:velocity:animateChange:
+->  0x1997a372c <+128>: b      0x1997a377c               ; <+208>
+    0x1997a3730 <+132>: cmp    x0, #0x3
+    0x1997a3734 <+136>: b.eq   0x1997a3770               ; <+196>
+    0x1997a3738 <+140>: cmp    x0, #0x4
+    0x1997a373c <+144>: ldr    x0, [sp, #0x8]
+    0x1997a3740 <+148>: b.ne   0x1997a3780               ; <+212>
+    0x1997a3744 <+152>: mov    x0, x19
+    0x1997a3748 <+156>: ldr    x2, [sp, #0x8]
+    0x1997a374c <+160>: bl     0x19b33ed20               ; objc_msgSend$draggingCancelledInSource:
+    0x1997a3750 <+164>: b      0x1997a377c               ; <+208>
+    0x1997a3754 <+168>: ldr    x0, [sp, #0x8]
+    0x1997a3758 <+172>: bl     0x19a2785a4               ; -[UIPanGestureRecognizer _scrollDeviceCategory]
+    0x1997a375c <+176>: bl     0x199694434               ; _UIScrollViewRubberBandCoefficient
+    0x1997a3760 <+180>: mov    x0, x19
+    0x1997a3764 <+184>: ldr    x2, [sp, #0x8]
+    0x1997a3768 <+188>: bl     0x19b33ed00               ; objc_msgSend$draggingBeganFromSource:withRubberBandCoefficient:
+    0x1997a376c <+192>: b      0x1997a377c               ; <+208>
+    0x1997a3770 <+196>: mov    x0, x19
+    0x1997a3774 <+200>: ldr    x2, [sp, #0x8]
+    0x1997a3778 <+204>: bl     0x19b33ed60               ; objc_msgSend$draggingEndedInSource:
+    0x1997a377c <+208>: ldr    x0, [sp, #0x8]
+    0x1997a3780 <+212>: ldp    x29, x30, [sp, #0x30]
+    0x1997a3784 <+216>: ldp    x20, x19, [sp, #0x20]
+    0x1997a3788 <+220>: ldp    d9, d8, [sp, #0x10]
+    0x1997a378c <+224>: add    sp, sp, #0x40
+    0x1997a3790 <+228>: autibsp 
+    0x1997a3794 <+232>: eor    x16, x30, x30, lsl #1
+    0x1997a3798 <+236>: tbz    x16, #0x3e, 0x1997a37a0   ; <+244>
+    0x1997a379c <+240>: brk    #0xc471
+    0x1997a37a0 <+244>: b      0x1a0284800
+
+UIKitCore`-[_UISheetInteraction draggingChangedInSource:withTranslation:velocity:animateChange:]:
+    0x199d8d38c <+0>:   pacibsp 
+    0x199d8d390 <+4>:   sub    sp, sp, #0x80
+    0x199d8d394 <+8>:   stp    x22, x21, [sp, #0x50]
+    0x199d8d398 <+12>:  stp    x20, x19, [sp, #0x60]
+    0x199d8d39c <+16>:  stp    x29, x30, [sp, #0x70]
+    0x199d8d3a0 <+20>:  add    x29, sp, #0x70
+    0x199d8d3a4 <+24>:  mov    x19, x3
+    0x199d8d3a8 <+28>:  mov    x21, x0
+    0x199d8d3ac <+32>:  stp    d0, d1, [x29, #-0x30]
+    0x199d8d3b0 <+36>:  stp    d2, d3, [sp, #0x30]
+    0x199d8d3b4 <+40>:  bl     0x1a02849c0
+    0x199d8d3b8 <+44>:  mov    x20, x0
+    0x199d8d3bc <+48>:  mov    x0, x21
+    0x199d8d3c0 <+52>:  bl     0x19b36f120               ; objc_msgSend$isDragging
+    0x199d8d3c4 <+56>:  cbz    w0, 0x199d8d490           ; <+260>
+    0x199d8d3c8 <+60>:  mov    x0, x21
+    0x199d8d3cc <+64>:  bl     0x19b33ea60               ; objc_msgSend$dragSource
+    0x199d8d3d0 <+68>:  bl     0x1a0284650
+    0x199d8d3d4 <+72>:  mov    x22, x0
+    0x199d8d3d8 <+76>:  bl     0x1a0284870
+    0x199d8d3dc <+80>:  cmp    x22, x20
+    0x199d8d3e0 <+84>:  b.ne   0x199d8d490               ; <+260>
+    0x199d8d3e4 <+88>:  mov    x0, x21
+    0x199d8d3e8 <+92>:  bl     0x19b36bd60               ; objc_msgSend$interactor
+    0x199d8d3ec <+96>:  bl     0x1a0284650
+    0x199d8d3f0 <+100>: mov    x22, x0
+    0x199d8d3f4 <+104>: mov    x8, sp
+    0x199d8d3f8 <+108>: adrp   x16, 398492
+    0x199d8d3fc <+112>: ldr    x16, [x16, #0xe00]
+    0x199d8d400 <+116>: mov    x17, x8
+    0x199d8d404 <+120>: movk   x17, #0x6ae1, lsl #48
+    0x199d8d408 <+124>: pacda  x16, x17
+    0x199d8d40c <+128>: str    x16, [sp]
+    0x199d8d410 <+132>: adrp   x9, 3931
+    0x199d8d414 <+136>: ldr    d0, [x9, #0xb78]
+    0x199d8d418 <+140>: str    d0, [sp, #0x8]
+    0x199d8d41c <+144>: add    x8, x8, #0x10
+    0x199d8d420 <+148>: adrp   x9, 399357
+    0x199d8d424 <+152>: add    x9, x9, #0x190            ; __block_descriptor_41_e8_32s_e5_v8?0ls32l8 + 8
+    0x199d8d428 <+156>: adrp   x16, 0
+    0x199d8d42c <+160>: add    x16, x16, #0x4a8          ; __86-[_UISheetInteraction draggingChangedInSource:withTranslation:velocity:animateChange:]_block_invoke
+    0x199d8d430 <+164>: pacia  x16, x8
+    0x199d8d434 <+168>: stp    x16, x9, [sp, #0x10]
+    0x199d8d438 <+172>: strb   w19, [sp, #0x28]
+    0x199d8d43c <+176>: str    x21, [sp, #0x20]
+    0x199d8d440 <+180>: sub    x2, x29, #0x30
+    0x199d8d444 <+184>: add    x3, sp, #0x30
+    0x199d8d448 <+188>: mov    x4, sp
+    0x199d8d44c <+192>: bl     0x19b29d6c0               ; objc_msgSend$_interactionChangedCopyingTranslation:velocity:mutatingState:
+->  0x199d8d450 <+196>: bl     0x1a0284870
+    0x199d8d454 <+200>: mov    x0, x21
+    0x199d8d458 <+204>: bl     0x19b334b20               ; objc_msgSend$delegate
+    0x199d8d45c <+208>: bl     0x1a0284650
+    0x199d8d460 <+212>: mov    x22, x0
+    0x199d8d464 <+216>: adrp   x8, 484105
+    0x199d8d468 <+220>: add    x1, x8, #0x11
+    0x199d8d46c <+224>: bl     0x1a02847d0
+    0x199d8d470 <+228>: tbz    w0, #0x0, 0x199d8d48c     ; <+256>
+    0x199d8d474 <+232>: ldp    d0, d1, [x29, #-0x30]
+    0x199d8d478 <+236>: ldp    d2, d3, [sp, #0x30]
+    0x199d8d47c <+240>: mov    x0, x22
+    0x199d8d480 <+244>: mov    x2, x21
+    0x199d8d484 <+248>: mov    x3, x19
+    0x199d8d488 <+252>: bl     0x19b2dc9e0               ; objc_msgSend$_sheetInteractionDraggingChanged:withTranslation:velocity:animateChange:
+    0x199d8d48c <+256>: bl     0x1a0284870
+    0x199d8d490 <+260>: bl     0x1a0284850
+    0x199d8d494 <+264>: ldp    x29, x30, [sp, #0x70]
+    0x199d8d498 <+268>: ldp    x20, x19, [sp, #0x60]
+    0x199d8d49c <+272>: ldp    x22, x21, [sp, #0x50]
+    0x199d8d4a0 <+276>: add    sp, sp, #0x80
+    0x199d8d4a4 <+280>: retab  
+
+UIKitCore`-[_UIHyperInteractor _interactionChangedCopyingTranslation:velocity:mutatingState:]:
+    0x199dbeb90 <+0>:   pacibsp 
+    0x199dbeb94 <+4>:   sub    sp, sp, #0x70
+    0x199dbeb98 <+8>:   stp    x29, x30, [sp, #0x60]
+    0x199dbeb9c <+12>:  add    x29, sp, #0x60
+    0x199dbeba0 <+16>:  add    x8, sp, #0x30
+    0x199dbeba4 <+20>:  adrp   x16, 398443
+    0x199dbeba8 <+24>:  ldr    x16, [x16, #0xe00]
+    0x199dbebac <+28>:  mov    x17, x8
+    0x199dbebb0 <+32>:  movk   x17, #0x6ae1, lsl #48
+    0x199dbebb4 <+36>:  pacda  x16, x17
+    0x199dbebb8 <+40>:  stp    x3, x16, [sp, #0x28]
+    0x199dbebbc <+44>:  adrp   x9, 3882
+    0x199dbebc0 <+48>:  ldr    d0, [x9, #0xb78]
+    0x199dbebc4 <+52>:  str    d0, [sp, #0x38]
+    0x199dbebc8 <+56>:  add    x8, x8, #0x10
+    0x199dbebcc <+60>:  adrp   x9, 399310
+    0x199dbebd0 <+64>:  add    x9, x9, #0x490            ; __block_descriptor_48_e8_32s_e9_v16?0^d8ls32l8 + 8
+    0x199dbebd4 <+68>:  adrp   x16, 0
+    0x199dbebd8 <+72>:  add    x16, x16, #0xc38          ; __83-[_UIHyperInteractor _interactionChangedCopyingTranslation:velocity:mutatingState:]_block_invoke
+    0x199dbebdc <+76>:  pacia  x16, x8
+    0x199dbebe0 <+80>:  stp    x16, x9, [sp, #0x40]
+    0x199dbebe4 <+84>:  stp    x0, x2, [sp, #0x50]
+    0x199dbebe8 <+88>:  mov    x8, sp
+    0x199dbebec <+92>:  adrp   x16, 398443
+    0x199dbebf0 <+96>:  ldr    x16, [x16, #0xe00]
+    0x199dbebf4 <+100>: mov    x17, x8
+    0x199dbebf8 <+104>: movk   x17, #0x6ae1, lsl #48
+    0x199dbebfc <+108>: pacda  x16, x17
+    0x199dbec00 <+112>: str    x16, [sp]
+    0x199dbec04 <+116>: str    d0, [sp, #0x8]
+    0x199dbec08 <+120>: add    x8, x8, #0x10
+    0x199dbec0c <+124>: adrp   x16, 0
+    0x199dbec10 <+128>: add    x16, x16, #0xc50          ; __83-[_UIHyperInteractor _interactionChangedCopyingTranslation:velocity:mutatingState:]_block_invoke_2
+    0x199dbec14 <+132>: pacia  x16, x8
+    0x199dbec18 <+136>: stp    x16, x9, [sp, #0x10]
+    0x199dbec1c <+140>: str    x0, [sp, #0x20]
+    0x199dbec20 <+144>: add    x2, sp, #0x30
+    0x199dbec24 <+148>: mov    x3, sp
+    0x199dbec28 <+152>: bl     0x19b29d6e0               ; objc_msgSend$_interactionChangedMutatingTranslation:velocity:mutatingState:
+->  0x199dbec2c <+156>: ldp    x29, x30, [sp, #0x60]
+    0x199dbec30 <+160>: add    sp, sp, #0x70
+    0x199dbec34 <+164>: retab  
+
+UIKitCore`-[_UIHyperInteractor _interactionChangedMutatingTranslation:velocity:mutatingState:]:
+    0x199dbec70 <+0>:   pacibsp 
+    0x199dbec74 <+4>:   sub    sp, sp, #0x40
+    0x199dbec78 <+8>:   stp    x22, x21, [sp, #0x10]
+    0x199dbec7c <+12>:  stp    x20, x19, [sp, #0x20]
+    0x199dbec80 <+16>:  stp    x29, x30, [sp, #0x30]
+    0x199dbec84 <+20>:  add    x29, sp, #0x30
+    0x199dbec88 <+24>:  mov    x20, x3
+    0x199dbec8c <+28>:  mov    x21, x2
+    0x199dbec90 <+32>:  mov    x19, x0
+    0x199dbec94 <+36>:  bl     0x1a0284a70
+    0x199dbec98 <+40>:  str    x0, [sp, #0x8]
+    0x199dbec9c <+44>:  ldr    x22, [x19, #0xa0]
+    0x199dbeca0 <+48>:  bl     0x1a02849d0
+    0x199dbeca4 <+52>:  mov    x20, x0
+    0x199dbeca8 <+56>:  bl     0x1a02849e0
+    0x199dbecac <+60>:  mov    x21, x0
+    0x199dbecb0 <+64>:  mov    x0, x19
+    0x199dbecb4 <+68>:  bl     0x19b279540               ; objc_msgSend$_constrainedPoint
+    0x199dbecb8 <+72>:  mov    x1, x0
+    0x199dbecbc <+76>:  ldr    w0, [x19, #0xc8]
+    0x199dbecc0 <+80>:  mov    w2, #0x1                  ; =1 
+    0x199dbecc4 <+84>:  mov    x3, x22
+    0x199dbecc8 <+88>:  mov    w4, #0x1                  ; =1 
+    0x199dbeccc <+92>:  bl     0x1a0283b30
+    0x199dbecd0 <+96>:  mov    x0, x19
+    0x199dbecd4 <+100>: mov    x2, x21
+    0x199dbecd8 <+104>: bl     0x19b2ad560               ; objc_msgSend$_mutateTranslation:
+    0x199dbecdc <+108>: bl     0x1a0284860
+    0x199dbece0 <+112>: mov    x0, x19
+    0x199dbece4 <+116>: mov    x2, x20
+    0x199dbece8 <+120>: bl     0x19b2ad5c0               ; objc_msgSend$_mutateVelocity:
+    0x199dbecec <+124>: bl     0x1a0284850
+    0x199dbecf0 <+128>: ldr    x0, [sp, #0x8]
+    0x199dbecf4 <+132>: cbz    x0, 0x199dbed08           ; <+152>
+    0x199dbecf8 <+136>: ldr    x0, [sp, #0x8]
+    0x199dbecfc <+140>: mov    x8, x0
+    0x199dbed00 <+144>: ldr    x9, [x8, #0x10]!
+    0x199dbed04 <+148>: blraa  x9, x8
+    0x199dbed08 <+152>: mov    x0, x19
+    0x199dbed0c <+156>: bl     0x19b268b60               ; objc_msgSend$_animator
+    0x199dbed10 <+160>: bl     0x1a0284650
+    0x199dbed14 <+164>: mov    x20, x0
+    0x199dbed18 <+168>: bl     0x19b29d6a0               ; objc_msgSend$_interactionChanged
+->  0x199dbed1c <+172>: bl     0x1a0284850
+    0x199dbed20 <+176>: mov    x0, x19
+    0x199dbed24 <+180>: bl     0x19b26ee80               ; objc_msgSend$_broadcaster
+    0x199dbed28 <+184>: bl     0x1a0284650
+    0x199dbed2c <+188>: mov    x19, x0
+    0x199dbed30 <+192>: bl     0x19b29d7a0               ; objc_msgSend$_interactionDidChange
+    0x199dbed34 <+196>: bl     0x1a0284830
+    0x199dbed38 <+200>: ldr    x0, [sp, #0x8]
+    0x199dbed3c <+204>: ldp    x29, x30, [sp, #0x30]
+    0x199dbed40 <+208>: ldp    x20, x19, [sp, #0x20]
+    0x199dbed44 <+212>: ldp    x22, x21, [sp, #0x10]
+    0x199dbed48 <+216>: add    sp, sp, #0x40
+    0x199dbed4c <+220>: autibsp 
+    0x199dbed50 <+224>: eor    x16, x30, x30, lsl #1
+    0x199dbed54 <+228>: tbz    x16, #0x3e, 0x199dbed5c   ; <+236>
+    0x199dbed58 <+232>: brk    #0xc471
+    0x199dbed5c <+236>: b      0x1a0284800
+    
+    UIKitCore`-[_UIHyperOutOfProcessViewAnimator _interactionChanged]:
+    0x199d968d0 <+0>:   pacibsp 
+    0x199d968d4 <+4>:   stp    x24, x23, [sp, #-0x40]!
+    0x199d968d8 <+8>:   stp    x22, x21, [sp, #0x10]
+    0x199d968dc <+12>:  stp    x20, x19, [sp, #0x20]
+    0x199d968e0 <+16>:  stp    x29, x30, [sp, #0x30]
+    0x199d968e4 <+20>:  add    x29, sp, #0x30
+    0x199d968e8 <+24>:  sub    sp, sp, #0x30
+    0x199d968ec <+28>:  mov    x19, x0
+    0x199d968f0 <+32>:  adrp   x8, 398483
+    0x199d968f4 <+36>:  ldr    x8, [x8, #0xe30]
+    0x199d968f8 <+40>:  ldr    x8, [x8]
+    0x199d968fc <+44>:  stur   x8, [x29, #-0x38]
+    0x199d96900 <+48>:  bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96904 <+52>:  bl     0x1a0284650
+    0x199d96908 <+56>:  mov    x21, x0
+    0x199d9690c <+60>:  bl     0x19b2be7c0               ; objc_msgSend$_region
+    0x199d96910 <+64>:  bl     0x1a0284650
+    0x199d96914 <+68>:  mov    x22, x0
+    0x199d96918 <+72>:  mov    x0, x19
+    0x199d9691c <+76>:  bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96920 <+80>:  bl     0x1a0284650
+    0x199d96924 <+84>:  mov    x23, x0
+    0x199d96928 <+88>:  bl     0x19b2a7160               ; objc_msgSend$_lastConstrainedPoint
+    0x199d9692c <+92>:  mov    x20, x0
+    0x199d96930 <+96>:  mov    x0, x19
+    0x199d96934 <+100>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96938 <+104>: bl     0x1a0284650
+    0x199d9693c <+108>: mov    x24, x0
+    0x199d96940 <+112>: bl     0x19b279540               ; objc_msgSend$_constrainedPoint
+    0x199d96944 <+116>: mov    x2, x0
+    0x199d96948 <+120>: mov    x0, x22
+    0x199d9694c <+124>: mov    x1, x20
+    0x199d96950 <+128>: bl     0x199eb61e8               ; _UIHyperregionIsBoundaryCrossedFromPointToPoint
+    0x199d96954 <+132>: mov    x20, x0
+    0x199d96958 <+136>: bl     0x1a0284890
+    0x199d9695c <+140>: bl     0x1a0284880
+    0x199d96960 <+144>: bl     0x1a0284870
+    0x199d96964 <+148>: bl     0x1a0284860
+    0x199d96968 <+152>: ldr    x8, [x19, #0x10]
+    0x199d9696c <+156>: lsl    x8, x8, #3
+    0x199d96970 <+160>: mov    x9, x8
+    0x199d96974 <+164>: adrp   x17, 431666
+    0x199d96978 <+168>: add    x17, x17, #0xee0
+    0x199d9697c <+172>: ldr    x16, [x17]
+    0x199d96980 <+176>: blraa  x16, x17
+    0x199d96984 <+180>: mov    x9, sp
+    0x199d96988 <+184>: add    x8, x8, #0xf
+    0x199d9698c <+188>: and    x8, x8, #0xfffffffffffffff0
+    0x199d96990 <+192>: sub    x21, x9, x8
+    0x199d96994 <+196>: mov    sp, x21
+    0x199d96998 <+200>: mov    x0, x19
+    0x199d9699c <+204>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d969a0 <+208>: bl     0x1a0284650
+    0x199d969a4 <+212>: mov    x22, x0
+    0x199d969a8 <+216>: bl     0x19b275660               ; objc_msgSend$_closestPoint
+    0x199d969ac <+220>: mov    x1, x0
+    0x199d969b0 <+224>: ldr    w0, [x19, #0x10]
+    0x199d969b4 <+228>: mov    w2, #0x1                  ; =1 
+    0x199d969b8 <+232>: mov    x3, x21
+    0x199d969bc <+236>: mov    w4, #0x1                  ; =1 
+    0x199d969c0 <+240>: bl     0x1a0283b30
+    0x199d969c4 <+244>: bl     0x1a0284870
+    0x199d969c8 <+248>: mov    x0, x19
+    0x199d969cc <+252>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d969d0 <+256>: bl     0x1a0284650
+    0x199d969d4 <+260>: mov    x22, x0
+    0x199d969d8 <+264>: mov    x0, x19
+    0x199d969dc <+268>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d969e0 <+272>: bl     0x1a0284650
+    0x199d969e4 <+276>: mov    x23, x0
+    0x199d969e8 <+280>: bl     0x19b2a7160               ; objc_msgSend$_lastConstrainedPoint
+    0x199d969ec <+284>: mov    x2, x0
+    0x199d969f0 <+288>: mov    x0, x22
+    0x199d969f4 <+292>: bl     0x19b27bea0               ; objc_msgSend$_copyOverridePresentationPoint:
+    0x199d969f8 <+296>: bl     0x1a0284880
+    0x199d969fc <+300>: bl     0x1a0284870
+    0x199d96a00 <+304>: mov    x0, x19
+    0x199d96a04 <+308>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96a08 <+312>: bl     0x1a0284650
+    0x199d96a0c <+316>: mov    x22, x0
+    0x199d96a10 <+320>: mov    w2, #0x1                  ; =1 
+    0x199d96a14 <+324>: bl     0x19b2d4dc0               ; objc_msgSend$_setOverridingPresentationPoint:
+    0x199d96a18 <+328>: bl     0x1a0284870
+    0x199d96a1c <+332>: mov    x0, x19
+    0x199d96a20 <+336>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96a24 <+340>: bl     0x1a0284650
+    0x199d96a28 <+344>: mov    x22, x0
+    0x199d96a2c <+348>: bl     0x19b2822a0               ; objc_msgSend$_delegate
+    0x199d96a30 <+352>: bl     0x1a0284650
+    0x199d96a34 <+356>: mov    x23, x0
+    0x199d96a38 <+360>: mov    x0, x19
+    0x199d96a3c <+364>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96a40 <+368>: bl     0x1a0284650
+    0x199d96a44 <+372>: mov    x24, x0
+    0x199d96a48 <+376>: mov    x0, x23
+    0x199d96a4c <+380>: mov    x2, x24
+    0x199d96a50 <+384>: bl     0x19b2984a0               ; objc_msgSend$_hyperInteractorApplyPresentationPoint:
+    0x199d96a54 <+388>: bl     0x1a0284890
+    0x199d96a58 <+392>: bl     0x1a0284880
+    0x199d96a5c <+396>: bl     0x1a0284870
+    0x199d96a60 <+400>: mov    x0, x19
+    0x199d96a64 <+404>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96a68 <+408>: bl     0x1a0284650
+    0x199d96a6c <+412>: mov    x22, x0
+    0x199d96a70 <+416>: mov    w2, #0x0                  ; =0 
+    0x199d96a74 <+420>: bl     0x19b2d4dc0               ; objc_msgSend$_setOverridingPresentationPoint:
+    0x199d96a78 <+424>: bl     0x1a0284870
+    0x199d96a7c <+428>: mov    x0, x19
+    0x199d96a80 <+432>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96a84 <+436>: bl     0x1a0284650
+    0x199d96a88 <+440>: mov    x22, x0
+    0x199d96a8c <+444>: bl     0x19b275660               ; objc_msgSend$_closestPoint
+    0x199d96a90 <+448>: mov    x1, x0
+    0x199d96a94 <+452>: ldr    x8, [x19, #0x10]
+    0x199d96a98 <+456>: lsl    x2, x8, #3
+    0x199d96a9c <+460>: mov    x0, x21
+    0x199d96aa0 <+464>: bl     0x19ab5abac               ; symbol stub for: memcmp
+    0x199d96aa4 <+468>: mov    x21, x0
+    0x199d96aa8 <+472>: bl     0x1a0284870
+    0x199d96aac <+476>: tbnz   w20, #0x0, 0x199d96af8    ; <+552>
+    0x199d96ab0 <+480>: cbnz   w21, 0x199d96af8          ; <+552>
+    0x199d96ab4 <+484>: mov    x0, x19
+    0x199d96ab8 <+488>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96abc <+492>: bl     0x1a0284650
+    0x199d96ac0 <+496>: mov    x20, x0
+    0x199d96ac4 <+500>: bl     0x19b2822a0               ; objc_msgSend$_delegate
+    0x199d96ac8 <+504>: bl     0x1a0284650
+    0x199d96acc <+508>: mov    x21, x0
+    0x199d96ad0 <+512>: mov    x0, x19
+    0x199d96ad4 <+516>: bl     0x19b29dba0               ; objc_msgSend$_interactor
+    0x199d96ad8 <+520>: bl     0x1a0284650
+    0x199d96adc <+524>: mov    x19, x0
+    0x199d96ae0 <+528>: mov    x0, x21
+    0x199d96ae4 <+532>: mov    x2, x19
+    0x199d96ae8 <+536>: bl     0x19b2984a0               ; objc_msgSend$_hyperInteractorApplyPresentationPoint:
+->  0x199d96aec <+540>: bl     0x1a0284830
+    0x199d96af0 <+544>: bl     0x1a0284860
+    0x199d96af4 <+548>: b      0x199d96b60               ; <+656>
+    0x199d96af8 <+552>: mov    x0, x19
+    0x199d96afc <+556>: bl     0x19b26eaa0               ; objc_msgSend$_boundaryCrossedSpringParameters
+    0x199d96b00 <+560>: bl     0x1a0284650
+    0x199d96b04 <+564>: mov    x20, x0
+    0x199d96b08 <+568>: sub    x8, x29, #0x60
+    0x199d96b0c <+572>: adrp   x16, 398483
+    0x199d96b10 <+576>: ldr    x16, [x16, #0xe00]
+    0x199d96b14 <+580>: mov    x17, x8
+    0x199d96b18 <+584>: movk   x17, #0x6ae1, lsl #48
+    0x199d96b1c <+588>: pacda  x16, x17
+    0x199d96b20 <+592>: stur   x16, [x29, #-0x60]
+    0x199d96b24 <+596>: adrp   x9, 3922
+    0x199d96b28 <+600>: ldr    d0, [x9, #0xb78]
+    0x199d96b2c <+604>: stur   d0, [x29, #-0x58]
+    0x199d96b30 <+608>: add    x8, x8, #0x10
+    0x199d96b34 <+612>: adrp   x16, 0
+    0x199d96b38 <+616>: add    x16, x16, #0xb98          ; __55-[_UIHyperOutOfProcessViewAnimator _interactionChanged]_block_invoke
+    0x199d96b3c <+620>: pacia  x16, x8
+    0x199d96b40 <+624>: adrp   x8, 399348
+    0x199d96b44 <+628>: add    x8, x8, #0x140            ; __block_descriptor_40_e8_32s_e5_v8?0ls32l8 + 8
+    0x199d96b48 <+632>: stp    x16, x8, [x29, #-0x50]
+    0x199d96b4c <+636>: stur   x19, [x29, #-0x40]
+    0x199d96b50 <+640>: sub    x3, x29, #0x60
+    0x199d96b54 <+644>: mov    x0, x19
+    0x199d96b58 <+648>: mov    x2, x20
+    0x199d96b5c <+652>: bl     0x19b2685e0               ; objc_msgSend$_animateWithParameters:animations:
+    0x199d96b60 <+656>: bl     0x1a0284850
+    0x199d96b64 <+660>: ldur   x8, [x29, #-0x38]
+    0x199d96b68 <+664>: adrp   x9, 398483
+    0x199d96b6c <+668>: ldr    x9, [x9, #0xe30]
+    0x199d96b70 <+672>: ldr    x9, [x9]
+    0x199d96b74 <+676>: cmp    x9, x8
+    0x199d96b78 <+680>: b.ne   0x199d96b94               ; <+708>
+    0x199d96b7c <+684>: sub    sp, x29, #0x30
+    0x199d96b80 <+688>: ldp    x29, x30, [sp, #0x30]
+    0x199d96b84 <+692>: ldp    x20, x19, [sp, #0x20]
+    0x199d96b88 <+696>: ldp    x22, x21, [sp, #0x10]
+    0x199d96b8c <+700>: ldp    x24, x23, [sp], #0x40
+    0x199d96b90 <+704>: retab  
+    0x199d96b94 <+708>: bl     0x1a0283820
+
+UIKitCore`-[_UISheetInteraction sendCurrentOffsetDidChange]:
+    0x199d8c5c8 <+0>:   pacibsp 
+    0x199d8c5cc <+4>:   sub    sp, sp, #0x40
+    0x199d8c5d0 <+8>:   stp    x22, x21, [sp, #0x10]
+    0x199d8c5d4 <+12>:  stp    x20, x19, [sp, #0x20]
+    0x199d8c5d8 <+16>:  stp    x29, x30, [sp, #0x30]
+    0x199d8c5dc <+20>:  add    x29, sp, #0x30
+    0x199d8c5e0 <+24>:  mov    x19, x0
+    0x199d8c5e4 <+28>:  bl     0x19b334b20               ; objc_msgSend$delegate
+    0x199d8c5e8 <+32>:  bl     0x1a0284650
+    0x199d8c5ec <+36>:  mov    x20, x0
+    0x199d8c5f0 <+40>:  adrp   x8, 484273
+    0x199d8c5f4 <+44>:  add    x1, x8, #0x4da
+    0x199d8c5f8 <+48>:  bl     0x1a02847d0
+    0x199d8c5fc <+52>:  mov    x21, x0
+    0x199d8c600 <+56>:  bl     0x1a0284850
+    0x199d8c604 <+60>:  tbz    w21, #0x0, 0x199d8c654    ; <+140>
+    0x199d8c608 <+64>:  mov    x0, x19
+    0x199d8c60c <+68>:  bl     0x19b334b20               ; objc_msgSend$delegate
+    0x199d8c610 <+72>:  bl     0x1a0284650
+    0x199d8c614 <+76>:  str    x0, [sp, #0x8]
+    0x199d8c618 <+80>:  mov    x0, x19
+    0x199d8c61c <+84>:  bl     0x19b32dcc0               ; objc_msgSend$currentOffset
+    0x199d8c620 <+88>:  ldr    x0, [sp, #0x8]
+    0x199d8c624 <+92>:  mov    x2, x19
+    0x199d8c628 <+96>:  bl     0x19b3f5300               ; objc_msgSend$sheetInteraction:didChangeOffset:
+->  0x199d8c62c <+100>: ldr    x0, [sp, #0x8]
+    0x199d8c630 <+104>: ldp    x29, x30, [sp, #0x30]
+    0x199d8c634 <+108>: ldp    x20, x19, [sp, #0x20]
+    0x199d8c638 <+112>: ldp    x22, x21, [sp, #0x10]
+    0x199d8c63c <+116>: add    sp, sp, #0x40
+    0x199d8c640 <+120>: autibsp 
+    0x199d8c644 <+124>: eor    x16, x30, x30, lsl #1
+    0x199d8c648 <+128>: tbz    x16, #0x3e, 0x199d8c650   ; <+136>
+    0x199d8c64c <+132>: brk    #0xc471
+    0x199d8c650 <+136>: b      0x1a0284800
+    0x199d8c654 <+140>: ldp    x29, x30, [sp, #0x30]
+    0x199d8c658 <+144>: ldp    x20, x19, [sp, #0x20]
+    0x199d8c65c <+148>: ldp    x22, x21, [sp, #0x10]
+    0x199d8c660 <+152>: add    sp, sp, #0x40
+    0x199d8c664 <+156>: retab  
+
+UIKitCore`-[UISheetPresentationController sheetInteraction:didChangeOffset:]:
+    0x19a89bd6c <+0>:    pacibsp 
+    0x19a89bd70 <+4>:    sub    sp, sp, #0x170
+    0x19a89bd74 <+8>:    stp    d11, d10, [sp, #0xf0]
+    0x19a89bd78 <+12>:   stp    d9, d8, [sp, #0x100]
+    0x19a89bd7c <+16>:   stp    x28, x27, [sp, #0x110]
+    0x19a89bd80 <+20>:   stp    x26, x25, [sp, #0x120]
+    0x19a89bd84 <+24>:   stp    x24, x23, [sp, #0x130]
+    0x19a89bd88 <+28>:   stp    x22, x21, [sp, #0x140]
+    0x19a89bd8c <+32>:   stp    x20, x19, [sp, #0x150]
+    0x19a89bd90 <+36>:   stp    x29, x30, [sp, #0x160]
+    0x19a89bd94 <+40>:   add    x29, sp, #0x160
+    0x19a89bd98 <+44>:   fmov   d8, d1
+    0x19a89bd9c <+48>:   fmov   d10, d0
+    0x19a89bda0 <+52>:   mov    x21, x0
+    0x19a89bda4 <+56>:   bl     0x1a02849c0
+    0x19a89bda8 <+60>:   mov    x19, x0
+    0x19a89bdac <+64>:   bl     0x19b36f120               ; objc_msgSend$isDragging
+    0x19a89bdb0 <+68>:   mov    x23, x0
+    0x19a89bdb4 <+72>:   mov    x0, x19
+    0x19a89bdb8 <+76>:   bl     0x19b35ac00               ; objc_msgSend$indexOfCurrentDetent
+    0x19a89bdbc <+80>:   mov    x25, x0
+    0x19a89bdc0 <+84>:   bl     0x1a0284830
+    0x19a89bdc4 <+88>:   mov    x0, x21
+    0x19a89bdc8 <+92>:   bl     0x19b2a82e0               ; objc_msgSend$_layoutInfo
+    0x19a89bdcc <+96>:   bl     0x1a0284650
+    0x19a89bdd0 <+100>:  mov    x19, x0
+    0x19a89bdd4 <+104>:  bl     0x19b2a2800               ; objc_msgSend$_isInverted
+    0x19a89bdd8 <+108>:  mov    x24, x0
+    0x19a89bddc <+112>:  mov    x0, x19
+    0x19a89bde0 <+116>:  bl     0x19b2630e0               ; objc_msgSend$_activeDetents
+    0x19a89bde4 <+120>:  bl     0x1a0284650
+    0x19a89bde8 <+124>:  str    x0, [sp, #0x10]
+    0x19a89bdec <+128>:  mov    x0, x19
+    0x19a89bdf0 <+132>:  bl     0x19b2e2740               ; objc_msgSend$_smallestNonDismissDetentOffset
+    0x19a89bdf4 <+136>:  fmov   d9, d0
+    0x19a89bdf8 <+140>:  mov    x0, x19
+    0x19a89bdfc <+144>:  bl     0x19b2b05c0               ; objc_msgSend$_numberOfActiveNonDismissDetents
+    0x19a89be00 <+148>:  mov    x27, x0
+    0x19a89be04 <+152>:  cmp    x25, x0
+    0x19a89be08 <+156>:  cset   w8, ne
+    0x19a89be0c <+160>:  str    w8, [sp, #0xc]
+    0x19a89be10 <+164>:  mov    x0, x19
+    0x19a89be14 <+168>:  bl     0x19b2a1100               ; objc_msgSend$_isDragging
+    0x19a89be18 <+172>:  mov    x22, x0
+    0x19a89be1c <+176>:  mov    x0, x19
+    0x19a89be20 <+180>:  mov    x2, x23
+    0x19a89be24 <+184>:  bl     0x19b2cf7c0               ; objc_msgSend$_setDragging:
+    0x19a89be28 <+188>:  cbz    w22, 0x19a89bf74          ; <+520>
+    0x19a89be2c <+192>:  tbnz   w23, #0x0, 0x19a89bf74    ; <+520>
+    0x19a89be30 <+196>:  mov    x0, x19
+    0x19a89be34 <+200>:  fmov   d0, d8
+    0x19a89be38 <+204>:  bl     0x19b2d3120               ; objc_msgSend$_setLatestUserChosenOffset:
+    0x19a89be3c <+208>:  cmp    x25, x27
+    0x19a89be40 <+212>:  b.eq   0x19a89be4c               ; <+224>
+    0x19a89be44 <+216>:  mov    x28, x25
+    0x19a89be48 <+220>:  b      0x19a89be78               ; <+268>
+    0x19a89be4c <+224>:  mov    x0, x21
+    0x19a89be50 <+228>:  bl     0x19b2a2120               ; objc_msgSend$_isHosting
+    0x19a89be54 <+232>:  cbz    w0, 0x19a89be64           ; <+248>
+    0x19a89be58 <+236>:  mov    x0, x19
+    0x19a89be5c <+240>:  bl     0x19b2a0ec0               ; objc_msgSend$_isDismissible
+    0x19a89be60 <+244>:  b      0x19a89be6c               ; <+256>
+    0x19a89be64 <+248>:  mov    x0, x21
+    0x19a89be68 <+252>:  bl     0x19b2de860               ; objc_msgSend$_shouldDismissByDragging
+    0x19a89be6c <+256>:  mov    x28, x25
+    0x19a89be70 <+260>:  tbnz   w0, #0x0, 0x19a89be78     ; <+268>
+    0x19a89be74 <+264>:  sub    x28, x25, #0x1
+    0x19a89be78 <+268>:  ldr    x0, [sp, #0x10]
+    0x19a89be7c <+272>:  mov    x2, x28
+    0x19a89be80 <+276>:  bl     0x19b389ba0               ; objc_msgSend$objectAtIndexedSubscript:
+    0x19a89be84 <+280>:  bl     0x1a0284650
+    0x19a89be88 <+284>:  mov    x26, x0
+    0x19a89be8c <+288>:  bl     0x19b298840               ; objc_msgSend$_identifier
+    0x19a89be90 <+292>:  bl     0x1a0284650
+    0x19a89be94 <+296>:  mov    x22, x0
+    0x19a89be98 <+300>:  bl     0x1a02848b0
+    0x19a89be9c <+304>:  cbz    x22, 0x19a89bf70          ; <+516>
+    0x19a89bea0 <+308>:  mov    x0, x21
+    0x19a89bea4 <+312>:  bl     0x19b2a82e0               ; objc_msgSend$_layoutInfo
+    0x19a89bea8 <+316>:  bl     0x1a0284650
+    0x19a89beac <+320>:  mov    x20, x0
+    0x19a89beb0 <+324>:  bl     0x19b265a80               ; objc_msgSend$_adjustedIndexOfCurrentActiveDetentForContainedFirstResponder
+    0x19a89beb4 <+328>:  mov    x26, x0
+    0x19a89beb8 <+332>:  bl     0x1a0284850
+    0x19a89bebc <+336>:  mov    x8, #0x7fffffffffffffff   ; =9223372036854775807 
+    0x19a89bec0 <+340>:  cmp    x26, x8
+    0x19a89bec4 <+344>:  b.eq   0x19a89befc               ; <+400>
+    0x19a89bec8 <+348>:  cmp    x26, x28
+    0x19a89becc <+352>:  b.eq   0x19a89befc               ; <+400>
+    0x19a89bed0 <+356>:  mov    x0, x21
+    0x19a89bed4 <+360>:  bl     0x19b398460               ; objc_msgSend$presentedViewController
+    0x19a89bed8 <+364>:  bl     0x1a0284650
+    0x19a89bedc <+368>:  mov    x20, x0
+    0x19a89bee0 <+372>:  bl     0x19b41f9a0               ; objc_msgSend$view
+    0x19a89bee4 <+376>:  bl     0x1a0284650
+    0x19a89bee8 <+380>:  mov    x26, x0
+    0x19a89beec <+384>:  mov    w2, #0x1                  ; =1 
+    0x19a89bef0 <+388>:  bl     0x19b343800               ; objc_msgSend$endEditing:
+    0x19a89bef4 <+392>:  bl     0x1a02848b0
+    0x19a89bef8 <+396>:  bl     0x1a0284850
+    0x19a89befc <+400>:  mov    x0, x19
+    0x19a89bf00 <+404>:  bl     0x19b2c9240               ; objc_msgSend$_selectedDetentIdentifier
+    0x19a89bf04 <+408>:  bl     0x1a0284650
+    0x19a89bf08 <+412>:  mov    x20, x0
+    0x19a89bf0c <+416>:  mov    x0, x19
+    0x19a89bf10 <+420>:  mov    x2, x22
+    0x19a89bf14 <+424>:  bl     0x19b2d73a0               ; objc_msgSend$_setSelectedDetentIdentifier:
+    0x19a89bf18 <+428>:  bl     0x1a02849d0
+    0x19a89bf1c <+432>:  mov    x28, x0
+    0x19a89bf20 <+436>:  bl     0x1a02849f0
+    0x19a89bf24 <+440>:  mov    x26, x0
+    0x19a89bf28 <+444>:  cmp    x28, x0
+    0x19a89bf2c <+448>:  b.eq   0x19a89bf54               ; <+488>
+    0x19a89bf30 <+452>:  cbz    x28, 0x19a89bf60          ; <+500>
+    0x19a89bf34 <+456>:  mov    x0, x28
+    0x19a89bf38 <+460>:  mov    x2, x26
+    0x19a89bf3c <+464>:  bl     0x19b36f5c0               ; objc_msgSend$isEqual:
+    0x19a89bf40 <+468>:  mov    x20, x0
+    0x19a89bf44 <+472>:  bl     0x1a02848b0
+    0x19a89bf48 <+476>:  bl     0x1a02848d0
+    0x19a89bf4c <+480>:  tbz    w20, #0x0, 0x19a89bf64    ; <+504>
+    0x19a89bf50 <+484>:  b      0x19a89bf6c               ; <+512>
+    0x19a89bf54 <+488>:  bl     0x1a02848b0
+    0x19a89bf58 <+492>:  bl     0x1a02848d0
+    0x19a89bf5c <+496>:  b      0x19a89bf6c               ; <+512>
+    0x19a89bf60 <+500>:  bl     0x1a02848b0
+    0x19a89bf64 <+504>:  mov    x0, x21
+    0x19a89bf68 <+508>:  bl     0x19b2c9f40               ; objc_msgSend$_sendDidChangeSelectedDetentIdentifier
+    0x19a89bf6c <+512>:  bl     0x1a02848d0
+    0x19a89bf70 <+516>:  bl     0x1a0284870
+    0x19a89bf74 <+520>:  fcmp   d8, d9
+    0x19a89bf78 <+524>:  cset   w8, mi
+    0x19a89bf7c <+528>:  cset   w9, gt
+    0x19a89bf80 <+532>:  cmp    w24, #0x0
+    0x19a89bf84 <+536>:  csel   w26, w8, w9, ne
+    0x19a89bf88 <+540>:  cbz    w23, 0x19a89bf98          ; <+556>
+    0x19a89bf8c <+544>:  mov    x0, x21
+    0x19a89bf90 <+548>:  bl     0x19b284fc0               ; objc_msgSend$_didTearOff
+    0x19a89bf94 <+552>:  tbz    w0, #0x0, 0x19a89bfa0     ; <+564>
+    0x19a89bf98 <+556>:  mov    w20, #0x0                 ; =0 
+    0x19a89bf9c <+560>:  b      0x19a89bfe0               ; <+628>
+    0x19a89bfa0 <+564>:  mov    x0, x21
+    0x19a89bfa4 <+568>:  bl     0x19b2dc9a0               ; objc_msgSend$_sheetInteraction
+    0x19a89bfa8 <+572>:  bl     0x1a0284650
+    0x19a89bfac <+576>:  mov    x22, x0
+    0x19a89bfb0 <+580>:  mov    x2, x24
+    0x19a89bfb4 <+584>:  bl     0x19b374b20               ; objc_msgSend$isUnconstrainedOffsetBeyondSideOrTopExtentInverted:
+    0x19a89bfb8 <+588>:  cbz    w0, 0x19a89bfd8           ; <+620>
+    0x19a89bfbc <+592>:  mov    x0, x21
+    0x19a89bfc0 <+596>:  bl     0x19b2e95c0               ; objc_msgSend$_tearOffActivity
+    0x19a89bfc4 <+600>:  bl     0x1a0284650
+    0x19a89bfc8 <+604>:  cmp    x0, #0x0
+    0x19a89bfcc <+608>:  cset   w20, ne
+    0x19a89bfd0 <+612>:  bl     0x1a0284800
+    0x19a89bfd4 <+616>:  b      0x19a89bfdc               ; <+624>
+    0x19a89bfd8 <+620>:  mov    w20, #0x0                 ; =0 
+    0x19a89bfdc <+624>:  bl     0x1a0284870
+    0x19a89bfe0 <+628>:  add    x8, sp, #0xa0
+    0x19a89bfe4 <+632>:  adrp   x16, 395662
+    0x19a89bfe8 <+636>:  ldr    x16, [x16, #0xe00]
+    0x19a89bfec <+640>:  mov    x17, x8
+    0x19a89bff0 <+644>:  movk   x17, #0x6ae1, lsl #48
+    0x19a89bff4 <+648>:  pacda  x16, x17
+    0x19a89bff8 <+652>:  str    x16, [sp, #0xa0]
+    0x19a89bffc <+656>:  adrp   x9, 1101
+    0x19a89c000 <+660>:  ldr    d11, [x9, #0xb78]
+    0x19a89c004 <+664>:  str    d11, [sp, #0xa8]
+    0x19a89c008 <+668>:  add    x8, x8, #0x10
+    0x19a89c00c <+672>:  adrp   x16, 0
+    0x19a89c010 <+676>:  add    x16, x16, #0x42c          ; __66-[UISheetPresentationController sheetInteraction:didChangeOffset:]_block_invoke
+    0x19a89c014 <+680>:  pacia  x16, x8
+    0x19a89c018 <+684>:  adrp   x8, 396574
+    0x19a89c01c <+688>:  add    x8, x8, #0x7c8            ; __block_descriptor_65_e8_32s_e5_d8?0ls32l8 + 8
+    0x19a89c020 <+692>:  stp    x16, x8, [sp, #0xb0]
+    0x19a89c024 <+696>:  str    x21, [sp, #0xc0]
+    0x19a89c028 <+700>:  strb   w24, [sp, #0xe0]
+    0x19a89c02c <+704>:  stp    d10, d8, [sp, #0xc8]
+    0x19a89c030 <+708>:  str    d9, [sp, #0xd8]
+    0x19a89c034 <+712>:  add    x0, sp, #0xa0
+    0x19a89c038 <+716>:  bl     0x1a0284960
+    0x19a89c03c <+720>:  mov    x22, x0
+    0x19a89c040 <+724>:  cbz    w20, 0x19a89c10c          ; <+928>
+    0x19a89c044 <+728>:  mov    x0, x21
+    0x19a89c048 <+732>:  bl     0x19b327ac0               ; objc_msgSend$containerView
+    0x19a89c04c <+736>:  bl     0x1a0284650
+    0x19a89c050 <+740>:  mov    x20, x0
+    0x19a89c054 <+744>:  bl     0x19b424720               ; objc_msgSend$window
+    0x19a89c058 <+748>:  bl     0x1a0284650
+    0x19a89c05c <+752>:  mov    x23, x0
+    0x19a89c060 <+756>:  bl     0x1a0284850
+    0x19a89c064 <+760>:  adrp   x8, 422197
+    0x19a89c068 <+764>:  add    x8, x8, #0xa90            ; UIApp
+    0x19a89c06c <+768>:  ldr    x0, [x8]
+    0x19a89c070 <+772>:  mov    x2, x23
+    0x19a89c074 <+776>:  bl     0x19b2ec160               ; objc_msgSend$_touchesEventForWindow:
+    0x19a89c078 <+780>:  mov    x29, x29
+    0x19a89c07c <+784>:  bl     0x1a0284b80
+    0x19a89c080 <+788>:  mov    x2, x23
+    0x19a89c084 <+792>:  bl     0x19b410080               ; objc_msgSend$touchesForWindow:
+    0x19a89c088 <+796>:  bl     0x1a0284650
+    0x19a89c08c <+800>:  mov    x20, x0
+    0x19a89c090 <+804>:  bl     0x19b30d840               ; objc_msgSend$anyObject
+    0x19a89c094 <+808>:  bl     0x1a0284650
+    0x19a89c098 <+812>:  mov    x24, x0
+    0x19a89c09c <+816>:  bl     0x1a0284850
+    0x19a89c0a0 <+820>:  mov    x0, x21
+    0x19a89c0a4 <+824>:  bl     0x19b2e95e0               ; objc_msgSend$_tearOffInteraction
+    0x19a89c0a8 <+828>:  bl     0x1a0284650
+    0x19a89c0ac <+832>:  mov    x20, x0
+    0x19a89c0b0 <+836>:  add    x8, sp, #0x78
+    0x19a89c0b4 <+840>:  adrp   x16, 395661
+    0x19a89c0b8 <+844>:  ldr    x16, [x16, #0xe00]
+    0x19a89c0bc <+848>:  mov    x17, x8
+    0x19a89c0c0 <+852>:  movk   x17, #0x6ae1, lsl #48
+    0x19a89c0c4 <+856>:  pacda  x16, x17
+    0x19a89c0c8 <+860>:  str    x16, [sp, #0x78]
+    0x19a89c0cc <+864>:  str    d11, [sp, #0x80]
+    0x19a89c0d0 <+868>:  add    x8, x8, #0x10
+    0x19a89c0d4 <+872>:  adrp   x16, 0
+    0x19a89c0d8 <+876>:  add    x16, x16, #0x4c0          ; __66-[UISheetPresentationController sheetInteraction:didChangeOffset:]_block_invoke_2
+    0x19a89c0dc <+880>:  pacia  x16, x8
+    0x19a89c0e0 <+884>:  adrp   x8, 396528
+    0x19a89c0e4 <+888>:  add    x8, x8, #0x578            ; __block_descriptor_40_e8_32s_e8_v12?0B8ls32l8 + 8
+    0x19a89c0e8 <+892>:  stp    x16, x8, [sp, #0x88]
+    0x19a89c0ec <+896>:  str    x21, [sp, #0x98]
+    0x19a89c0f0 <+900>:  add    x3, sp, #0x78
+    0x19a89c0f4 <+904>:  mov    x2, x24
+    0x19a89c0f8 <+908>:  bl     0x19b299600               ; objc_msgSend$_immediatelyBeginDragWithTouch:completion:
+    0x19a89c0fc <+912>:  bl     0x1a0284850
+    0x19a89c100 <+916>:  bl     0x1a0284890
+    0x19a89c104 <+920>:  bl     0x1a0284880
+    0x19a89c108 <+924>:  b      0x19a89c298               ; <+1324>
+    0x19a89c10c <+928>:  and    w28, w23, w26
+    0x19a89c110 <+932>:  mov    x0, x21
+    0x19a89c114 <+936>:  bl     0x19b284fc0               ; objc_msgSend$_didTearOff
+    0x19a89c118 <+940>:  mov    x20, x0
+    0x19a89c11c <+944>:  mov    x0, x21
+    0x19a89c120 <+948>:  bl     0x19b2a1120               ; objc_msgSend$_isDraggingAndTransitioning
+    0x19a89c124 <+952>:  cbz    w20, 0x19a89c150          ; <+996>
+    0x19a89c128 <+956>:  orn    w8, w28, w0
+    0x19a89c12c <+960>:  tbnz   w8, #0x0, 0x19a89c298     ; <+1324>
+    0x19a89c130 <+964>:  bl     0x199fa9e0c               ; _UISheetTransitionDuration
+    0x19a89c134 <+968>:  fmov   d8, d0
+    0x19a89c138 <+972>:  bl     0x199fa9ea0               ; _UISheetTransitionTimingCurve
+    0x19a89c13c <+976>:  bl     0x1a0284650
+    0x19a89c140 <+980>:  mov    x20, x0
+    0x19a89c144 <+984>:  mov    x0, x21
+    0x19a89c148 <+988>:  mov    w2, #0x0                  ; =0 
+    0x19a89c14c <+992>:  b      0x19a89c288               ; <+1308>
+    0x19a89c150 <+996>:  orn    w8, w0, w28
+    0x19a89c154 <+1000>: tbnz   w8, #0x0, 0x19a89c164     ; <+1016>
+    0x19a89c158 <+1004>: mov    x0, x21
+    0x19a89c15c <+1008>: bl     0x19b283f60               ; objc_msgSend$_didAttemptToStartDismiss
+    0x19a89c160 <+1012>: tbz    w0, #0x0, 0x19a89c200     ; <+1172>
+    0x19a89c164 <+1016>: mov    x0, x21
+    0x19a89c168 <+1020>: bl     0x19b2a1120               ; objc_msgSend$_isDraggingAndTransitioning
+    0x19a89c16c <+1024>: and    w8, w0, w28
+    0x19a89c170 <+1028>: cmp    w8, #0x1
+    0x19a89c174 <+1032>: b.ne   0x19a89c194               ; <+1064>
+    0x19a89c178 <+1036>: mov    x8, x22
+    0x19a89c17c <+1040>: ldr    x9, [x8, #0x10]!
+    0x19a89c180 <+1044>: mov    x0, x22
+    0x19a89c184 <+1048>: blraa  x9, x8
+    0x19a89c188 <+1052>: mov    x0, x21
+    0x19a89c18c <+1056>: bl     0x19b2f56c0               ; objc_msgSend$_updateInteractiveTransitionWithProgress:
+    0x19a89c190 <+1060>: b      0x19a89c298               ; <+1324>
+    0x19a89c194 <+1064>: mov    x0, x21
+    0x19a89c198 <+1068>: bl     0x19b2a1120               ; objc_msgSend$_isDraggingAndTransitioning
+    0x19a89c19c <+1072>: orn    w8, w28, w0
+    0x19a89c1a0 <+1076>: tbz    w8, #0x0, 0x19a89c248     ; <+1244>
+    0x19a89c1a4 <+1080>: mov    x0, x21
+    0x19a89c1a8 <+1084>: bl     0x19b2a1120               ; objc_msgSend$_isDraggingAndTransitioning
+    0x19a89c1ac <+1088>: tbnz   w0, #0x0, 0x19a89c298     ; <+1324>
+    0x19a89c1b0 <+1092>: orn    w8, w26, w23
+    0x19a89c1b4 <+1096>: tbnz   w8, #0x0, 0x19a89c1c4     ; <+1112>
+    0x19a89c1b8 <+1100>: mov    x0, x21
+    0x19a89c1bc <+1104>: mov    w2, #0x0                  ; =0 
+    0x19a89c1c0 <+1108>: bl     0x19b2cf060               ; objc_msgSend$_setDidAttemptToStartDismiss:
+    0x19a89c1c4 <+1112>: tbnz   w23, #0x0, 0x19a89c37c    ; <+1552>
+    0x19a89c1c8 <+1116>: mov    x0, x21
+    0x19a89c1cc <+1120>: bl     0x19b283f60               ; objc_msgSend$_didAttemptToStartDismiss
+    0x19a89c1d0 <+1124>: cbz    w0, 0x19a89c37c           ; <+1552>
+    0x19a89c1d4 <+1128>: mov    x0, x21
+    0x19a89c1d8 <+1132>: mov    w2, #0x0                  ; =0 
+    0x19a89c1dc <+1136>: bl     0x19b2cf060               ; objc_msgSend$_setDidAttemptToStartDismiss:
+    0x19a89c1e0 <+1140>: fsub   d0, d9, d8
+    0x19a89c1e4 <+1144>: fsub   d1, d8, d9
+    0x19a89c1e8 <+1148>: cmp    w24, #0x0
+    0x19a89c1ec <+1152>: fcsel  d8, d0, d1, ne
+    0x19a89c1f0 <+1156>: mov    x0, x19
+    0x19a89c1f4 <+1160>: cbz    w24, 0x19a89c2f4          ; <+1416>
+    0x19a89c1f8 <+1164>: bl     0x19b2c5b80               ; objc_msgSend$_rubberBandExtentBeyondMinimumOffset
+    0x19a89c1fc <+1168>: b      0x19a89c2f8               ; <+1420>
+    0x19a89c200 <+1172>: mov    x0, x21
+    0x19a89c204 <+1176>: bl     0x19b2a2120               ; objc_msgSend$_isHosting
+    0x19a89c208 <+1180>: tbnz   w0, #0x0, 0x19a89c220     ; <+1204>
+    0x19a89c20c <+1184>: mov    x0, x21
+    0x19a89c210 <+1188>: bl     0x19b2de860               ; objc_msgSend$_shouldDismissByDragging
+    0x19a89c214 <+1192>: mov    x2, x0
+    0x19a89c218 <+1196>: mov    x0, x19
+    0x19a89c21c <+1200>: bl     0x19b2cf460               ; objc_msgSend$_setDismissible:
+    0x19a89c220 <+1204>: mov    x0, x19
+    0x19a89c224 <+1208>: bl     0x19b2a0ec0               ; objc_msgSend$_isDismissible
+    0x19a89c228 <+1212>: cbz    w0, 0x19a89c2d0           ; <+1380>
+    0x19a89c22c <+1216>: mov    x8, x22
+    0x19a89c230 <+1220>: ldr    x9, [x8, #0x10]!
+    0x19a89c234 <+1224>: mov    x0, x22
+    0x19a89c238 <+1228>: blraa  x9, x8
+    0x19a89c23c <+1232>: mov    x0, x21
+    0x19a89c240 <+1236>: bl     0x19b2e3d40               ; objc_msgSend$_startInteractiveTransitionWithProgress:
+->  0x19a89c244 <+1240>: b      0x19a89c298               ; <+1324>
+    0x19a89c248 <+1244>: mov    x0, x21
+    0x19a89c24c <+1248>: bl     0x19b398320               ; objc_msgSend$presented
+    0x19a89c250 <+1252>: ldr    w23, [sp, #0xc]
+    0x19a89c254 <+1256>: tbnz   w0, #0x0, 0x19a89c264     ; <+1272>
+    0x19a89c258 <+1260>: mov    x0, x21
+    0x19a89c25c <+1264>: bl     0x19b33be00               ; objc_msgSend$dismissing
+    0x19a89c260 <+1268>: cbz    w0, 0x19a89c26c           ; <+1280>
+    0x19a89c264 <+1272>: cmp    x25, x27
+    0x19a89c268 <+1276>: cset   w23, eq
+    0x19a89c26c <+1280>: bl     0x199fa9e0c               ; _UISheetTransitionDuration
+    0x19a89c270 <+1284>: fmov   d8, d0
+    0x19a89c274 <+1288>: bl     0x199fa9ea0               ; _UISheetTransitionTimingCurve
+    0x19a89c278 <+1292>: bl     0x1a0284650
+    0x19a89c27c <+1296>: mov    x20, x0
+    0x19a89c280 <+1300>: mov    x0, x21
+    0x19a89c284 <+1304>: mov    x2, x23
+    0x19a89c288 <+1308>: fmov   d0, d8
+    0x19a89c28c <+1312>: mov    x3, x20
+    0x19a89c290 <+1316>: bl     0x19b2771a0               ; objc_msgSend$_completeInteractiveTransition:duration:timingCurve:
+    0x19a89c294 <+1320>: bl     0x1a0284850
+    0x19a89c298 <+1324>: bl     0x1a0284870
+    0x19a89c29c <+1328>: ldr    x8, [sp, #0x10]
+    0x19a89c2a0 <+1332>: bl     0x1a0284900
+    0x19a89c2a4 <+1336>: bl     0x1a0284830
+    0x19a89c2a8 <+1340>: ldp    x29, x30, [sp, #0x160]
+    0x19a89c2ac <+1344>: ldp    x20, x19, [sp, #0x150]
+    0x19a89c2b0 <+1348>: ldp    x22, x21, [sp, #0x140]
+    0x19a89c2b4 <+1352>: ldp    x24, x23, [sp, #0x130]
+    0x19a89c2b8 <+1356>: ldp    x26, x25, [sp, #0x120]
+    0x19a89c2bc <+1360>: ldp    x28, x27, [sp, #0x110]
+    0x19a89c2c0 <+1364>: ldp    d9, d8, [sp, #0x100]
+    0x19a89c2c4 <+1368>: ldp    d11, d10, [sp, #0xf0]
+    0x19a89c2c8 <+1372>: add    sp, sp, #0x170
+    0x19a89c2cc <+1376>: retab  
+    0x19a89c2d0 <+1380>: mov    x0, x21
+    0x19a89c2d4 <+1384>: mov    w2, #0x1                  ; =1 
+    0x19a89c2d8 <+1388>: bl     0x19b2cf060               ; objc_msgSend$_setDidAttemptToStartDismiss:
+    0x19a89c2dc <+1392>: mov    x0, x21
+    0x19a89c2e0 <+1396>: bl     0x19b327ac0               ; objc_msgSend$containerView
+    0x19a89c2e4 <+1400>: bl     0x1a0284650
+    0x19a89c2e8 <+1404>: mov    x20, x0
+    0x19a89c2ec <+1408>: bl     0x19b3d6460               ; objc_msgSend$setNeedsLayout
+    0x19a89c2f0 <+1412>: b      0x19a89c294               ; <+1320>
+    0x19a89c2f4 <+1416>: bl     0x19b2c5b40               ; objc_msgSend$_rubberBandExtentBeyondMaximumOffset
+    0x19a89c2f8 <+1420>: fmov   d1, #0.25000000
+    0x19a89c2fc <+1424>: fmul   d0, d0, d1
+    0x19a89c300 <+1428>: fcmp   d8, d0
+    0x19a89c304 <+1432>: b.le   0x19a89c37c               ; <+1552>
+    0x19a89c308 <+1436>: add    x0, sp, #0x70
+    0x19a89c30c <+1440>: mov    x1, x21
+    0x19a89c310 <+1444>: bl     0x1a0284730
+    0x19a89c314 <+1448>: add    x20, sp, #0x48
+    0x19a89c318 <+1452>: adrp   x16, 395661
+    0x19a89c31c <+1456>: ldr    x16, [x16, #0xe00]
+    0x19a89c320 <+1460>: mov    x17, x20
+    0x19a89c324 <+1464>: movk   x17, #0x6ae1, lsl #48
+    0x19a89c328 <+1468>: pacda  x16, x17
+    0x19a89c32c <+1472>: str    x16, [sp, #0x48]
+    0x19a89c330 <+1476>: str    d11, [sp, #0x50]
+    0x19a89c334 <+1480>: add    x8, x20, #0x10
+    0x19a89c338 <+1484>: adrp   x16, 0
+    0x19a89c33c <+1488>: add    x16, x16, #0x570          ; __66-[UISheetPresentationController sheetInteraction:didChangeOffset:]_block_invoke_3
+    0x19a89c340 <+1492>: pacia  x16, x8
+    0x19a89c344 <+1496>: adrp   x8, 396528
+    0x19a89c348 <+1500>: add    x8, x8, #0x4e0            ; __block_descriptor_40_e8_32w_e5_v8?0lw32l8 + 8
+    0x19a89c34c <+1504>: stp    x16, x8, [sp, #0x58]
+    0x19a89c350 <+1508>: add    x0, x20, #0x20
+    0x19a89c354 <+1512>: add    x1, sp, #0x70
+    0x19a89c358 <+1516>: bl     0x1a0284670
+    0x19a89c35c <+1520>: adrp   x0, 395661
+    0x19a89c360 <+1524>: ldr    x0, [x0, #0xc88]
+    0x19a89c364 <+1528>: add    x1, sp, #0x48
+    0x19a89c368 <+1532>: bl     0x19ab5a4dc               ; symbol stub for: dispatch_async
+    0x19a89c36c <+1536>: add    x0, x20, #0x20
+    0x19a89c370 <+1540>: bl     0x1a0284680
+    0x19a89c374 <+1544>: add    x0, sp, #0x70
+    0x19a89c378 <+1548>: bl     0x1a0284680
+    0x19a89c37c <+1552>: add    x8, sp, #0x18
+    0x19a89c380 <+1556>: adrp   x16, 395661
+    0x19a89c384 <+1560>: ldr    x16, [x16, #0xe00]
+    0x19a89c388 <+1564>: mov    x17, x8
+    0x19a89c38c <+1568>: movk   x17, #0x6ae1, lsl #48
+    0x19a89c390 <+1572>: pacda  x16, x17
+    0x19a89c394 <+1576>: str    x16, [sp, #0x18]
+    0x19a89c398 <+1580>: str    d11, [sp, #0x20]
+    0x19a89c39c <+1584>: add    x24, x8, #0x10
+    0x19a89c3a0 <+1588>: adrp   x16, 0
+    0x19a89c3a4 <+1592>: add    x16, x16, #0x5b0          ; __66-[UISheetPresentationController sheetInteraction:didChangeOffset:]_block_invoke_4
+    0x19a89c3a8 <+1596>: pacia  x16, x24
+    0x19a89c3ac <+1600>: adrp   x8, 396526
+    0x19a89c3b0 <+1604>: add    x8, x8, #0x168            ; __block_descriptor_48_e8_32s40s_e5_v8?0ls32l8s40l8 + 8
+    0x19a89c3b4 <+1608>: stp    x16, x8, [sp, #0x28]
+    0x19a89c3b8 <+1612>: bl     0x1a02849b0
+    0x19a89c3bc <+1616>: mov    x23, x0
+    0x19a89c3c0 <+1620>: stp    x0, x21, [sp, #0x38]
+    0x19a89c3c4 <+1624>: mov    x0, x21
+    0x19a89c3c8 <+1628>: bl     0x19b2847e0               ; objc_msgSend$_didExpand
+    0x19a89c3cc <+1632>: mov    x20, x0
+    0x19a89c3d0 <+1636>: mov    x0, x23
+    0x19a89c3d4 <+1640>: bl     0x19b2a16a0               ; objc_msgSend$_isExpanded
+    0x19a89c3d8 <+1644>: cmp    w20, w0
+    0x19a89c3dc <+1648>: b.eq   0x19a89c404               ; <+1688>
+    0x19a89c3e0 <+1652>: mov    x0, x23
+    0x19a89c3e4 <+1656>: bl     0x19b2a16a0               ; objc_msgSend$_isExpanded
+    0x19a89c3e8 <+1660>: mov    x2, x0
+    0x19a89c3ec <+1664>: mov    x0, x21
+    0x19a89c3f0 <+1668>: bl     0x19b2cf0c0               ; objc_msgSend$_setDidExpand:
+    0x19a89c3f4 <+1672>: adrp   x8, 396519
+    0x19a89c3f8 <+1676>: ldr    x0, [x8, #0xc0]
+    0x19a89c3fc <+1680>: bl     0x19b2a22a0               ; objc_msgSend$_isInAnimationBlockWithAnimationsEnabled
+    0x19a89c400 <+1684>: tbz    w0, #0x0, 0x19a89c414     ; <+1704>
+    0x19a89c404 <+1688>: ldr    x8, [sp, #0x28]
+    0x19a89c408 <+1692>: add    x0, sp, #0x18
+    0x19a89c40c <+1696>: blraa  x8, x24
+    0x19a89c410 <+1700>: b      0x19a89c420               ; <+1716>
+    0x19a89c414 <+1704>: add    x0, sp, #0x18
+    0x19a89c418 <+1708>: mov    x1, #0x0                  ; =0 
+    0x19a89c41c <+1712>: bl     0x199fa9f78               ; _UISheetAnimateWithCompletion
+    0x19a89c420 <+1716>: ldr    x8, [sp, #0x38]
+    0x19a89c424 <+1720>: bl     0x1a0284900
+    0x19a89c428 <+1724>: b      0x19a89c298               ; <+1324>
+
+UIKitCore`-[UISheetPresentationController _startInteractiveTransitionWithProgress:fromViewController:completion:]:
+    0x19a89b640 <+0>:   pacibsp 
+    0x19a89b644 <+4>:   sub    sp, sp, #0x80
+    0x19a89b648 <+8>:   stp    d9, d8, [sp, #0x40]
+    0x19a89b64c <+12>:  stp    x22, x21, [sp, #0x50]
+    0x19a89b650 <+16>:  stp    x20, x19, [sp, #0x60]
+    0x19a89b654 <+20>:  stp    x29, x30, [sp, #0x70]
+    0x19a89b658 <+24>:  add    x29, sp, #0x70
+    0x19a89b65c <+28>:  mov    x21, x3
+    0x19a89b660 <+32>:  fmov   d8, d0
+    0x19a89b664 <+36>:  mov    x20, x0
+    0x19a89b668 <+40>:  bl     0x1a02849c0
+    0x19a89b66c <+44>:  mov    x19, x0
+    0x19a89b670 <+48>:  bl     0x1a02849e0
+    0x19a89b674 <+52>:  mov    x21, x0
+    0x19a89b678 <+56>:  mov    x0, x20
+    0x19a89b67c <+60>:  mov    w2, #0x1                  ; =1 
+    0x19a89b680 <+64>:  bl     0x19b2cf7e0               ; objc_msgSend$_setDraggingAndTransitioning:
+    0x19a89b684 <+68>:  mov    x0, x20
+    0x19a89b688 <+72>:  bl     0x19b2a2120               ; objc_msgSend$_isHosting
+    0x19a89b68c <+76>:  tbnz   w0, #0x0, 0x19a89b6a8     ; <+104>
+    0x19a89b690 <+80>:  mov    x0, x20
+    0x19a89b694 <+84>:  bl     0x19b327ac0               ; objc_msgSend$containerView
+    0x19a89b698 <+88>:  bl     0x1a0284650
+    0x19a89b69c <+92>:  mov    x22, x0
+    0x19a89b6a0 <+96>:  bl     0x19b37af80               ; objc_msgSend$layoutIfNeeded
+    0x19a89b6a4 <+100>: bl     0x1a0284870
+    0x19a89b6a8 <+104>: mov    x0, x20
+    0x19a89b6ac <+108>: bl     0x19b2a3940               ; objc_msgSend$_isPresentedRemotely
+    0x19a89b6b0 <+112>: cbz    w0, 0x19a89b6c4           ; <+132>
+    0x19a89b6b4 <+116>: mov    x0, x20
+    0x19a89b6b8 <+120>: mov    w2, #0x1                  ; =1 
+    0x19a89b6bc <+124>: bl     0x19b2d67c0               ; objc_msgSend$_setRemoteDismissing:
+    0x19a89b6c0 <+128>: b      0x19a89b774               ; <+308>
+    0x19a89b6c4 <+132>: mov    x0, x20
+    0x19a89b6c8 <+136>: bl     0x19b29d700               ; objc_msgSend$_interactionController
+    0x19a89b6cc <+140>: bl     0x1a0284650
+    0x19a89b6d0 <+144>: mov    x22, x0
+    0x19a89b6d4 <+148>: bl     0x1a0284870
+    0x19a89b6d8 <+152>: cbz    x22, 0x19a89b6f8          ; <+184>
+    0x19a89b6dc <+156>: mov    x0, x20
+    0x19a89b6e0 <+160>: bl     0x19b29d700               ; objc_msgSend$_interactionController
+    0x19a89b6e4 <+164>: bl     0x1a0284650
+    0x19a89b6e8 <+168>: mov    x22, x0
+    0x19a89b6ec <+172>: bl     0x19b38ed80               ; objc_msgSend$pauseInteractiveTransition
+    0x19a89b6f0 <+176>: bl     0x1a0284870
+    0x19a89b6f4 <+180>: b      0x19a89b774               ; <+308>
+    0x19a89b6f8 <+184>: adrp   x8, 396520
+    0x19a89b6fc <+188>: ldr    x22, [x8, #0xe0]
+    0x19a89b700 <+192>: add    x8, sp, #0x8
+    0x19a89b704 <+196>: adrp   x16, 395662
+    0x19a89b708 <+200>: ldr    x16, [x16, #0xe00]
+    0x19a89b70c <+204>: mov    x17, x8
+    0x19a89b710 <+208>: movk   x17, #0x6ae1, lsl #48
+    0x19a89b714 <+212>: pacda  x16, x17
+    0x19a89b718 <+216>: str    x16, [sp, #0x8]
+    0x19a89b71c <+220>: adrp   x9, 1101
+    0x19a89b720 <+224>: ldr    d0, [x9, #0xb78]
+    0x19a89b724 <+228>: str    d0, [sp, #0x10]
+    0x19a89b728 <+232>: add    x8, x8, #0x10
+    0x19a89b72c <+236>: adrp   x16, 0
+    0x19a89b730 <+240>: add    x16, x16, #0x7a0          ; __103-[UISheetPresentationController _startInteractiveTransitionWithProgress:fromViewController:completion:]_block_invoke
+    0x19a89b734 <+244>: pacia  x16, x8
+    0x19a89b738 <+248>: adrp   x8, 396536
+    0x19a89b73c <+252>: add    x8, x8, #0x738            ; __block_descriptor_56_e8_32s40s48bs_e5_v8?0ls32l8s40l8s48l8 + 8
+    0x19a89b740 <+256>: stp    x16, x8, [sp, #0x18]
+    0x19a89b744 <+260>: bl     0x1a02849b0
+    0x19a89b748 <+264>: stp    x0, x20, [sp, #0x28]
+    0x19a89b74c <+268>: bl     0x1a02849e0
+    0x19a89b750 <+272>: str    x0, [sp, #0x38]
+    0x19a89b754 <+276>: add    x2, sp, #0x8
+    0x19a89b758 <+280>: mov    x0, x22
+    0x19a89b75c <+284>: mov    w1, #0x1                  ; =1 
+    0x19a89b760 <+288>: bl     0x1996f82fc               ; +[UIViewController _performWithoutDeferringTransitionsAllowingAnimation:actions:]
+->  0x19a89b764 <+292>: ldr    x8, [sp, #0x38]
+    0x19a89b768 <+296>: bl     0x1a0284900
+    0x19a89b76c <+300>: ldr    x8, [sp, #0x28]
+    0x19a89b770 <+304>: bl     0x1a0284900
+    0x19a89b774 <+308>: mov    x0, x20
+    0x19a89b778 <+312>: fmov   d0, d8
+    0x19a89b77c <+316>: bl     0x19b2f56c0               ; objc_msgSend$_updateInteractiveTransitionWithProgress:
+    0x19a89b780 <+320>: bl     0x1a0284860
+    0x19a89b784 <+324>: bl     0x1a0284830
+    0x19a89b788 <+328>: ldp    x29, x30, [sp, #0x70]
+    0x19a89b78c <+332>: ldp    x20, x19, [sp, #0x60]
+    0x19a89b790 <+336>: ldp    x22, x21, [sp, #0x50]
+    0x19a89b794 <+340>: ldp    d9, d8, [sp, #0x40]
+    0x19a89b798 <+344>: add    sp, sp, #0x80
+    0x19a89b79c <+348>: retab  
+
+UIKitCore`+[UIViewController _performWithoutDeferringTransitionsAllowingAnimation:actions:]:
+    0x1996f82fc <+0>:   pacibsp 
+    0x1996f8300 <+4>:   sub    sp, sp, #0x50
+    0x1996f8304 <+8>:   stp    x24, x23, [sp, #0x10]
+    0x1996f8308 <+12>:  stp    x22, x21, [sp, #0x20]
+    0x1996f830c <+16>:  stp    x20, x19, [sp, #0x30]
+    0x1996f8310 <+20>:  stp    x29, x30, [sp, #0x40]
+    0x1996f8314 <+24>:  add    x29, sp, #0x40
+    0x1996f8318 <+28>:  mov    x19, x1
+    0x1996f831c <+32>:  mov    x20, x0
+    0x1996f8320 <+36>:  bl     0x1a02849c0
+    0x1996f8324 <+40>:  str    x0, [sp, #0x8]
+    0x1996f8328 <+44>:  mov    x0, x20
+    0x1996f832c <+48>:  bl     0x1a02847e0
+    0x1996f8330 <+52>:  mov    x0, #0x2                  ; =2 
+    0x1996f8334 <+56>:  movk   x0, #0x8, lsl #48
+    0x1996f8338 <+60>:  bl     0x1a0283fc0
+    0x1996f833c <+64>:  cbz    w0, 0x1996f83a4           ; <+168>
+    0x1996f8340 <+68>:  adrp   x21, 401035
+    0x1996f8344 <+72>:  ldr    x0, [x21, #0xe0]
+    0x1996f8348 <+76>:  bl     0x19b2de600               ; objc_msgSend$_shouldDeferTransitions
+    0x1996f834c <+80>:  mov    x20, x0
+    0x1996f8350 <+84>:  ldr    x0, [x21, #0xe0]
+    0x1996f8354 <+88>:  bl     0x1a02847e0
+    0x1996f8358 <+92>:  adrp   x22, 426702
+    0x1996f835c <+96>:  ldrb   w23, [x22, #0xd18]
+    0x1996f8360 <+100>: ldr    x0, [x21, #0xe0]
+    0x1996f8364 <+104>: mov    w2, #0x0                  ; =0 
+    0x1996f8368 <+108>: bl     0x19b2d7ca0               ; objc_msgSend$_setShouldDeferTransitions:
+    0x1996f836c <+112>: ldr    x0, [x21, #0xe0]
+    0x1996f8370 <+116>: bl     0x1a02847e0
+    0x1996f8374 <+120>: strb   w19, [x22, #0xd18]
+    0x1996f8378 <+124>: ldr    x0, [sp, #0x8]
+    0x1996f837c <+128>: mov    x8, x0
+    0x1996f8380 <+132>: ldr    x9, [x8, #0x10]!
+    0x1996f8384 <+136>: blraa  x9, x8
+->  0x1996f8388 <+140>: ldr    x0, [x21, #0xe0]
+    0x1996f838c <+144>: bl     0x1a02847e0
+    0x1996f8390 <+148>: strb   w23, [x22, #0xd18]
+    0x1996f8394 <+152>: ldr    x0, [x21, #0xe0]
+    0x1996f8398 <+156>: mov    x2, x20
+    0x1996f839c <+160>: bl     0x19b2d7ca0               ; objc_msgSend$_setShouldDeferTransitions:
+    0x1996f83a0 <+164>: b      0x1996f83b4               ; <+184>
+    0x1996f83a4 <+168>: ldr    x0, [sp, #0x8]
+    0x1996f83a8 <+172>: mov    x8, x0
+    0x1996f83ac <+176>: ldr    x9, [x8, #0x10]!
+    0x1996f83b0 <+180>: blraa  x9, x8
+    0x1996f83b4 <+184>: ldr    x0, [sp, #0x8]
+    0x1996f83b8 <+188>: ldp    x29, x30, [sp, #0x40]
+    0x1996f83bc <+192>: ldp    x20, x19, [sp, #0x30]
+    0x1996f83c0 <+196>: ldp    x22, x21, [sp, #0x20]
+    0x1996f83c4 <+200>: ldp    x24, x23, [sp, #0x10]
+    0x1996f83c8 <+204>: add    sp, sp, #0x50
+    0x1996f83cc <+208>: autibsp 
+    0x1996f83d0 <+212>: eor    x16, x30, x30, lsl #1
+    0x1996f83d4 <+216>: tbz    x16, #0x3e, 0x1996f83dc   ; <+224>
+    0x1996f83d8 <+220>: brk    #0xc471
+    0x1996f83dc <+224>: b      0x1a0284800
+
+UIKitCore`__103-[UISheetPresentationController _startInteractiveTransitionWithProgress:fromViewController:completion:]_block_invoke:
+    0x19a89b7a0 <+0>:   pacibsp 
+    0x19a89b7a4 <+4>:   sub    sp, sp, #0x30
+    0x19a89b7a8 <+8>:   stp    x20, x19, [sp, #0x10]
+    0x19a89b7ac <+12>:  stp    x29, x30, [sp, #0x20]
+    0x19a89b7b0 <+16>:  add    x29, sp, #0x20
+    0x19a89b7b4 <+20>:  mov    x20, x0
+    0x19a89b7b8 <+24>:  ldp    x19, x0, [x0, #0x20]
+    0x19a89b7bc <+28>:  cbz    x19, 0x19a89b7e4          ; <+68>
+    0x19a89b7c0 <+32>:  bl     0x19b398460               ; objc_msgSend$presentedViewController
+    0x19a89b7c4 <+36>:  bl     0x1a0284650
+    0x19a89b7c8 <+40>:  mov    x2, x0
+    0x19a89b7cc <+44>:  ldr    x4, [x20, #0x30]
+    0x19a89b7d0 <+48>:  mov    x0, x19
+    0x19a89b7d4 <+52>:  str    x2, [sp, #0x8]
+    0x19a89b7d8 <+56>:  mov    w3, #0x1                  ; =1 
+    0x19a89b7dc <+60>:  bl     0x19b397b20               ; objc_msgSend$presentViewController:animated:completion:
+    0x19a89b7e0 <+64>:  b      0x19a89b7fc               ; <+92>
+    0x19a89b7e4 <+68>:  bl     0x19b398560               ; objc_msgSend$presentingViewController
+    0x19a89b7e8 <+72>:  bl     0x1a0284650
+    0x19a89b7ec <+76>:  str    x0, [sp, #0x8]
+    0x19a89b7f0 <+80>:  mov    w2, #0x1                  ; =1 
+    0x19a89b7f4 <+84>:  mov    x3, #0x0                  ; =0 
+    0x19a89b7f8 <+88>:  bl     0x19b33ba60               ; objc_msgSend$dismissViewControllerAnimated:completion:
+->  0x19a89b7fc <+92>:  ldr    x0, [sp, #0x8]
+    0x19a89b800 <+96>:  ldp    x29, x30, [sp, #0x20]
+    0x19a89b804 <+100>: ldp    x20, x19, [sp, #0x10]
+    0x19a89b808 <+104>: add    sp, sp, #0x30
+    0x19a89b80c <+108>: autibsp 
+    0x19a89b810 <+112>: eor    x16, x30, x30, lsl #1
+    0x19a89b814 <+116>: tbz    x16, #0x3e, 0x19a89b81c   ; <+124>
+    0x19a89b818 <+120>: brk    #0xc471
+    0x19a89b81c <+124>: b      0x1a0284800
+
+UIKitCore`-[UIViewController dismissViewControllerAnimated:completion:]:
+    0x199795b64 <+0>:   pacibsp 
+    0x199795b68 <+4>:   sub    sp, sp, #0xc0
+    0x199795b6c <+8>:   stp    d9, d8, [sp, #0x70]
+    0x199795b70 <+12>:  stp    x24, x23, [sp, #0x80]
+    0x199795b74 <+16>:  stp    x22, x21, [sp, #0x90]
+    0x199795b78 <+20>:  stp    x20, x19, [sp, #0xa0]
+    0x199795b7c <+24>:  stp    x29, x30, [sp, #0xb0]
+    0x199795b80 <+28>:  add    x29, sp, #0xb0
+    0x199795b84 <+32>:  mov    x19, x2
+    0x199795b88 <+36>:  mov    x21, x0
+    0x199795b8c <+40>:  bl     0x1a0284a60
+    0x199795b90 <+44>:  add    x8, sp, #0x38
+    0x199795b94 <+48>:  adrp   x16, 400020
+    0x199795b98 <+52>:  ldr    x16, [x16, #0xe00]
+    0x199795b9c <+56>:  mov    x17, x8
+    0x199795ba0 <+60>:  movk   x17, #0x6ae1, lsl #48
+    0x199795ba4 <+64>:  pacda  x16, x17
+    0x199795ba8 <+68>:  str    x16, [sp, #0x38]
+    0x199795bac <+72>:  adrp   x9, 5459
+    0x199795bb0 <+76>:  ldr    d8, [x9, #0xb78]
+    0x199795bb4 <+80>:  str    d8, [sp, #0x40]
+    0x199795bb8 <+84>:  add    x8, x8, #0x10
+    0x199795bbc <+88>:  adrp   x24, 400894
+    0x199795bc0 <+92>:  add    x24, x24, #0x9d8          ; __block_descriptor_49_e8_32s40bs_e5_v8?0ls32l8s40l8 + 8
+    0x199795bc4 <+96>:  adrp   x16, 733
+    0x199795bc8 <+100>: add    x16, x16, #0xa00          ; __61-[UIViewController dismissViewControllerAnimated:completion:]_block_invoke
+    0x199795bcc <+104>: pacia  x16, x8
+    0x199795bd0 <+108>: stp    x16, x24, [sp, #0x48]
+    0x199795bd4 <+112>: str    x21, [sp, #0x58]
+    0x199795bd8 <+116>: strb   w19, [sp, #0x68]
+    0x199795bdc <+120>: bl     0x1a0284920
+    0x199795be0 <+124>: mov    x20, x0
+    0x199795be4 <+128>: str    x0, [sp, #0x60]
+    0x199795be8 <+132>: add    x0, sp, #0x38
+    0x199795bec <+136>: bl     0x1a0284960
+    0x199795bf0 <+140>: mov    x22, x0
+    0x199795bf4 <+144>: mov    x0, x21
+    0x199795bf8 <+148>: bl     0x19b3003a0               ; objc_msgSend$_willPreemptRunningTransitionForDismissal
+    0x199795bfc <+152>: cbz    w0, 0x199795c64           ; <+256>
+    0x199795c00 <+156>: adrp   x8, 400878
+    0x199795c04 <+160>: ldr    x23, [x8, #0xc0]
+    0x199795c08 <+164>: mov    x8, sp
+    0x199795c0c <+168>: adrp   x16, 400020
+    0x199795c10 <+172>: ldr    x16, [x16, #0xe00]
+    0x199795c14 <+176>: mov    x17, x8
+    0x199795c18 <+180>: movk   x17, #0x6ae1, lsl #48
+    0x199795c1c <+184>: pacda  x16, x17
+    0x199795c20 <+188>: str    x16, [sp]
+    0x199795c24 <+192>: str    d8, [sp, #0x8]
+    0x199795c28 <+196>: add    x8, x8, #0x10
+    0x199795c2c <+200>: adrp   x16, 2230
+    0x199795c30 <+204>: add    x16, x16, #0xd4c          ; __61-[UIViewController dismissViewControllerAnimated:completion:]_block_invoke_2
+    0x199795c34 <+208>: pacia  x16, x8
+    0x199795c38 <+212>: stp    x16, x24, [sp, #0x10]
+    0x199795c3c <+216>: str    x21, [sp, #0x20]
+    0x199795c40 <+220>: bl     0x1a02849f0
+    0x199795c44 <+224>: str    x0, [sp, #0x28]
+    0x199795c48 <+228>: strb   w19, [sp, #0x30]
+    0x199795c4c <+232>: mov    x1, sp
+    0x199795c50 <+236>: mov    x0, x23
+    0x199795c54 <+240>: bl     0x19a9fede8               ; +[UIView _performWithFluidPresentationTransitionsEnabled:]
+    0x199795c58 <+244>: ldr    x8, [sp, #0x28]
+    0x199795c5c <+248>: bl     0x1a0284900
+    0x199795c60 <+252>: b      0x199795c74               ; <+272>
+    0x199795c64 <+256>: mov    x0, x21
+    0x199795c68 <+260>: mov    x1, x22
+    0x199795c6c <+264>: mov    x2, x19
+    0x199795c70 <+268>: bl     0x19979607c               ; -[UIViewController _performCoordinatedPresentOrDismiss:animated:]
+->  0x199795c74 <+272>: bl     0x1a0284870
+    0x199795c78 <+276>: ldr    x8, [sp, #0x60]
+    0x199795c7c <+280>: bl     0x1a0284900
+    0x199795c80 <+284>: bl     0x1a0284850
+    0x199795c84 <+288>: ldp    x29, x30, [sp, #0xb0]
+    0x199795c88 <+292>: ldp    x20, x19, [sp, #0xa0]
+    0x199795c8c <+296>: ldp    x22, x21, [sp, #0x90]
+    0x199795c90 <+300>: ldp    x24, x23, [sp, #0x80]
+    0x199795c94 <+304>: ldp    d9, d8, [sp, #0x70]
+    0x199795c98 <+308>: add    sp, sp, #0xc0
+    0x199795c9c <+312>: retab  
+
+
+
+
+
+
+

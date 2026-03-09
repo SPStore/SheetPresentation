@@ -1,0 +1,75 @@
+平移过程中修改presentedFrame堆栈：
+#7	0x0000000199681b90 in -[UISheetPresentationController _updatePresentedViewFrame] ()
+#8	0x000000019966c2ac in -[UISheetPresentationController _containerViewLayoutSubviews] ()
+#9	0x00000001996731fc in -[UITransitionView layoutSubviews] ()
+#10	0x000000019950a070 in -[UIView(CALayerDelegate) layoutSublayersOfLayer:] ()
+#11	0x0000000198781c14 in CA::Layer::layout_if_needed ()
+#12	0x00000001994fab78 in -[UIView(Hierarchy) layoutBelowIfNeeded] ()
+#13	0x0000000199aa8944 in -[UISheetPresentationController _sheetLayoutInfoLayout:] ()
+#14	0x0000000199aa88d0 in -[_UISheetLayoutInfo _layout] ()
+#15	0x000000019a89c5cc in __66-[UISheetPresentationController sheetInteraction:didChangeOffset:]_block_invoke_4 ()
+#16	0x000000019a89c410 in -[UISheetPresentationController sheetInteraction:didChangeOffset:] ()
+#17	0x0000000199d8c62c in -[_UISheetInteraction sendCurrentOffsetDidChange] ()
+#18	0x0000000199d96a54 in -[_UIHyperOutOfProcessViewAnimator _interactionChanged] ()
+#19	0x0000000199dbed1c in -[_UIHyperInteractor _interactionChangedMutatingTranslation:velocity:mutatingState:] ()
+#20	0x0000000199dbec2c in -[_UIHyperInteractor _interactionChangedCopyingTranslation:velocity:mutatingState:] ()
+#21	0x0000000199d8d450 in -[_UISheetInteraction draggingChangedInSource:withTranslation:velocity:animateChange:] ()
+#22	0x00000001997a372c in -[_UISheetInteraction handlePan:] ()
+
+
+平移过程中触发转场的堆栈：
+#1	0x0000000199fa702c in -[_UIFormSheetPresentationController dismissalTransitionWillBegin] ()
+#2	0x0000000199669e00 in __80-[UIPresentationController _initViewHierarchyForPresentationSuperview:inWindow:]_block_invoke ()
+#3	0x000000019966b4f8 in __77-[UIPresentationController runTransitionForCurrentStateAnimated:handoffData:]_block_invoke_3 ()
+#4	0x00000001996376a8 in +[UIPresentationController _scheduleTransition:] ()
+#5	0x00000001996367a8 in -[UIPresentationController runTransitionForCurrentStateAnimated:handoffData:] ()
+#6	0x000000019997b34c in -[UIPresentationController _dismissWithAnimationController:interactionController:animated:handoffData:] ()
+#7	0x000000019a04b2f8 in __73-[UIViewController _dismissViewControllerWithTransition:from:completion:]_block_invoke ()
+#8	0x000000019a04a86c in -[UIViewController _dismissViewControllerWithTransition:from:completion:] ()
+#9	0x0000000199796d98 in -[UIViewController dismissViewControllerWithTransition:completion:] ()
+#10	0x0000000199796290 in -[UIViewController _performCoordinatedPresentOrDismiss:animated:] ()
+#11	0x0000000199795c74 in -[UIViewController dismissViewControllerAnimated:completion:] ()
+#12	0x000000019a89b7fc in __103-[UISheetPresentationController _startInteractiveTransitionWithProgress:fromViewController:completion:]_block_invoke ()
+#13	0x00000001996f8388 in +[UIViewController _performWithoutDeferringTransitionsAllowingAnimation:actions:] ()
+#14	0x000000019a89b764 in -[UISheetPresentationController _startInteractiveTransitionWithProgress:fromViewController:completion:] ()
+#15	0x000000019a89c244 in -[UISheetPresentationController sheetInteraction:didChangeOffset:] ()
+#16	0x0000000199d8c62c in -[_UISheetInteraction sendCurrentOffsetDidChange] ()
+#17	0x0000000199d96aec in -[_UIHyperOutOfProcessViewAnimator _interactionChanged] ()
+#18	0x0000000199dbed1c in -[_UIHyperInteractor _interactionChangedMutatingTranslation:velocity:mutatingState:] ()
+#19	0x0000000199dbec2c in -[_UIHyperInteractor _interactionChangedCopyingTranslation:velocity:mutatingState:] ()
+#20	0x0000000199d8d450 in -[_UISheetInteraction draggingChangedInSource:withTranslation:velocity:animateChange:] ()
+#21	0x00000001997a372c in -[_UISheetInteraction handlePan:] ()
+
+平移过程中更新转场进度的堆栈：（注意如果presentedViewController的modalInPresentation为NO或者presentationController.delegate的presentationControllerShouldDismiss这个代理方法返回NO，不会调用updateInteractiveTransition:）
+#0	0x000000010062bf8c in -[UIPercentDrivenInteractiveTransition updateInteractiveTransition:]
+#1	0x000000019a89b884 in -[UISheetPresentationController _updateInteractiveTransitionWithProgress:] ()
+#2	0x000000019a89b780 in -[UISheetPresentationController _startInteractiveTransitionWithProgress:fromViewController:completion:] ()
+#3	0x000000019a89c244 in -[UISheetPresentationController sheetInteraction:didChangeOffset:] ()
+#4	0x0000000199d8c62c in -[_UISheetInteraction sendCurrentOffsetDidChange] ()
+#5	0x0000000199d96aec in -[_UIHyperOutOfProcessViewAnimator _interactionChanged] ()
+#6	0x0000000199dbed1c in -[_UIHyperInteractor _interactionChangedMutatingTranslation:velocity:mutatingState:] ()
+#7	0x0000000199dbec2c in -[_UIHyperInteractor _interactionChangedCopyingTranslation:velocity:mutatingState:] ()
+#8	0x0000000199d8d450 in -[_UISheetInteraction draggingChangedInSource:withTranslation:velocity:animateChange:] ()
+#9	0x00000001997a372c in -[_UISheetInteraction handlePan:] ()
+
+平移过程中结束转场的堆栈：（注意如果presentedViewController的modalInPresentation为NO或者presentationController.delegate的presentationControllerShouldDismiss这个代理方法返回NO，不会调用finishInteractiveTransition）
+#0	0x000000010062bfbc in -[UIPercentDrivenInteractiveTransition finishInteractiveTransition] 
+#1	0x000000019a89ba00 in -[UISheetPresentationController _completeInteractiveTransition:duration:timingCurve:] ()
+#2	0x000000019a89c294 in -[UISheetPresentationController sheetInteraction:didChangeOffset:] ()
+#3	0x0000000199d8c62c in -[_UISheetInteraction sendCurrentOffsetDidChange] ()
+#4	0x0000000199d96d6c in -[_UIHyperOutOfProcessViewAnimator _interactionEndedMutatingState:] ()
+#5	0x0000000199dbee10 in -[_UIHyperInteractor _interactionEndedMutatingState:] ()
+#6	0x0000000199d8d740 in -[_UISheetInteraction draggingEndedInSource:] ()
+#7	0x00000001997a377c in -[_UISheetInteraction handlePan:] ()
+
+平移过程中，调用sheetPresentationControllerDidChangeSelectedDetentIdentifier代理的堆栈
+#0	0x000000010062ec88 in -[ViewController sheetPresentationControllerDidChangeSelectedDetentIdentifier:] at /Users/shengping_le/Desktop/临时demo/PresentTest/PresentTest/ViewController.m:301
+#1	0x000000019a89bcac in -[UISheetPresentationController _sendDidChangeSelectedDetentIdentifier] ()
+#2	0x0000000199fac874 in -[_UISheetPresentationController _sendDidChangeSelectedDetentIdentifier] ()
+#3	0x000000019a89bf6c in -[UISheetPresentationController sheetInteraction:didChangeOffset:] ()
+#4	0x0000000199d8c62c in -[_UISheetInteraction sendCurrentOffsetDidChange] ()
+#5	0x0000000199d96d6c in -[_UIHyperOutOfProcessViewAnimator _interactionEndedMutatingState:] ()
+#6	0x0000000199dbee10 in -[_UIHyperInteractor _interactionEndedMutatingState:] ()
+#7	0x0000000199d8d740 in -[_UISheetInteraction draggingEndedInSource:] ()
+#8	0x00000001997a377c in -[_UISheetInteraction handlePan:] ()
+

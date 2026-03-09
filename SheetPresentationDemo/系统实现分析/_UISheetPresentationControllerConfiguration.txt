@@ -1,0 +1,126 @@
+✅ 找到 _UISheetPresentationControllerConfiguration 类
+=== 属性 (Properties) ===
+  _additionalMinimumTopInset
+    类型: Td,N,S_setAdditionalMinimumTopInset:,V__additionalMinimumTopInset
+  _cornerRadiusForPresentationAndDismissal
+    类型: Td,N,S_setCornerRadiusForPresentationAndDismissal:,V__cornerRadiusForPresentationAndDismissal
+  _detentDirectionWhenFloating
+    类型: Tq,N,S_setDetentDirectionWhenFloating:,V__detentDirectionWhenFloating
+  _detents
+    类型: T@"NSArray",C,N,S_setDetents:,V__detents
+  _edgeAttachedCompactHeightAppearance
+    类型: T@"_UISheetPresentationControllerAppearance",&,N,S_setEdgeAttachedCompactHeightAppearance:,V__edgeAttachedCompactHeightAppearance
+  _floatingAppearance
+    类型: T@"_UISheetPresentationControllerAppearance",&,N,S_setFloatingAppearance:,V__floatingAppearance
+  _grabberTopSpacing
+    类型: Td,N,S_setGrabberTopSpacing:,V__grabberTopSpacing
+  _hostParentDepthLevel
+    类型: Td,N,S_setHostParentDepthLevel:,V__hostParentDepthLevel
+  _hostParentFullHeightUntransformedFrameForDepthLevel
+    类型: T{CGRect={CGPoint=dd}{CGSize=dd}},N,S_setHostParentFullHeightUntransformedFrameForDepthLevel:,V__hostParentFullHeightUntransformedFrameForDepthLevel
+  _hostParentStackAlignmentFrame
+    类型: T{CGRect={CGPoint=dd}{CGSize=dd}},N,S_setHostParentStackAlignmentFrame:,V__hostParentStackAlignmentFrame
+  _insetsPresentedViewForGrabber
+    类型: TB,N,S_setInsetsPresentedViewForGrabber:,V__insetsPresentedViewForGrabber
+  _mode
+    类型: Tq,N,S_setMode:,V__mode
+  _peeksWhenFloating
+    类型: TB,N,S_setPeeksWhenFloating:,V__peeksWhenFloating
+  _preferredCornerRadius
+    类型: Td,N,S_setPreferredCornerRadius:,V__preferredCornerRadius
+  _preferredShadowOpacity
+    类型: Td,N,S_setPreferredShadowOpacity:,V__preferredShadowOpacity
+  _prefersGrabberVisible
+    类型: TB,N,S_prefersGrabberVisible:,V__prefersGrabberVisible
+  _prefersScrollingExpandsToLargerDetentWhenScrolledToEdge
+    类型: TB,N,S_setPrefersScrollingExpandsToLargerDetentWhenScrolledToEdge:,V__prefersScrollingExpandsToLargerDetentWhenScrolledToEdge
+  _prefersScrollingResizesWhenDetentDirectionIsDown
+    类型: TB,N,S_setPrefersScrollingResizesWhenDetentDirectionIsDown:,V__prefersScrollingResizesWhenDetentDirectionIsDown
+  _selectedDetentIdentifier
+    类型: T@"NSString",C,N,S_setSelectedDetentIdentifier:,V__selectedDetentIdentifier
+  _shadowRadius
+    类型: Td,N,S_setShadowRadius:,V__shadowRadius
+  _shouldScaleDownBehindDescendantSheets
+    类型: TB,N,S_setShouldScaleDownBehindDescendantSheets:,V__shouldScaleDownBehindDescendantSheets
+  _standardAppearance
+    类型: T@"_UISheetPresentationControllerAppearance",&,N,S_setStandardAppearance:,V__standardAppearance
+  _wantsBottomAttached
+    类型: TB,N,S_setWantsBottomAttached:,V__wantsBottomAttached
+  _wantsEdgeAttachedInCompactHeight
+    类型: TB,N,S_setWantsEdgeAttachedInCompactHeight:,V__wantsEdgeAttachedInCompactHeight
+  _wantsFullScreen
+    类型: TB,N,S_setWantsFullScreen:,V__wantsFullScreen
+  _widthFollowsPreferredContentSizeWhenEdgeAttached
+    类型: TB,N,S_setWidthFollowsPreferredContentSizeWhenEdgeAttached:,V__widthFollowsPreferredContentSizeWhenEdgeAttached
+  debugDescription
+    类型: T@"NSString",?,R,C
+  description
+    类型: T@"NSString",R,C
+  hash
+    类型: TQ,R
+  superclass
+    类型: T#,R
+
+=== 实例方法 (Instance Methods) ===
+  - .cxx_destruct
+  - _additionalMinimumTopInset
+  - _cornerRadiusForPresentationAndDismissal
+  - _detentDirectionWhenFloating
+  - _detents
+  - _edgeAttachedCompactHeightAppearance
+  - _floatingAppearance
+  - _grabberTopSpacing
+  - _hostParentDepthLevel
+  - _hostParentFullHeightUntransformedFrameForDepthLevel
+  - _hostParentStackAlignmentFrame
+  - _insetsPresentedViewForGrabber
+  - _isEqual:onlyCheckPropertiesRequiringFencing:
+  - _mode
+  - _peeksWhenFloating
+  - _preferredCornerRadius
+  - _preferredShadowOpacity
+  - _prefersGrabberVisible
+  - _prefersGrabberVisible:
+  - _prefersScrollingExpandsToLargerDetentWhenScrolledToEdge
+  - _prefersScrollingResizesWhenDetentDirectionIsDown
+  - _selectedDetentIdentifier
+  - _setAdditionalMinimumTopInset:
+  - _setCornerRadiusForPresentationAndDismissal:
+  - _setDetentDirectionWhenFloating:
+  - _setDetents:
+  - _setEdgeAttachedCompactHeightAppearance:
+  - _setFloatingAppearance:
+  - _setGrabberTopSpacing:
+  - _setHostParentDepthLevel:
+  - _setHostParentFullHeightUntransformedFrameForDepthLevel:
+  - _setHostParentStackAlignmentFrame:
+  - _setInsetsPresentedViewForGrabber:
+  - _setMode:
+  - _setPeeksWhenFloating:
+  - _setPreferredCornerRadius:
+  - _setPreferredShadowOpacity:
+  - _setPrefersScrollingExpandsToLargerDetentWhenScrolledToEdge:
+  - _setPrefersScrollingResizesWhenDetentDirectionIsDown:
+  - _setSelectedDetentIdentifier:
+  - _setShadowRadius:
+  - _setShouldScaleDownBehindDescendantSheets:
+  - _setStandardAppearance:
+  - _setWantsBottomAttached:
+  - _setWantsEdgeAttachedInCompactHeight:
+  - _setWantsFullScreen:
+  - _setWidthFollowsPreferredContentSizeWhenEdgeAttached:
+  - _shadowRadius
+  - _shouldFenceChangeToConfiguration:
+  - _shouldScaleDownBehindDescendantSheets
+  - _standardAppearance
+  - _wantsBottomAttached
+  - _wantsEdgeAttachedInCompactHeight
+  - _wantsFullScreen
+  - _widthFollowsPreferredContentSizeWhenEdgeAttached
+  - description
+  - encodeWithBSXPCCoder:
+  - encodeWithCoder:
+  - init
+  - initWithBSXPCCoder:
+  - initWithCoder:
+  - isEqual:
