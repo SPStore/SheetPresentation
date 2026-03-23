@@ -128,28 +128,11 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 private extension ViewController {
     func presentAsSheet(_ vc: UIViewController, profile: SheetProfile) {
         let controller = vc.cs.sheetPresentationController
-        let settings = SheetDemoSettingsStore.shared
         controller.delegate = self
-        controller.prefersGrabberVisible = settings.prefersGrabberVisible
-        controller.preferredCornerRadius = settings.preferredCornerRadius
-        controller.dimmingBackgroundAlpha = settings.dimmingBackgroundAlpha
-        controller.requiresScrollingFromEdgeToDriveSheet = settings.requiresScrollingFromEdgeToDriveSheet
-        controller.allowsScrollViewToDriveSheet = (vc is RefreshSheetDemoViewController)
-            ? false
-            : settings.allowsScrollViewToDriveSheet
-        controller.allowsPanGestureToDriveSheet = settings.allowsPanGestureToDriveSheet
-        controller.prefersScrollingExpandsWhenScrolledToEdge = settings.prefersScrollingExpandsWhenScrolledToEdge
-        controller.prefersSheetPanOverpullWithDamping = settings.prefersSheetPanOverpullWithDamping
-        controller.allowsTapBackgroundToDismiss = settings.allowsTapBackgroundToDismiss
-        controller.isEdgePanGestureEnabled = settings.isEdgePanGestureEnabled
-        controller.edgePanTriggerDistance = settings.edgePanTriggerDistance
-        controller.prefersShadowVisible = settings.prefersShadowVisible
-        controller.prefersFloatingStyle = settings.prefersFloatingStyle
-        if #available(iOS 26, *) {
-            controller.prefersGlassEffect = settings.prefersGlassEffect
+        SheetDemoSettingsStore.shared.configureController(controller, for: vc)
+        if vc is RefreshSheetDemoViewController {
+            controller.allowsScrollViewToDriveSheet = false
         }
-
-        vc.isModalInPresentation = settings.isModalInPresentation
 
         switch profile {
         case .pageSheetLike(let customHeight):

@@ -161,6 +161,30 @@ final class SheetDemoSettingsStore {
         bool(for: .prefersGlassEffect)
     }
 
+    // MARK: - 批量配置
+
+    /// 将当前所有设置值写入 `controller` 及被展示的 `presentedVC`。
+    /// 调用后可按需覆写个别属性。
+    func configureController(_ controller: SheetPresentationController, for presentedVC: UIViewController) {
+        controller.prefersGrabberVisible = prefersGrabberVisible
+        controller.preferredCornerRadius = preferredCornerRadius
+        controller.dimmingBackgroundAlpha = dimmingBackgroundAlpha
+        controller.requiresScrollingFromEdgeToDriveSheet = requiresScrollingFromEdgeToDriveSheet
+        controller.allowsScrollViewToDriveSheet = allowsScrollViewToDriveSheet
+        controller.allowsPanGestureToDriveSheet = allowsPanGestureToDriveSheet
+        controller.prefersScrollingExpandsWhenScrolledToEdge = prefersScrollingExpandsWhenScrolledToEdge
+        controller.prefersSheetPanOverpullWithDamping = prefersSheetPanOverpullWithDamping
+        controller.allowsTapBackgroundToDismiss = allowsTapBackgroundToDismiss
+        controller.isEdgePanGestureEnabled = isEdgePanGestureEnabled
+        controller.edgePanTriggerDistance = edgePanTriggerDistance
+        controller.prefersShadowVisible = prefersShadowVisible
+        controller.prefersFloatingStyle = prefersFloatingStyle
+        if #available(iOS 26, *) {
+            controller.prefersGlassEffect = prefersGlassEffect
+        }
+        presentedVC.isModalInPresentation = isModalInPresentation
+    }
+
     // MARK: - 设置页绑定
 
     func boolValue(forSetting key: SettingKey) -> Bool {

@@ -41,25 +41,8 @@ final class CustomTransitionDemoViewController: UIViewController {
     @objc private func presentSheet() {
         let contentVC = CustomTransitionSheetContentViewController()
         let controller = contentVC.cs.sheetPresentationController
-        let settings = SheetDemoSettingsStore.shared
         controller.delegate = self
-        controller.prefersGrabberVisible = settings.prefersGrabberVisible
-        controller.preferredCornerRadius = settings.preferredCornerRadius
-        controller.dimmingBackgroundAlpha = settings.dimmingBackgroundAlpha
-        controller.requiresScrollingFromEdgeToDriveSheet = settings.requiresScrollingFromEdgeToDriveSheet
-        controller.allowsScrollViewToDriveSheet = settings.allowsScrollViewToDriveSheet
-        controller.allowsPanGestureToDriveSheet = settings.allowsPanGestureToDriveSheet
-        controller.prefersScrollingExpandsWhenScrolledToEdge = settings.prefersScrollingExpandsWhenScrolledToEdge
-        controller.prefersSheetPanOverpullWithDamping = settings.prefersSheetPanOverpullWithDamping
-        controller.allowsTapBackgroundToDismiss = settings.allowsTapBackgroundToDismiss
-        controller.isEdgePanGestureEnabled = settings.isEdgePanGestureEnabled
-        controller.edgePanTriggerDistance = settings.edgePanTriggerDistance
-        controller.prefersShadowVisible = settings.prefersShadowVisible
-        controller.prefersFloatingStyle = settings.prefersFloatingStyle
-        if #available(iOS 26, *) {
-            controller.prefersGlassEffect = settings.prefersGlassEffect
-        }
-        contentVC.isModalInPresentation = settings.isModalInPresentation
+        SheetDemoSettingsStore.shared.configureController(controller, for: contentVC)
         controller.detents = [.custom(identifier: .init("custom.height")) { _ in 400 }]
         cs.presentSheetViewController(contentVC, animated: true)
     }
