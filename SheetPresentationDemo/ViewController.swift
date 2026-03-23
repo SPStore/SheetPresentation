@@ -129,7 +129,7 @@ private extension ViewController {
     func presentAsSheet(_ vc: UIViewController, profile: SheetProfile) {
         let controller = vc.cs.sheetPresentationController
         controller.delegate = self
-        SheetDemoSettingsStore.shared.configureController(controller, for: vc)
+        SheetDemoSettingsStore.shared.configure(sheetController: controller, for: vc)
         if vc is RefreshSheetDemoViewController {
             controller.allowsScrollViewToDriveSheet = false
         }

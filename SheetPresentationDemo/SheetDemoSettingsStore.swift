@@ -165,7 +165,7 @@ final class SheetDemoSettingsStore {
 
     /// 将当前所有设置值写入 `controller` 及被展示的 `presentedVC`。
     /// 调用后可按需覆写个别属性。
-    func configureController(_ controller: SheetPresentationController, for presentedVC: UIViewController) {
+    func configure(sheetController controller: SheetPresentationController, for presentedVC: UIViewController) {
         controller.prefersGrabberVisible = prefersGrabberVisible
         controller.preferredCornerRadius = preferredCornerRadius
         controller.dimmingBackgroundAlpha = dimmingBackgroundAlpha

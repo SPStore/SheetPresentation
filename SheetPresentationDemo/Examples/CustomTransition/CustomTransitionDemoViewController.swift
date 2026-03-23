@@ -42,7 +42,7 @@ final class CustomTransitionDemoViewController: UIViewController {
         let contentVC = CustomTransitionSheetContentViewController()
         let controller = contentVC.cs.sheetPresentationController
         controller.delegate = self
-        SheetDemoSettingsStore.shared.configureController(controller, for: contentVC)
+        SheetDemoSettingsStore.shared.configure(sheetController: controller, for: contentVC)
         controller.detents = [.custom(identifier: .init("custom.height")) { _ in 400 }]
         cs.presentSheetViewController(contentVC, animated: true)
     }
