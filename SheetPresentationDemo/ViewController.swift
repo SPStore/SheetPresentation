@@ -69,9 +69,7 @@ final class ViewController: UIViewController {
         DemoItem(title: "Navigation", detail: "present 一个导航控制器", action: .present, profile: .twoDetents) {
             NavigationSheetDemoViewController.makeNavigationRoot()
         },
-        DemoItem(title: "Keyboard", detail: "键盘弹起避让", action: .present, profile: .twoDetents) {
-            KeyboardSheetDemoViewController()
-        },
+
         DemoItem(title: "Custom Transition", detail: "自定义非交互式转场动画", action: .push, profile: .twoDetents) {
             CustomTransitionDemoViewController()
         },
