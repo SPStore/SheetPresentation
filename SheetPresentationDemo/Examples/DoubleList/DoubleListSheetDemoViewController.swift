@@ -64,6 +64,7 @@ extension DoubleListSheetDemoViewController: UITableViewDataSource, UITableViewD
             return cell
         }
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: id)
+        cell.selectionStyle = .none
         if tableView === leftTable {
             cell.backgroundColor = .systemGray5
         } else {

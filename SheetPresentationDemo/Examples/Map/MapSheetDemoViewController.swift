@@ -237,6 +237,7 @@ extension MapSheetDemoViewController: UITableViewDataSource, UITableViewDelegate
         cell.textLabel?.text = place.title
         cell.detailTextLabel?.text = place.subtitle
         cell.imageView?.image = UIImage(named: "landmark")
+        cell.selectionStyle = .none
         return cell
     }
 

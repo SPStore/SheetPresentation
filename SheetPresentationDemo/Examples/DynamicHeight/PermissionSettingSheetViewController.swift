@@ -70,6 +70,7 @@ extension PermissionSettingSheetViewController: UITableViewDataSource, UITableVi
         let sub = dataArray[indexPath.section]
         cell.titleLabel.text = sub[indexPath.row]
         cell.applyRoundedAppearance(indexPath: indexPath, totalInSection: sub.count)
+        cell.selectionStyle = .none
         return cell
     }
 

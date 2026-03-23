@@ -65,6 +65,7 @@ extension RefreshSheetDemoViewController: UITableViewDataSource, UITableViewDele
             return cell
         }
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: id)
+        cell.selectionStyle = .none
         cell.contentView.backgroundColor = .systemGray6
         applyRandomTitle(to: cell)
         return cell

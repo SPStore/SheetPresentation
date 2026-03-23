@@ -73,6 +73,7 @@ extension NestedScrollViewSheetDemoViewController: UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = "Row \(indexPath.row)"
+        cell.selectionStyle = .none
         return cell
     }
 }
