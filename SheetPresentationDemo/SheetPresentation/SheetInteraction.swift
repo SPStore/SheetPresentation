@@ -735,7 +735,7 @@ fileprivate extension UIScrollView {
 
     /// 判断 scrollView 的主轴是否为垂直滚动方向
     var isVerticalScrollDirection: Bool {
-        guard isScrollEnabled, panGestureRecognizer.isEnabled else { return false }
+        guard isScrollEnabled else { return false }
         if self is UITableView {
             return canActAsVerticalScrollDriver
         }
