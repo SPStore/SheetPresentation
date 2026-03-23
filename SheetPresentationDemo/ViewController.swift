@@ -42,6 +42,9 @@ final class ViewController: UIViewController {
         DemoItem(title: "Nested ScrollView", detail: "内嵌横向列表 + 纵向列表", action: .present, profile: .pageSheetLike(customHeight: 600)) {
             NestedScrollViewSheetDemoViewController()
         },
+        DemoItem(title: "Nested Vertical Scroll", detail: "App Store 式详情页，嵌套垂直滚动", action: .present, profile: .twoDetents) {
+            NestedVerticalScrollDemoViewController()
+        },
         DemoItem(title: "RefreshData", detail: "下拉刷新", action: .present, profile: .pageSheetLike(customHeight: view.bounds.height - 62)) {
             RefreshSheetDemoViewController()
         },
