@@ -39,8 +39,8 @@ final class ViewController: UIViewController {
     }()
 
     private lazy var demos: [DemoItem] = [
-        DemoItem(title: "Nested ScrollView", detail: "内嵌横向列表 + 纵向列表", action: .present, profile: .pageSheetLike(customHeight: 600)) {
-            NestedScrollViewSheetDemoViewController()
+        DemoItem(title: "Nested Horizontal Scroll", detail: "竖向列表首格内嵌横向滚动", action: .present, profile: .pageSheetLike(customHeight: 600)) {
+            NestedHorizontalScrollDemoViewController()
         },
         DemoItem(title: "Nested Vertical Scroll", detail: "App Store 式详情页，嵌套垂直滚动", action: .present, profile: .twoDetents) {
             NestedVerticalScrollDemoViewController()
