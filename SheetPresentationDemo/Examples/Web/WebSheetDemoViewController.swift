@@ -25,7 +25,7 @@ final class WebSheetDemoViewController: UIViewController {
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        if let url = URL(string: "https://www.apple.com") {
+        if let url = URL(string: "https://www.baidu.com") {
             webView.load(URLRequest(url: url))
         }
     }

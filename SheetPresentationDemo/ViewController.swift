@@ -42,29 +42,26 @@ final class ViewController: UIViewController {
         DemoItem(title: "Nested ScrollView", detail: "内嵌横向列表 + 纵向列表", action: .present, profile: .pageSheetLike(customHeight: 600)) {
             NestedScrollViewSheetDemoViewController()
         },
-        DemoItem(title: "Detents", detail: "2个档位", action: .present, profile: .twoDetents) {
-            DetentsSheetDemoViewController()
-        },
-        DemoItem(title: "Map", detail: "真地图 + 地点搜索 Sheet", action: .push, profile: .threeDetents) {
-            MapDemoEntryViewController()
-        },
-        DemoItem(title: "Double List", detail: "左右双列表", action: .present, profile: .twoDetents) {
-            DoubleListSheetDemoViewController()
-        },
-        DemoItem(title: "Dynamic Height", detail: "高度自适应内容", action: .push, profile: .twoDetents) {
-            DynamicHeightDemoViewController()
+        DemoItem(title: "RefreshData", detail: "下拉刷新", action: .present, profile: .pageSheetLike(customHeight: view.bounds.height - 62)) {
+            RefreshSheetDemoViewController()
         },
         DemoItem(title: "Comments Enter", detail: "评论区交互入口", action: .push, profile: .twoDetents) {
             CommentsEntryDemoViewController()
         },
+        DemoItem(title: "Dynamic Height", detail: "高度自适应内容", action: .push, profile: .twoDetents) {
+            DynamicHeightDemoViewController()
+        },
+        DemoItem(title: "Map", detail: "3个档位", action: .push, profile: .threeDetents) {
+            MapDemoEntryViewController()
+        },
         DemoItem(title: "Web", detail: "网页容器", action: .present, profile: .twoDetents) {
             WebSheetDemoViewController()
         },
-        DemoItem(title: "Page Sheet", detail: "单档高度 600pt", action: .present, profile: .pageSheetLike(customHeight: 600)) {
+        DemoItem(title: "Page Sheet", detail: "类似系统的缩放效果", action: .present, profile: .pageSheetLike(customHeight: 600)) {
             PageSheetDemoViewController()
         },
-        DemoItem(title: "RefreshData", detail: "下拉刷新", action: .present, profile: .pageSheetLike(customHeight: view.bounds.height - 62)) {
-            RefreshSheetDemoViewController()
+        DemoItem(title: "Double List", detail: "左右双列表", action: .present, profile: .twoDetents) {
+            DoubleListSheetDemoViewController()
         },
         DemoItem(title: "Navigation", detail: "present 一个导航控制器", action: .present, profile: .twoDetents) {
             NavigationSheetDemoViewController.makeNavigationRoot()
