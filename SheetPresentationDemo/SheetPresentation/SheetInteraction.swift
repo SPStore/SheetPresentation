@@ -603,7 +603,7 @@ extension SheetInteraction {
         return 1.0
     }
 
-    /// 向下拖拽越过最小 detent 时的阻尼：越往下越强，最低 0.18。
+    /// 向下拖拽越过最小 detent 时的阻尼：越往下越强，最低 0.18
     private func downwardDampingFactor(velocity: CGPoint, currentY: CGFloat) -> CGFloat? {
         guard velocity.y > 0,
               delegate?.shouldApplyDownwardDampingAtSmallestDetent == true,
@@ -612,7 +612,7 @@ extension SheetInteraction {
         return decayingFactor(overflow: overflow, initial: 1.0, decay: 0.05, minimum: 0.18)
     }
 
-    /// sheetPan overpull 向上拖拽越过最大 detent 时的阻尼：从边界第一帧就强，越往上越强，最低 0.04。
+    /// sheetPan overpull 向上拖拽越过最大 detent 时的阻尼：从边界第一帧就强，越往上越强，最低 0.04
     private func overpullDampingFactor(velocity: CGPoint, currentY: CGFloat, source: InteractionSource) -> CGFloat? {
         guard velocity.y < 0,
               source == .sheetPan,
@@ -632,7 +632,7 @@ extension SheetInteraction {
 
 extension SheetInteraction: UIGestureRecognizerDelegate {
 
-    /// 是否接收触摸：自动检测 scrollView，重置手势状态。
+    /// 是否接收触摸：自动检测 scrollView，重置手势状态
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldReceive touch: UITouch
