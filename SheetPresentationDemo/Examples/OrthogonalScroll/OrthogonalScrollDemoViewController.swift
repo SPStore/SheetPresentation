@@ -89,7 +89,7 @@ final class OrthogonalScrollDemoViewController: UIViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPagingCentered
         section.interGroupSpacing = 12
-        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
         section.boundarySupplementaryItems = [makeHeader()]
         return section
     }
@@ -304,10 +304,11 @@ private final class SectionHeaderView: UICollectionReusableView {
         super.init(frame: frame)
         label.font = .systemFont(ofSize: 13)
         label.textColor = .secondaryLabel
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
         ])
     }

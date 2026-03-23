@@ -202,6 +202,7 @@ private final class SectionHeaderView: UICollectionReusableView {
         super.init(frame: frame)
         label.font = .systemFont(ofSize: 13)
         label.textColor = .secondaryLabel
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         NSLayoutConstraint.activate([
