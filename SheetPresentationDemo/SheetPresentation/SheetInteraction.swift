@@ -662,8 +662,10 @@ extension SheetInteraction: UIGestureRecognizerDelegate {
             let ratio = abs(velocity.x) / abs(velocity.y)
             let shouldLimitHorizontalRatio = screenEdgePanGestureRecognizer.isEnabled == true
             if shouldLimitHorizontalRatio, ratio > 2 {
-                currentTouchingScrollView?.panGestureRecognizer.isEnabled = false
-                currentTouchingScrollView?.panGestureRecognizer.isEnabled = true
+                if currentTouchingScrollView?.panGestureRecognizer.isEnabled == true {
+                    currentTouchingScrollView?.panGestureRecognizer.isEnabled = false
+                    currentTouchingScrollView?.panGestureRecognizer.isEnabled = true
+                }
                 return false
             }
             guard currentTouchingScrollView == nil else { return false }
