@@ -111,7 +111,4 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
         isInteractive = false
     }
     
-    deinit {
-        print("[SheetPresentation] SheetTransitioningManager deinit")
-    }
 }

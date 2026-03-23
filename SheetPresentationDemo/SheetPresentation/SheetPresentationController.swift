@@ -197,9 +197,6 @@ open class SheetPresentationController: UIPresentationController {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
     }
     
-    deinit {
-        print("[SheetPresentation] SheetPresentationController deinit")
-    }
 }
 
 // MARK: - Presentation Lifecycle

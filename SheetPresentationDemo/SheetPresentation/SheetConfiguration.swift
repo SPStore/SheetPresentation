@@ -24,7 +24,6 @@ struct SheetConfiguration {
 
     // MARK: - 侧滑返回
 
-
     var edgePanTriggerDistance: CGFloat = 32
 
     var edgePanDismissVelocityThreshold: CGFloat = 500.0

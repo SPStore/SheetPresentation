@@ -504,8 +504,7 @@ extension SheetInteraction {
     private func applyDisplacementToSheet(
         _ yDisplacement: CGFloat,
         velocity: CGPoint,
-        source: InteractionSource,
-        animated: Bool = false
+        source: InteractionSource
     ) {
         let currentY = view?.frame.origin.y ?? 0
         var displacement = yDisplacement
