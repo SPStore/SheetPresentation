@@ -2,8 +2,6 @@
 //  SheetPresentationOptionalAdapters.swift
 //  SheetPresentationDemo
 //
-//  不常用扩展能力：自定义非交互转场等（主文件仅保留核心展示逻辑）。
-//
 
 import UIKit
 
