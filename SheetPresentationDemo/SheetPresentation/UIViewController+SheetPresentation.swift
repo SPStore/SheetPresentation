@@ -59,10 +59,22 @@ public extension CSWrapper where Base: UIViewController {
     }
 
     /// 以 Sheet 方式展示视图控制器
-    func presentSheetViewController(_ viewControllerToPresent: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
-        viewControllerToPresent.modalPresentationStyle = .custom
-        viewControllerToPresent.transitioningDelegate = viewControllerToPresent.cs.transitioningManager
+    func presentSheetViewController(
+        _ viewControllerToPresent: UIViewController,
+        animated: Bool,
+        sourceView: UIView? = nil,
+        sourceRect: CGRect = .zero,
+        completion: (() -> Void)? = nil
+    ) {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            viewControllerToPresent.modalPresentationStyle = .popover
+            viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect
+            viewControllerToPresent.popoverPresentationController?.sourceView = sourceView ?? base.view
+        } else {
+            viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
+            viewControllerToPresent.modalPresentationStyle = .custom
+            viewControllerToPresent.transitioningDelegate = viewControllerToPresent.cs.transitioningManager
+        }
         base.present(viewControllerToPresent, animated: animated, completion: completion)
     }
 }
