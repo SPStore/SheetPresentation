@@ -27,14 +27,23 @@ class SheetLayoutInfo: NSObject {
     // MARK: - 输入属性（由 SheetPresentationController 设置）
 
     var containerBounds: CGRect = .zero {
-        didSet { setNeedsInvalidation() }
+        didSet { invalidateDetents() }
     }
 
-    var containerSafeAreaInsets: UIEdgeInsets = .zero
+    var containerSafeAreaInsets: UIEdgeInsets = .zero {
+        didSet { invalidateDetents() }
+    }
 
-    var containerTraitCollection: UITraitCollection = .current
+    var containerTraitCollection: UITraitCollection = .current {
+        didSet { invalidateDetents() }
+    }
 
     var detents: [SheetPresentationController.Detent] = [] {
+        didSet { invalidateDetents() }
+    }
+
+    /// 浮动样式开启时，detent Y 坐标会预减底部 margin，使 frame.origin.y 始终是最终 Y（无逻辑/视觉区分）。
+    var prefersFloatingStyle: Bool = false {
         didSet { invalidateDetents() }
     }
 
@@ -68,10 +77,35 @@ class SheetLayoutInfo: NSObject {
     /// 以 identifier 为 key 的快速查找表
     private(set) var detentMap: [SheetPresentationController.Detent.Identifier: DetentEntry] = [:]
 
+    /// `performBatchUpdates` 嵌套深度；>0 时 `invalidateDetents` 只打标，退出最外层时再算一次。
+    private var batchUpdateDepth = 0
+    private var pendingInvalidateDetents = false
+
+    // MARK: - 批量更新（类似 `NSMutableAttributedString` begin/endEditing）
+
+    /// 在闭包内连续改 `containerBounds` / `containerTraitCollection` / `containerSafeAreaInsets` / `detents` 等，结束时最多 **`invalidateDetents` 一次**。
+    func performBatchUpdates(_ updates: () -> Void) {
+        batchUpdateDepth += 1
+        updates()
+        batchUpdateDepth -= 1
+        guard batchUpdateDepth == 0, pendingInvalidateDetents else { return }
+        pendingInvalidateDetents = false
+        invalidateDetents()
+    }
+
     // MARK: - 核心方法
 
     /// 重新计算所有 detent 的 Y 坐标和 height。
     func invalidateDetents() {
+        if batchUpdateDepth > 0 {
+            pendingInvalidateDetents = true
+            return
+        }
+        guard !detents.isEmpty else {
+            sortedDetentEntries = []
+            detentMap = [:]
+            return
+        }
         guard !containerBounds.isEmpty else {
             sortedDetentEntries = []
             detentMap = [:]
@@ -80,14 +114,17 @@ class SheetLayoutInfo: NSObject {
 
         let context = ResolutionContext(
             containerTraitCollection: containerTraitCollection,
-            maximumDetentValue: maximumDetentValue
+            maximumDetentValue: maximumDetentValue,
+            containerSafeAreaTopInset: containerSafeAreaInsets.top
         )
 
         var entries: [DetentEntry] = []
         for detent in detents {
             let rawHeight = detent.resolvedValue(in: context) ?? detent.height
             let height = min(max(rawHeight, 0), maximumDetentValue)
-            let y = containerBounds.height - height
+            let baseY = containerBounds.height - height
+            // 浮动样式：预减底部 margin
+            let y = prefersFloatingStyle ? baseY - floatingStyleMargin(at: baseY) : baseY
             entries.append(DetentEntry(identifier: detent.identifier, yPosition: y, height: height))
         }
 
@@ -116,6 +153,50 @@ class SheetLayoutInfo: NSObject {
             return frameOfPresentedView(at: largestDetentYPosition)
         }
         return frameOfPresentedView(at: y)
+    }
+
+    // MARK: - 浮动样式布局
+
+    /// 浮动样式左右 margin。
+    func floatingStyleMargin(at yPosition: CGFloat) -> CGFloat {
+        let maxMargin: CGFloat = 28.0
+        // 这2个if是临界态，临界态不用函数计算，避免精度问题.
+        let largestOriginY = SheetPresentationController.Detent.preferredLargestDetentOriginY(
+            safeAreaTop: containerSafeAreaInsets.top
+        )
+        if yPosition <= largestOriginY  {
+            return 0
+        }
+        // 已是最小档或继续往 dismiss 方向：固定为最小档上的插值 margin（侧滑 dismiss 时不会变成 maxMargin）。
+        if yPosition >= smallestDetentYPosition {
+            return floatingStyleMarginInterpolated(at: smallestDetentYPosition, maxMargin: maxMargin)
+        }
+        // 靠近容器底且 y 仍小于最小档 Y：满 margin（与上面分支互斥，避免最小档贴底时误进满 margin）。
+        if yPosition >= maximumDetentValue - maxMargin {
+            return maxMargin
+        }
+        return floatingStyleMarginInterpolated(at: yPosition, maxMargin: maxMargin)
+    }
+
+    /// 浮动样式 margin 的幂次插值（`effectiveY = min(y, smallestDetent)` 在调用方按需体现）。
+    private func floatingStyleMarginInterpolated(at yPosition: CGFloat, maxMargin: CGFloat) -> CGFloat {
+        let minY = self.yPosition(for: .large) ?? 0
+        let H = maximumDetentValue - minY
+        guard H > 0 else { return 0 }
+        let effectiveY = min(yPosition, smallestDetentYPosition)
+        let h = max(H - effectiveY, 0)
+        let k: CGFloat = 2.0
+        let normalized = max(0, min(1, 1 - h / H))
+        return maxMargin * pow(normalized, k)
+    }
+
+    func floatingPresentedLayout(at yPosition: CGFloat) -> CGRect {
+        let baseFrame = frameOfPresentedView(at: yPosition)
+        let margin = floatingStyleMargin(at: yPosition)
+        let narrowedWidth = max(baseFrame.width - 2 * margin, 0)
+        let height = max(baseFrame.height - margin, 1)
+        let reportFrame = CGRect(x: margin, y: yPosition, width: narrowedWidth, height: height)
+        return reportFrame
     }
 
     /// 获取指定 detent 条目。
@@ -168,22 +249,21 @@ class SheetLayoutInfo: NSObject {
         return min(max(progress, 0), 1)
     }
 
-    // MARK: - Private
-
-    private func setNeedsInvalidation() {
-        guard !detents.isEmpty else { return }
-        invalidateDetents()
-    }
-
     // MARK: - 内部 Resolution Context
 
     private class ResolutionContext: NSObject, SheetPresentationControllerDetentResolutionContext {
         let containerTraitCollection: UITraitCollection
         let maximumDetentValue: CGFloat
+        let containerSafeAreaTopInset: CGFloat
 
-        init(containerTraitCollection: UITraitCollection, maximumDetentValue: CGFloat) {
+        init(
+            containerTraitCollection: UITraitCollection,
+            maximumDetentValue: CGFloat,
+            containerSafeAreaTopInset: CGFloat
+        ) {
             self.containerTraitCollection = containerTraitCollection
             self.maximumDetentValue = maximumDetentValue
+            self.containerSafeAreaTopInset = containerSafeAreaTopInset
         }
     }
 }

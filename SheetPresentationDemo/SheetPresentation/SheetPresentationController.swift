@@ -7,94 +7,17 @@
 
 import UIKit
 
-// MARK: - Detent & Identifier
-
-extension SheetPresentationController.Detent {
-
-    public struct Identifier: Hashable, Equatable, RawRepresentable {
-        public var rawValue: String
-
-        public init(_ rawValue: String) {
-            self.rawValue = rawValue
-        }
-
-        public init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-    }
-}
-
-extension SheetPresentationController.Detent.Identifier {
-
-    public static let medium: SheetPresentationController.Detent.Identifier = .init("medium")
-    public static let large: SheetPresentationController.Detent.Identifier = .init("large")
-}
-
-// MARK: - Detent Resolution Context
-
-@MainActor public protocol SheetPresentationControllerDetentResolutionContext: NSObjectProtocol {
-    var containerTraitCollection: UITraitCollection { get }
-    var maximumDetentValue: CGFloat { get }
-}
-
-// MARK: - Detent
-
-@MainActor
-extension SheetPresentationController {
-
-    open class Detent: NSObject {
-
-        open var identifier: Identifier
-        open var height: CGFloat
-        private var heightResolver: ((_ context: any SheetPresentationControllerDetentResolutionContext) -> CGFloat?)?
-
-        init(identifier: Identifier, height: CGFloat) {
-            self.identifier = identifier
-            self.height = height
-        }
-
-        public static func medium() -> Detent {
-            .custom(identifier: .medium) { $0.maximumDetentValue * 0.5 }
-        }
-
-        public static func large() -> Detent {
-            .custom(identifier: .large) { $0.maximumDetentValue - 50 }
-        }
-
-        @MainActor @preconcurrency
-        public static func custom(
-            identifier: SheetPresentationController.Detent.Identifier? = nil,
-            resolver: @escaping (_ context: any SheetPresentationControllerDetentResolutionContext) -> CGFloat?
-        ) -> SheetPresentationController.Detent {
-            let id = identifier ?? .init("custom")
-            return Detent(identifier: id, heightResolver: resolver)
-        }
-
-        @MainActor @preconcurrency
-        public func resolvedValue(
-            in context: any SheetPresentationControllerDetentResolutionContext
-        ) -> CGFloat? {
-            heightResolver?(context)
-        }
-
-        private init(
-            identifier: Identifier,
-            heightResolver: @escaping (_ context: any SheetPresentationControllerDetentResolutionContext) -> CGFloat?
-        ) {
-            self.identifier = identifier
-            self.heightResolver = heightResolver
-            self.height = 0
-        }
-    }
-}
-
 // MARK: - SheetPresentationControllerDelegate
 
 @MainActor
 @objc public protocol SheetPresentationControllerDelegate: UIAdaptivePresentationControllerDelegate {
-    /// 当前选中的 detent 发生变化时调用
     @objc optional func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
         _ sheetPresentationController: SheetPresentationController
+    )
+
+    @objc optional func sheetPresentationController(
+        _ sheetPresentationController: SheetPresentationController,
+        didUpdatePresentedFrame frame: CGRect
     )
 }
 
@@ -105,18 +28,15 @@ open class SheetPresentationController: UIPresentationController {
 
     // MARK: - Detent 配置
 
-    /// 多段高度配置
     open var detents: [Detent] = [.large()] {
         didSet {
             layoutInfo.detents = detents
-            layoutInfo.invalidateDetents()
             syncDetentYPositionsToInteraction()
+            selectedDetentIdentifier = detents.last?.identifier
         }
     }
 
-    /// 当前选中的 detent 标识符。
-    /// 直接设置不带动画（立即跳到目标位置）；
-    /// 需要动画时请使用 `animateChanges(_:)` 包裹。
+    /// 直接设置不带动画；需要动画请用 `animateChanges(_:)`。
     open var selectedDetentIdentifier: Detent.Identifier? {
         get { _selectedDetentIdentifier }
         set { setSelectedDetent(newValue, animated: false) }
@@ -124,16 +44,22 @@ open class SheetPresentationController: UIPresentationController {
 
     // MARK: - 行为配置
 
-    /// 是否允许点击背景蒙层 dismiss，默认 true
+    /// 是否允许点击背景蒙层 dismiss
     open var allowsTapBackgroundToDismiss: Bool {
         get { configuration.allowsTapBackgroundToDismiss }
         set { configuration.allowsTapBackgroundToDismiss = newValue }
     }
 
-    /// 手势驱动模式（scroll / pan），默认 both。
-    open var sheetDrivingMode: SheetPresentationController.DrivingMode {
-        get { configuration.sheetDrivingMode }
-        set { configuration.sheetDrivingMode = newValue }
+    /// 是否允许 scrollView 驱动 sheet，默认 true
+    open var allowsScrollViewToDriveSheet: Bool {
+        get { configuration.allowsScrollViewToDriveSheet }
+        set { configuration.allowsScrollViewToDriveSheet = newValue }
+    }
+
+    /// 是否允许 pan 手势驱动 sheet，默认 true
+    open var allowsPanGestureToDriveSheet: Bool {
+        get { configuration.allowsPanGestureToDriveSheet }
+        set { configuration.allowsPanGestureToDriveSheet = newValue }
     }
 
     /// 是否要求必须从 edge 开始滚动，scrollView 才能驱动 sheet，默认 false
@@ -142,55 +68,80 @@ open class SheetPresentationController: UIPresentationController {
         set { configuration.requiresScrollingFromEdgeToDriveSheet = newValue }
     }
 
-    /// 处于非最大高度时，scrollView 滑到边缘是否可带动 sheet 展开，默认 true
+    /// 处于非最大detent时，scrollView 滑到边缘是否可带动 sheet 展开，默认 true
     open var prefersScrollingExpandsWhenScrolledToEdge: Bool {
         get { configuration.prefersScrollingExpandsWhenScrolledToEdge }
         set { configuration.prefersScrollingExpandsWhenScrolledToEdge = newValue }
     }
 
-    /// 是否允许穿透
-    open var allowsTouchEventsPassingThroughTransitionView: Bool = false
+    /// sheetPan 到达最大 detent 后是否允许继续上拉（带阻尼回弹），默认 false
+    open var prefersSheetPanOverpullWithDamping: Bool {
+        get { configuration.prefersSheetPanOverpullWithDamping }
+        set { configuration.prefersSheetPanOverpullWithDamping = newValue }
+    }
 
     // MARK: - 外观配置
 
-    /// 顶部圆角数值，默认 10.0
-    open var preferredCornerRadius: CGFloat = 10.0 {
+    /// 圆角半径
+    open var preferredCornerRadius: CGFloat = 13.0 {
         didSet { dropShadowView?.cornerRadius = preferredCornerRadius }
     }
 
-    /// 是否显示阴影，默认 false
+    // 是否显示阴影效果
     open var prefersShadowVisible: Bool = false {
         didSet { dropShadowView?.isShadowVisible = prefersShadowVisible }
     }
 
-    /// 是否显示顶部抓取条，默认 false
+    /// 是否显示手柄（顶部的一个小横条）
     open var prefersGrabberVisible: Bool = false {
         didSet { dropShadowView?.isGrabberVisible = prefersGrabberVisible }
     }
 
-    /// 背景蒙层不透明度，默认 0.4
+    /// 是否以浮动样式展示，如果为true，那么左、右、底都有间距
+    open var prefersFloatingStyle: Bool = false {
+        didSet {
+            layoutInfo.prefersFloatingStyle = prefersFloatingStyle
+            dropShadowView?.contentViewRoundsAllCorners = prefersFloatingStyle
+            if let id = selectedDetentIdentifier, let y = layoutInfo.yPosition(for: id) {
+                updatePresentedViewFrame(forYPosition: y)
+            }
+        }
+    }
+    
+    /// 是否开启iOS26+的液态玻璃效果，
+    /// 开启后，除了视觉上有液态玻璃效果外，交互上也会有按压放大、光晕等效果.
+    @available(iOS 26, *)
+    open var prefersGlassEffect: Bool {
+        get { _prefersGlassEffect }
+        set {
+            _prefersGlassEffect = newValue
+            dropShadowView?.isGlassEffectEnabled = newValue
+        }
+    }
+    private var _prefersGlassEffect: Bool = false
+
+    /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {
         didSet { dimmingView?.backgroundAlpha = dimmingBackgroundAlpha }
     }
 
-    /// present / dismiss 转场时长，默认 0.3s
     open var transitionAnimationDuration: TimeInterval = 0.3
 
     // MARK: - 侧滑返回
 
-    /// 是否允许侧滑返回
-    open var allowScreenEdgeInteractive: Bool {
-        get { configuration.allowScreenEdgeInteractive }
-        set { configuration.allowScreenEdgeInteractive = newValue }
+    /// 是否开启侧滑交互
+    open var isEdgePanGestureEnabled: Bool {
+        get { sheetInteraction.screenEdgePanGestureRecognizer.isEnabled }
+        set { sheetInteraction.screenEdgePanGestureRecognizer.isEnabled = newValue }
     }
 
-    /// 侧滑有效触发距离
-    open var maxAllowedDistanceToScreenEdgeForPanInteraction: CGFloat {
-        get { configuration.maxAllowedDistanceToScreenEdgeForPanInteraction }
-        set { configuration.maxAllowedDistanceToScreenEdgeForPanInteraction = newValue }
+    /// 距离屏幕边缘多少距离可触发侧滑手势
+    open var edgePanTriggerDistance: CGFloat {
+        get { configuration.edgePanTriggerDistance }
+        set { configuration.edgePanTriggerDistance = newValue }
     }
     
-    /// 在此闭包中修改属性（如 `selectedDetentIdentifier`）会自动带动画过渡。
+    /// 动画捕获方法，比如外部设置 selectedDetentIdentifier ，可以放到该方法的闭包中则可动画切换档位
     open func animateChanges(_ changes: @escaping () -> Void) {
         animateChanges(changes, completion: nil)
     }
@@ -199,52 +150,45 @@ open class SheetPresentationController: UIPresentationController {
 
     private var _selectedDetentIdentifier: Detent.Identifier?
 
-    /// 布局信息
-    private(set) var layoutInfo = SheetLayoutInfo()
+    private var layoutInfo = SheetLayoutInfo()
 
-    /// 内部配置
     private var configuration = SheetConfiguration()
 
-    /// 平移结束时可触发 dismiss 的最小垂直速率，默认 800
     private var minVerticalVelocityToTriggerDismiss: CGFloat = 800
-    
-    /// 背景蒙层
+
     private var dimmingView: SheetDimmingView?
 
-    /// 阴影容器视图
-    private var dropShadowView: DropShadowView?
+    private var dropShadowView: SheetDropShadowView?
 
-    /// 交互控制器
-    private(set) var sheetInteraction: SheetInteraction?
+    private let sheetInteraction = SheetInteraction()
 
-    /// 当前进行中的 sheet 动画（用于手势接管时中断）。
     private var sheetAnimator: UIViewPropertyAnimator?
 
-    /// 是否正在拖拽（阻止 layout 重置 frame）
     private var isDragging = false
 
-    /// 是否正在进行交互式 dismiss 转场（拖拽越过最小 detent 触发）。
-    private var isDraggingAndTransitioning = false
+    private enum InteractiveDismissSource {
+        case none
+        case pan        // 拖拽越过最小 detent(包括scrollPan和普通pan)
+        case screenEdge // 侧滑返回
+    }
+    private var interactiveDismissSource: InteractiveDismissSource = .none
 
-    /// detent 吸附动画进行中。
-    private var isAnimatingToDetent = false
-
-    /// 标记当前 dismiss 是否由用户操作触发（拖拽/点击蒙层）。
-    /// 外部代码直接调用 dismiss 时，不转发 UIAdaptivePresentationControllerDelegate 回调。
-    /// 用于决定是否转发 UIAdaptivePresentationControllerDelegate 的回调。
-    private var isUserInitiatedDismiss = false
-
-    /// 转场管理器（通过 presentedViewController 关联获取）
-    private var transitioningManager: SheetTransitioningManager? {
-        presentedViewController.cs.transitioningManager
+    var isScreenEdgeInteractiveDismiss: Bool {
+        interactiveDismissSource == .screenEdge
     }
 
-    /// 将 delegate 转为 SheetPresentationControllerDelegate（外部未遵循则为 nil）
+    private var isAnimatingToDetent = false
+
+    // 主要是用于区分是程序代码调用dismiss还是用户操作调用dismiss，外部通过调用dismiss(animated:)方法退场的都是程序化代码调用.
+    private var isUserInitiatedDismiss = false
+
+    private var transitioningManager: SheetTransitioningManager? {
+        presentedViewController.cs.attachedTransitioningManager
+    }
+
     private var sheetDelegate: SheetPresentationControllerDelegate? {
         delegate as? SheetPresentationControllerDelegate
     }
-
-    // MARK: - Lifecycle
 
     public override init(
         presentedViewController: UIViewController,
@@ -252,25 +196,32 @@ open class SheetPresentationController: UIPresentationController {
     ) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
     }
+    
+    deinit {
+        print("[SheetPresentation] SheetPresentationController deinit")
+    }
+}
 
-    // MARK: - Presentation Lifecycle
+// MARK: - Presentation Lifecycle
+
+@MainActor
+extension SheetPresentationController {
 
     open override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
         guard let containerView else { return }
 
-        // 配置 layoutInfo
+        delegate?.presentationController?(self, willPresentWithAdaptiveStyle: .custom, transitionCoordinator: presentedViewController.transitionCoordinator)
+        
         refreshLayoutInfo(using: containerView, invalidateDetents: true)
 
-        // 确保有选中的 detent：默认选择最小 detent（最靠近底部、Y 最大）
         if selectedDetentIdentifier == nil,
            let smallest = layoutInfo.sortedDetentEntries.last {
             setSelectedDetent(smallest.identifier, animated: false)
         }
 
         setupViews()
-
-        // 带转场协调器渐入蒙层
+        
         dimmingView?.alpha = 0
         presentedViewController.transitionCoordinator?.animate(alongsideTransition: { [weak self] _ in
             self?.dimmingView?.alpha = 1
@@ -287,14 +238,11 @@ open class SheetPresentationController: UIPresentationController {
     open override func dismissalTransitionWillBegin() {
         super.dismissalTransitionWillBegin()
 
-        // 仅用户操作触发的 dismiss 才转发 willDismiss
         if isUserInitiatedDismiss {
             delegate?.presentationControllerWillDismiss?(self)
         }
 
-        // 交互式 dismiss 时蒙层由手动 updateDimmingForPosition 控制，不使用 coordinator。
-        // 非交互式 dismiss（如点击蒙层、代码调用）使用 coordinator 渐出。
-        if !isDraggingAndTransitioning {
+        if interactiveDismissSource != .pan {
             presentedViewController.transitionCoordinator?.animate(alongsideTransition: { [weak self] _ in
                 self?.dimmingView?.alpha = 0
             })
@@ -302,31 +250,38 @@ open class SheetPresentationController: UIPresentationController {
     }
 
     open override func dismissalTransitionDidEnd(_ completed: Bool) {
-        super.dismissalTransitionDidEnd(completed)
+        let shouldNotifyDidDismiss = isUserInitiatedDismiss
         if completed {
-            // 仅用户操作触发的 dismiss 完成后才转发 didDismiss
-            if isUserInitiatedDismiss {
+            if shouldNotifyDidDismiss {
                 delegate?.presentationControllerDidDismiss?(self)
             }
             cleanupViews()
         } else {
-            // 交互式 dismiss 被取消：cancelInteraction() → 反向动画跑完 → completeTransition(false) → UIKit 回调此处。
-            // 在此重置 isDraggingAndTransitioning，确保下次用户越过 smallestDetentY 时能重新触发 beginInteractiveDismiss。
-            isDraggingAndTransitioning = false
+            interactiveDismissSource = .none
         }
         isUserInitiatedDismiss = false
+        super.dismissalTransitionDidEnd(completed)
     }
+}
 
-    // MARK: - Layout
+// MARK: - Layout
+
+@MainActor
+extension SheetPresentationController {
 
     open override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
 
         dimmingView?.frame = containerView?.bounds ?? .zero
 
-        let allowFrameUpdate = !isDragging && !isDraggingAndTransitioning && !isAnimatingToDetent
-        if allowFrameUpdate, let shadowView = dropShadowView {
-            shadowView.frame = self.frameOfPresentedViewInContainerView
+        let allowFrameUpdate =
+            !isDragging &&
+            interactiveDismissSource == .none &&
+            !isAnimatingToDetent &&
+            !isNonInteractiveTransitioning
+        if allowFrameUpdate {
+            let targetY = frameOfPresentedViewInContainerView.origin.y
+            updatePresentedViewFrame(forYPosition: targetY)
         }
     }
 
@@ -337,20 +292,23 @@ open class SheetPresentationController: UIPresentationController {
     open override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView else { return .zero }
 
-        // 更新 layoutInfo 的 containerBounds（以防旋转）
-        if layoutInfo.containerBounds != containerView.bounds {
+        if layoutInfo.containerBounds != containerView.bounds
+            || layoutInfo.containerSafeAreaInsets != containerView.safeAreaInsets {
             refreshLayoutInfo(using: containerView, invalidateDetents: false)
         }
 
         return layoutInfo.frameOfPresentedView(for: selectedDetentIdentifier)
     }
+}
 
-    // MARK: - View Setup
+// MARK: - View Setup
+
+@MainActor
+extension SheetPresentationController {
 
     private func setupViews() {
         guard let containerView else { return }
 
-        // 背景蒙层
         let dimming = SheetDimmingView()
         dimming.backgroundAlpha = dimmingBackgroundAlpha
         dimming.didTap = { [weak self] in
@@ -363,30 +321,28 @@ open class SheetPresentationController: UIPresentationController {
         containerView.addSubview(dimming)
         dimmingView = dimming
 
-        // 阴影容器
-        let shadowView = DropShadowView()
+        let shadowView = SheetDropShadowView()
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
+        shadowView.contentViewRoundsAllCorners = prefersFloatingStyle
+        if #available(iOS 26, *) {
+            shadowView.isGlassEffectEnabled = prefersGlassEffect
+        }
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 
-        // 将 presentedViewController.view 嵌入 contentView
         let controllerView = presentedViewController.view!
         controllerView.frame = shadowView.contentView.bounds
         controllerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         shadowView.contentView.addSubview(controllerView)
 
-        // 添加 SheetInteraction
-        let interaction = SheetInteraction()
+        let interaction = sheetInteraction
         interaction.delegate = self
         shadowView.addInteraction(interaction)
-        sheetInteraction = interaction
 
-        // 同步 detent Y 坐标到 interaction（行为配置通过 delegate.sheetConfiguration 按需读取）
         syncDetentYPositionsToInteraction()
 
-        // 配置 grabber 点击（在 detent 间切换）
         shadowView.grabberDidClickHandler = { [weak self] in
             self?.toggleNextDetent()
         }
@@ -395,37 +351,37 @@ open class SheetPresentationController: UIPresentationController {
     private func cleanupViews() {
         dimmingView?.removeFromSuperview()
         dimmingView = nil
-        if let interaction = sheetInteraction {
-            dropShadowView?.removeInteraction(interaction)
-        }
-        sheetInteraction = nil
+        dropShadowView?.removeInteraction(sheetInteraction)
         dropShadowView?.removeFromSuperview()
         dropShadowView = nil
     }
+}
 
-    // MARK: - 属性同步
+@MainActor
+extension SheetPresentationController {
 
-    /// 同步 detent Y 坐标到 SheetInteraction。
-    /// 行为配置（SheetConfiguration）由 interaction 通过 delegate.sheetConfiguration 按需读取，无需手动同步。
     private func syncDetentYPositionsToInteraction() {
-        sheetInteraction?.detentYPositions = layoutInfo.sortedDetentEntries.map(\.yPosition)
+        sheetInteraction.detentYPositions = layoutInfo.sortedDetentEntries.map(\.yPosition)
     }
 
     private func refreshLayoutInfo(using containerView: UIView, invalidateDetents: Bool) {
-        layoutInfo.containerBounds = containerView.bounds
-        layoutInfo.containerSafeAreaInsets = containerView.safeAreaInsets
-        layoutInfo.containerTraitCollection = containerView.traitCollection
-        if invalidateDetents {
-            layoutInfo.detents = detents
-            layoutInfo.invalidateDetents()
+        layoutInfo.performBatchUpdates {
+            layoutInfo.containerBounds = containerView.bounds
+            layoutInfo.containerTraitCollection = containerView.traitCollection
+            layoutInfo.containerSafeAreaInsets = containerView.safeAreaInsets
+            if invalidateDetents {
+                layoutInfo.prefersFloatingStyle = prefersFloatingStyle
+                layoutInfo.detents = detents
+            }
         }
     }
+}
 
-    // MARK: - Detent Management
+// MARK: - Detent Management
 
-    /// 设置选中的 detent 标识符，可选是否带动画。
-    /// 类似 `UIScrollView.setContentOffset(_:animated:)`。
-    /// animated = true 时弹簧动画过渡，animated = false 时直接跳到目标位置。
+@MainActor
+extension SheetPresentationController {
+
     private func setSelectedDetent(_ identifier: Detent.Identifier?, animated: Bool) {
         let oldValue = _selectedDetentIdentifier
         _selectedDetentIdentifier = identifier
@@ -441,13 +397,19 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
 
-    /// 直接根据 Y 更新 presentedView 的 frame（无动画）。
-    private func updatePresentedViewFrame(forYPosition yPosition: CGFloat) {
+    func updatePresentedViewFrame(forYPosition yPosition: CGFloat) {
         guard let shadowView = dropShadowView else { return }
-        shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
+
+        if prefersFloatingStyle {
+            let floatingFrame = layoutInfo.floatingPresentedLayout(at: yPosition)
+            shadowView.frame = floatingFrame
+            sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: floatingFrame)
+        } else {
+            shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
+            sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: shadowView.frame)
+        }
     }
 
-    /// 动画切换到指定 detent（对齐 OC：动画期直接驱动 frame，不依赖 layoutIfNeeded 触发回调）。
     private func animateToDetent(_ identifier: Detent.Identifier) {
         guard let y = layoutInfo.yPosition(for: identifier),
               dropShadowView != nil else { return }
@@ -461,12 +423,10 @@ open class SheetPresentationController: UIPresentationController {
         }, completion: { [weak self] _ in
             guard let self else { return }
             self.isAnimatingToDetent = false
-            // 动画结束后标记下一轮容器布局对齐。
             self.containerView?.setNeedsLayout()
         })
     }
     
-    /// 内部版本：允许带 completion，供控制器内部收尾逻辑使用。
     private func animateChanges(
         _ changes: @escaping () -> Void,
         completion: ((UIViewAnimatingPosition) -> Void)?
@@ -487,30 +447,28 @@ open class SheetPresentationController: UIPresentationController {
         animator.startAnimation()
     }
 
-    /// 点击 grabber 切换 detent：
-    /// - 当前非最大 detent：向上一档
-    /// - 当前最大 detent：跳到最小 detent
     private func toggleNextDetent() {
         guard let currentId = selectedDetentIdentifier else { return }
         let targetId: Detent.Identifier?
         if let upperEntry = layoutInfo.relativeEntry(from: currentId, offset: -1) {
-            // 非最大 detent：固定向上一档（例如 medium -> large）
             targetId = upperEntry.identifier
         } else {
-            // 最大 detent：跳到最小 detent
             targetId = layoutInfo.sortedDetentEntries.last?.identifier
         }
         guard let targetId else { return }
         setSelectedDetent(targetId, animated: true)
     }
+}
 
-    // MARK: - 拖拽结束逻辑
+// MARK: - Drag Resolution
 
-    /// 拖拽结束后根据速率和位置决定目标 detent 或 dismiss。
+@MainActor
+extension SheetPresentationController {
+
     private func resolveDragEnd(velocity: CGPoint) {
         guard let shadowView = dropShadowView else { return }
 
-        let currentY = shadowView.frame.origin.y
+        let currentY = shadowView.frame.minY
         let isHighVelocity = abs(velocity.y) >= minVerticalVelocityToTriggerDismiss
 
         if isHighVelocity {
@@ -524,7 +482,6 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
 
-    /// 高速向上拖拽：切换到更大的 detent
     private func resolveHighVelocityDragUp(from currentY: CGFloat) {
         guard let currentId = selectedDetentIdentifier else {
             snapToNearest(from: currentY)
@@ -535,20 +492,16 @@ open class SheetPresentationController: UIPresentationController {
             return
         }
 
-        // 松手时位置未越过当前 detent（仍在其下方），速率再高也只弹回当前 detent。
-        // 例如：medium 状态向下拖后高速上滑，但松手时 currentY 仍大于 mediumY → 回到 medium。
         guard currentY < currentEntry.yPosition else {
             setSelectedDetent(currentId, animated: true)
             return
         }
 
         guard let previousEntry = layoutInfo.relativeEntry(from: currentId, offset: -1) else {
-            // 已在最大 detent → 弹回
             setSelectedDetent(currentId, animated: true)
             return
         }
 
-        // 如果已拖过 prevEntry → 再上一档
         if currentY < previousEntry.yPosition,
            let target = layoutInfo.relativeEntry(from: currentId, offset: -2) {
             setSelectedDetent(target.identifier, animated: true)
@@ -557,7 +510,6 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
 
-    /// 高速向下拖拽：切换到更小的 detent 或 dismiss
     private func resolveHighVelocityDragDown(from currentY: CGFloat) {
         guard let currentId = selectedDetentIdentifier else {
             snapToNearest(from: currentY)
@@ -569,9 +521,6 @@ open class SheetPresentationController: UIPresentationController {
             return
         }
         guard let nextEntry = layoutInfo.relativeEntry(from: currentId, offset: 1) else {
-            // 已在最小 detent
-            // 若松手位置仍在当前最小 detent 上方（例如先上拉到其上方再高速向下），
-            // 应先回到当前 detent，而不是直接 dismiss。
             if currentY < currentEntry.yPosition {
                 setSelectedDetent(currentId, animated: true)
                 return
@@ -622,13 +571,17 @@ open class SheetPresentationController: UIPresentationController {
         isUserInitiatedDismiss = true
         presentedViewController.dismiss(animated: true)
     }
+}
 
-    // MARK: - 交互式 Dismiss 转场
-    //
-    // - 拖拽越过 smallestDetentYPosition → beginInteractiveDismiss()
+// MARK: - Interactive Dismiss
+
+@MainActor
+extension SheetPresentationController {
+
+    // 拖拽越过 smallestDetentYPosition → beginInteractiveDismiss()
     private func beginInteractiveDismiss() {
         isUserInitiatedDismiss = true
-        isDraggingAndTransitioning = true
+        interactiveDismissSource = .pan
         transitioningManager?.beginInteraction()
         presentedViewController.dismiss(animated: true)
     }
@@ -637,7 +590,7 @@ open class SheetPresentationController: UIPresentationController {
     /// - finish 时：finishInteraction 与 performDismissAnimation 并发运行。
     /// - cancel 时：取消交互转场并回到最近的 detent。
     private func completeInteractiveTransition(finish: Bool, velocity: CGPoint) {
-        isDraggingAndTransitioning = false
+        interactiveDismissSource = .none
 
         if finish {
             // 剩余动画时长 = (1 - percentComplete) * 完整时长
@@ -670,10 +623,38 @@ open class SheetPresentationController: UIPresentationController {
             completion: { _ in }
         )
     }
+}
 
-    // MARK: - Dimming
+// MARK: - Screen Edge Interactive Dismiss
 
-    /// 根据当前 Y 位置更新蒙层透明度（仅在拖拽超过最小 detent 时淡出）
+@MainActor
+extension SheetPresentationController {
+    
+    private func shouldFinishScreenEdgeInteraction(velocity: CGPoint) -> Bool {
+        let rtl = (containerView ?? presentedViewController.view).effectiveUserInterfaceLayoutDirection == .rightToLeft
+        // LTR：向右为正；RTL：向左为 dismiss，等价于对 x 取反后与阈值比较（与 SheetInteraction.gestureRecognizerShouldBegin 一致）
+        let dismissDirectionVelocityX = rtl ? -velocity.x : velocity.x
+        let isHighVelocityTowardDismiss = dismissDirectionVelocityX >= configuration.edgePanDismissVelocityThreshold
+        let progress = transitioningManager?.interactivePercentComplete ?? 0
+        return isHighVelocityTowardDismiss || progress > 0.5
+    }
+
+    private func completeScreenEdgeInteractiveTransition(finish: Bool) {
+        interactiveDismissSource = .none
+
+        if finish {
+            transitioningManager?.finishInteraction()
+        } else {
+            transitioningManager?.cancelInteraction()
+        }
+    }
+}
+
+// MARK: - Dimming And Animation
+
+@MainActor
+extension SheetPresentationController {
+
     private func updateDimmingForPosition(_ yPosition: CGFloat) {
         let progress = layoutInfo.dimmingProgress(at: yPosition)
         dimmingView?.alpha = 1 - progress
@@ -712,13 +693,13 @@ extension SheetPresentationController: SheetInteractionDelegate {
 
         // 交互式 dismiss 转场逻辑
         if shouldDismiss {
-            if !isDraggingAndTransitioning
+            if interactiveDismissSource == .none
                 && yPosition > smallestDetentY && !presentedViewController.isBeingDismissed {
                 // 首次越过最小 detent → 开始交互式 dismiss
                 beginInteractiveDismiss()
             }
 
-            if isDraggingAndTransitioning {
+            if interactiveDismissSource != .none {
                 let totalRange = containerView.bounds.height - smallestDetentY
                 if totalRange > 0 {
                     let progress = (yPosition - smallestDetentY) / totalRange
@@ -728,9 +709,7 @@ extension SheetPresentationController: SheetInteractionDelegate {
             }
         }
 
-        // 更新 frame
         updatePresentedViewFrame(forYPosition: yPosition)
-
         updateDimmingForPosition(yPosition)
     }
 
@@ -743,11 +722,11 @@ extension SheetPresentationController: SheetInteractionDelegate {
         presentedViewController.view.setNeedsLayout()
         presentedViewController.view.layoutIfNeeded()
 
-        if isDraggingAndTransitioning {
+        if interactiveDismissSource != .none {
 
             // ── 分支 1：交互式 dismiss 进行中（曾越过 smallestDetent），手指抬起。
             // 根据当前位置和速率决定 finish 或 cancel。
-            let currentY = dropShadowView?.frame.origin.y ?? 0
+            let currentY = dropShadowView?.frame.minY ?? 0
             let containerHeight = containerView?.bounds.height ?? UIScreen.main.bounds.height
             let isBelow = currentY > layoutInfo.smallestDetentYPosition
             let isHighVelocity = velocity.y >= minVerticalVelocityToTriggerDismiss
@@ -771,7 +750,7 @@ extension SheetPresentationController: SheetInteractionDelegate {
     }
 
     var isNonInteractiveTransitioning: Bool {
-        if isDraggingAndTransitioning { return false }
+        if interactiveDismissSource != .none { return false }
         return presentedViewController.isBeingPresented || presentedViewController.isBeingDismissed
     }
 
@@ -787,4 +766,33 @@ extension SheetPresentationController: SheetInteractionDelegate {
         guard let sid = selectedDetentIdentifier else { return 0 }
         return layoutInfo.yPosition(for: sid) ?? 0
     }
+
+    func sheetInteractionDidBeginScreenEdgeInteraction(_ interaction: SheetInteraction) {
+        guard shouldDismiss else {
+            delegate?.presentationControllerDidAttemptToDismiss?(self)
+            return
+        }
+        guard interactiveDismissSource == .none, !presentedViewController.isBeingDismissed else { return }
+
+        interruptRunningSheetAnimatorIfNeeded()
+        isUserInitiatedDismiss = true
+        interactiveDismissSource = .screenEdge
+        transitioningManager?.beginInteraction()
+        presentedViewController.dismiss(animated: true)
+    }
+
+    func sheetInteraction(
+        _ interaction: SheetInteraction,
+        screenEdgeDidChangeProgress progress: CGFloat
+    ) {
+        guard interactiveDismissSource != .none else { return }
+        transitioningManager?.updateInteraction(progress)
+    }
+
+    func sheetInteraction(_ interaction: SheetInteraction, screenEdgeEndedWithVelocity velocity: CGPoint) {
+        guard interactiveDismissSource != .none else { return }
+        let finish = shouldFinishScreenEdgeInteraction(velocity: velocity)
+        completeScreenEdgeInteractiveTransition(finish: finish)
+    }
 }
+

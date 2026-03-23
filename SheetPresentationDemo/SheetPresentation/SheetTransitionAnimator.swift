@@ -31,7 +31,7 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
             withDuration: duration,
             delay: 0,
             usingSpringWithDamping: 1.0,
-            initialSpringVelocity: 1.0,
+            initialSpringVelocity: 0.0,
             options: options,
             animations: animations,
             completion: completion
@@ -41,9 +41,10 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
     // MARK: - UIViewControllerAnimatedTransitioning
     
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return animationDuration
+        animationDuration
     }
     
+    @MainActor
     open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         if isPresenting {
             animatePresentation(using: transitionContext)
@@ -52,6 +53,7 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
         }
     }
         
+    @MainActor
     private func animatePresentation(using transitionContext: UIViewControllerContextTransitioning) {
         guard
             let toVC = transitionContext.viewController(forKey: .to),
@@ -61,25 +63,23 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
             return
         }
         
-        guard let presentationController = toVC.presentationController  else {
+        guard let sheetController = toVC.presentationController as? SheetPresentationController else {
+            transitionContext.completeTransition(false)
             return
         }
         
         // 获取要动画的视图
-        guard let panView = presentationController.presentedView ?? toVC.view else {
+        guard sheetController.presentedView != nil else {
             transitionContext.completeTransition(false)
             return
         }
         
         // 先记录最终要到达的位置
-        let finalFrame = presentationController.frameOfPresentedViewInContainerView
-        let finalYPosition = finalFrame.origin.y
+        let finalYPosition = sheetController.frameOfPresentedViewInContainerView.origin.y
         
+        // 将视图移动到屏幕底部作为起始位置
         let containerView = transitionContext.containerView
-        // 将视图移动到屏幕底部
-        var initialFrame = panView.frame
-        initialFrame.origin.y = containerView.bounds.height
-        panView.frame = initialFrame
+        sheetController.updatePresentedViewFrame(forYPosition: containerView.bounds.height)
         
         let duration = transitionDuration(using: transitionContext)
         let options: UIView.AnimationOptions = [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]
@@ -91,9 +91,7 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
             initialSpringVelocity: 0,
             options: options,
             animations: {
-                var finalFrame = panView.frame
-                finalFrame.origin.y = finalYPosition
-                panView.frame = finalFrame
+                sheetController.updatePresentedViewFrame(forYPosition: finalYPosition)
             },
             completion: { finished in
                 transitionContext.completeTransition(finished)
@@ -101,6 +99,7 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
         )
     }
     
+    @MainActor
     private func animateDismissal(using transitionContext: UIViewControllerContextTransitioning) {
         guard
             let fromVC = transitionContext.viewController(forKey: .from),
@@ -110,74 +109,92 @@ open class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
             return
         }
         
-        // 获取 presentationController
-        guard let presentationController = fromVC.presentationController else {
-            transitionContext.completeTransition(false)
-            return
-        }
-        
-        // 获取要动画的视图
-        guard let panView = presentationController.presentedView ?? fromVC.view else {
+        guard let sheetController = fromVC.presentationController as? SheetPresentationController else {
             transitionContext.completeTransition(false)
             return
         }
         
         // 判断是否是交互式 dismiss
         if transitionContext.isInteractive {
-            interactionDismiss(using: transitionContext, fromVC: fromVC, panView: panView)
+            interactionDismiss(using: transitionContext, sheetController: sheetController)
         } else {
-            nonInteractiveDismiss(using: transitionContext, fromVC: fromVC, panView: panView)
+            nonInteractiveDismiss(
+                using: transitionContext,
+                sheetController: sheetController
+            )
         }
     }
     
-    /// 交互式 dismiss 动画
+    /// 交互式 dismiss 动画。
+    /// - 侧滑（screen edge）：由 UIPercentDrivenInteractiveTransition 全程驱动，真正动画 sheet + dimming。
+    /// - 拖拽越过最小 detent：帧由 SheetPresentationController 手动更新，此处仅用占位动画供 PDRIT 捕获。
     private func interactionDismiss(
         using transitionContext: UIViewControllerContextTransitioning,
-        fromVC: UIViewController,
-        panView: UIView
+        sheetController: SheetPresentationController
     ) {
         let containerView = transitionContext.containerView
         let duration = transitionDuration(using: transitionContext)
-        
-        // 占位视图：交互式 dismiss 的实际位移由平移手势手动驱动，
-        // 此处仅需一个最小的 UIView 动画供 UIPercentDrivenInteractiveTransition 捕获。
-        let animationDriver = UIView()
-        containerView.addSubview(animationDriver)
-        
-        UIView.animate(
-            withDuration: duration,
-            delay: 0,
-            options: [.curveLinear, .allowUserInteraction, .beginFromCurrentState],
-            animations: {
-                animationDriver.alpha = 0
-            },
-            completion: { _ in
-                animationDriver.removeFromSuperview()
-                let cancelled = transitionContext.transitionWasCancelled
-                if !cancelled {
-                    fromVC.view.removeFromSuperview()
+
+        if sheetController.isScreenEdgeInteractiveDismiss {
+            // 侧滑模式：真实动画 sheet frame + dimming，完全由 UIPercentDrivenInteractiveTransition 驱动。
+            let dismissY = containerView.bounds.height
+            let anchorLogicalTopY = sheetController.presentedView?.frame.origin.y ?? 0
+            UIView.animate(
+                withDuration: duration,
+                delay: 0,
+                options: [.curveLinear, .allowUserInteraction, .beginFromCurrentState],
+                animations: {
+                    sheetController.updatePresentedViewFrame(forYPosition: dismissY)
+                },
+                completion: { _ in
+                    let cancelled = transitionContext.transitionWasCancelled
+                    if cancelled {
+                        // 防止动画取消后，animations block只是更新了展示层，model层不更新，结束时再更新一次。
+                        sheetController.updatePresentedViewFrame(forYPosition: anchorLogicalTopY)
+                    } else {
+                        sheetController.presentedViewController.view.removeFromSuperview()
+                    }
+                    transitionContext.completeTransition(!cancelled)
                 }
-                transitionContext.completeTransition(!cancelled)
-            }
-        )
+            )
+        } else {
+            // 拖拽模式：占位视图动画，sheet 帧由控制器手动驱动。
+            let animationDriver = UIView()
+            containerView.addSubview(animationDriver)
+            UIView.animate(
+                withDuration: duration,
+                delay: 0,
+                options: [.curveLinear, .allowUserInteraction, .beginFromCurrentState],
+                animations: {
+                    animationDriver.alpha = 0
+                },
+                completion: { _ in
+                    animationDriver.removeFromSuperview()
+                    let cancelled = transitionContext.transitionWasCancelled
+                    if !cancelled {
+                        sheetController.presentedViewController.view.removeFromSuperview()
+                    }
+                    transitionContext.completeTransition(!cancelled)
+                }
+            )
+        }
     }
     
     /// 非交互式 dismiss 动画
+    @MainActor
     private func nonInteractiveDismiss(
         using transitionContext: UIViewControllerContextTransitioning,
-        fromVC: UIViewController,
-        panView: UIView
+        sheetController: SheetPresentationController
     ) {
         let containerView = transitionContext.containerView
         
         performAnimation(
             animations: {
-                var panViewFrame = panView.frame
-                panViewFrame.origin.y = containerView.bounds.height
-                panView.frame = panViewFrame
+                let bottomY = containerView.bounds.height
+                sheetController.updatePresentedViewFrame(forYPosition: bottomY)
             },
             completion: { finished in
-                fromVC.view.removeFromSuperview()
+                sheetController.presentedViewController.view.removeFromSuperview()
                 transitionContext.completeTransition(finished)
             }
         )

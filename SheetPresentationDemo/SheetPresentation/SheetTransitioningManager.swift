@@ -15,9 +15,31 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
 
     // MARK: - Private
 
+    private weak var presentedViewController: UIViewController?
+    private weak var _sheetPresentationController: SheetPresentationController?
+
     private var interactionController: UIPercentDrivenInteractiveTransition?
-    private func transitionDuration(for viewController: UIViewController) -> TimeInterval {
-        return viewController.cs.sheetPresentationController.transitionAnimationDuration
+
+    init(presentedViewController: UIViewController) {
+        self.presentedViewController = presentedViewController
+        super.init()
+    }
+
+    /// 与 presented VC 一一对应；实例由 UIKit 在转场期间持有，此处仅 `weak` 引用，避免 Manager ↔ SheetPC 成环。
+    var sheetPresentationController: SheetPresentationController {
+        if let pc = _sheetPresentationController {
+            return pc
+        }
+        guard let presented = presentedViewController else {
+            preconditionFailure("SheetTransitioningManager: presentedViewController is nil")
+        }
+        let pc = SheetPresentationController(presentedViewController: presented, presenting: nil)
+        _sheetPresentationController = pc
+        return pc
+    }
+
+    private var transitionAnimationDuration: TimeInterval {
+        sheetPresentationController.transitionAnimationDuration
     }
 
     // MARK: - UIViewControllerTransitioningDelegate
@@ -27,22 +49,34 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
         presenting: UIViewController?,
         source: UIViewController
     ) -> UIPresentationController? {
-        return presented.cs.sheetPresentationController
+        sheetPresentationController
     }
 
+    /// Present 无交互式转场：delegate 返回的 animator 可直接交给 UIKit，不必再包 `SheetTransitionAnimator`。
     func animationController(
         forPresented presented: UIViewController,
         presenting: UIViewController,
         source: UIViewController
     ) -> UIViewControllerAnimatedTransitioning? {
-        let duration = transitionDuration(for: presented)
+        let sheet = sheetPresentationController
+        let duration = transitionAnimationDuration
+        if let custom = sheet.resolvedNonInteractivePresentAnimator(duration: duration) {
+            return custom
+        }
         return SheetTransitionAnimator(isPresenting: true, animationDuration: duration)
     }
 
     func animationController(
         forDismissed dismissed: UIViewController
     ) -> UIViewControllerAnimatedTransitioning? {
-        let duration = transitionDuration(for: dismissed)
+        let sheet = sheetPresentationController
+        let duration = transitionAnimationDuration
+        if isInteractive {
+            return SheetTransitionAnimator(isPresenting: false, animationDuration: duration)
+        }
+        if let custom = sheet.resolvedNonInteractiveDismissAnimator(duration: duration) {
+            return custom
+        }
         return SheetTransitionAnimator(isPresenting: false, animationDuration: duration)
     }
 
@@ -75,5 +109,9 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
     func cancelInteraction() {
         interactionController?.cancel()
         isInteractive = false
+    }
+    
+    deinit {
+        print("[SheetPresentation] SheetTransitioningManager deinit")
     }
 }

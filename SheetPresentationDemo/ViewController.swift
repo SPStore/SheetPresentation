@@ -7,245 +7,172 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIGestureRecognizerDelegate {
-    
-    private let presentButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Present Sheet", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    var pan: UIPanGestureRecognizer?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//        view.backgroundColor = .green
-        setupUI()
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
-        tap.delegate = self
-        view.addGestureRecognizer(tap)
-        
-        let pan = UIPanGestureRecognizer()
-        view.addGestureRecognizer(pan)
-        self.pan = pan
-    }
-    
-    @objc private func tapAction(_ gesture: UITapGestureRecognizer) {
-
-    }
-    
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch
-    ) -> Bool {
-        print("点击手势")
-
-        self.pan?.addTarget(self, action: #selector(panAction(_:)))
-        
-
-        return true
-    }
-    
-    
-    @objc private func panAction(_ gesture: UIPanGestureRecognizer) {
-        print("点击手势 -> 平移手势")
-
-        
-    }
-    
-    private func setupUI() {
-        view.addSubview(presentButton)
-        
-        NSLayoutConstraint.activate([
-            presentButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            presentButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-        
-        presentButton.addTarget(self, action: #selector(presentSheet), for: .touchUpInside)
-    }
-    
-
-    @objc private func presentSheet() {
-        let sheetVC = DemoSheetViewController()
-        
-        // 配置Sheet属性
-        let sheetController = sheetVC.cs.sheetPresentationController
-        sheetController.detents = [
-            .medium(),
-            .large(),
-//            .custom(identifier: .init("small")) { context in
-//                return 300
-//            }
-        ]
-//        sheetController.selectedDetentIdentifier = .medium
-        sheetController.prefersGrabberVisible = true
-        sheetController.preferredCornerRadius = 13
-        sheetController.dimmingBackgroundAlpha = 0.4
-//        sheetController.prefersShadowVisible = true
-        sheetController.delegate = self
-//        sheetController.prefersScrollingExpandsWhenScrolledToEdge = false
-        sheetController.requiresScrollingFromEdgeToDriveSheet = true
-//        sheetController.sheetDrivingMode = .none
-        sheetController.allowScreenEdgeInteractive = true
-        sheetController.maxAllowedDistanceToScreenEdgeForPanInteraction = 500
-        
-//        sheetController.allowsTapBackgroundToDismiss = false
-//        sheetVC.isModalInPresentation = true
-        
-        cs.presentSheetViewController(sheetVC, animated: true)
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            sheetController.animateChanges {
-//                sheetController.selectedDetentIdentifier = .large
-//            }
-//        }
-    }
+private enum DemoActionType {
+    case present
+    case push
 }
 
-// MARK: - SheetPresentationControllerDelegate
-
-extension ViewController: SheetPresentationControllerDelegate {
-    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
-        _ sheetPresentationController: SheetPresentationController
-    ) {
-        print("Selected detent changed to: \(sheetPresentationController.selectedDetentIdentifier?.rawValue ?? "nil")")
-    }
-    
-    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
-        print("User attempted to dismiss, but isModalInPresentation is true")
-    }
-    
-    func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-//        presentationController.presentedViewController.transitionCoordinator?.animate { context in
-//            presentationController.presentingViewController.view.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-//        } completion: { context in
-//            print("结束")
-////            presentationController.presentingViewController.view.transform = .identity
-//
-//        }
-    }
-    
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        
-    }
+private enum SheetProfile {
+    /// 单档，高度由关联值传入（内部 `.custom(identifier: "pageSheetLike")`）。
+    case pageSheetLike(customHeight: CGFloat)
+    case twoDetents
+    case threeDetents
 }
 
-// MARK: - Demo Sheet Content
+private struct DemoItem {
+    let title: String
+    let detail: String
+    let action: DemoActionType
+    let profile: SheetProfile
+    let makeTarget: () -> UIViewController
+}
 
-class DemoSheetViewController: UIViewController {
-    
-    private let tableView: SPTableView = {
-        let table = SPTableView(frame: .zero, style: .plain)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        return table
-    }()
-    
-    private let items = [
-        "Item 1", "Item 2", "Item 3", "Item 4", "Item 5",
-        "Item 6", "Item 7", "Item 8", "Item 9", "Item 10",
-        "Item 11", "Item 12", "Item 13", "Item 14", "Item 15",
-        "Item 16", "Item 17", "Item 18", "Item 19", "Item 20",
-    ]
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .yellow
-        setupUI()
-    }
-    
-    private func setupUI() {
-        let titleLabel = UILabel()
-        titleLabel.text = "Sheet Demo"
-        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
-        titleLabel.textAlignment = .center
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let dismissButton = UIButton(type: .system)
-//        dismissButton.frame = view.bounds
-//        dismissButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        dismissButton.setTitle("Dismiss", for: .normal)
-        dismissButton.translatesAutoresizingMaskIntoConstraints = false
-        dismissButton.backgroundColor = .green
-        dismissButton.addTarget(self, action: #selector(dismissSheet), for: .touchUpInside)
-        
-        view.addSubview(titleLabel)
-        view.addSubview(dismissButton)
-        view.addSubview(tableView)
-        
+final class ViewController: UIViewController {
+
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = 56
         tableView.delegate = self
         tableView.dataSource = self
-        
+        return tableView
+    }()
 
-//
-//        tableView.backgroundColor = UIColor.green
-//
+    private lazy var demos: [DemoItem] = [
+        DemoItem(title: "Nested ScrollView", detail: "内嵌横向列表 + 纵向列表", action: .present, profile: .pageSheetLike(customHeight: 600)) {
+            NestedScrollViewSheetDemoViewController()
+        },
+        DemoItem(title: "Detents", detail: "2个档位", action: .present, profile: .twoDetents) {
+            DetentsSheetDemoViewController()
+        },
+        DemoItem(title: "Map", detail: "真地图 + 地点搜索 Sheet", action: .push, profile: .threeDetents) {
+            MapDemoEntryViewController()
+        },
+        DemoItem(title: "Double List", detail: "左右双列表", action: .present, profile: .twoDetents) {
+            DoubleListSheetDemoViewController()
+        },
+        DemoItem(title: "Dynamic Height", detail: "高度自适应内容", action: .push, profile: .twoDetents) {
+            DynamicHeightDemoViewController()
+        },
+        DemoItem(title: "Comments Enter", detail: "评论区交互入口", action: .push, profile: .twoDetents) {
+            CommentsEntryDemoViewController()
+        },
+        DemoItem(title: "Web", detail: "网页容器", action: .present, profile: .twoDetents) {
+            WebSheetDemoViewController()
+        },
+        DemoItem(title: "Page Sheet", detail: "单档高度 600pt", action: .present, profile: .pageSheetLike(customHeight: 600)) {
+            PageSheetDemoViewController()
+        },
+        DemoItem(title: "RefreshData", detail: "下拉刷新", action: .present, profile: .pageSheetLike(customHeight: view.bounds.height - 62)) {
+            RefreshSheetDemoViewController()
+        },
+        DemoItem(title: "Navigation", detail: "present 一个导航控制器", action: .present, profile: .twoDetents) {
+            NavigationSheetDemoViewController.makeNavigationRoot()
+        },
+        DemoItem(title: "Keyboard", detail: "键盘弹起避让", action: .present, profile: .twoDetents) {
+            KeyboardSheetDemoViewController()
+        },
+    ]
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Swift Example"
+        view.backgroundColor = .systemBackground
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            dismissButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0),
-//            dismissButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dismissButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            dismissButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-
-            tableView.topAnchor.constraint(equalTo: dismissButton.bottomAnchor, constant: 20),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    
-    @objc private func dismissSheet() {
-//        dismiss(animated: true)
-        
-        if cs.sheetPresentationController.selectedDetentIdentifier == .large {
-            dismiss(animated: true)
+
+    private func show(_ item: DemoItem) {
+        let target = item.makeTarget()
+        if item.action == .push {
+            guard let nav = navigationController else { return }
+            target.hidesBottomBarWhenPushed = true
+            nav.pushViewController(target, animated: true)
             return
         }
-        cs.sheetPresentationController.detents = [
-            .large(),
-            .medium(),
-//            .custom(identifier: .init("small")) { context in
-//                return 200
-//            }
-        ]
-        
-        cs.sheetPresentationController.animateChanges {
-            self.cs.sheetPresentationController.selectedDetentIdentifier = .large
-        }
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            self.cs.sheetPresentationController.detents = [
-//                .medium(),
-//            ]
-//        }
-        
+        presentAsSheet(target, profile: item.profile)
     }
 }
 
-// MARK: - UITableViewDelegate & DataSource
-
-extension DemoSheetViewController: UITableViewDelegate, UITableViewDataSource {
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        demos.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "第\(indexPath.row)行";
-        cell.contentView.backgroundColor = .white
+        let cell = tableView.dequeueReusableCell(withIdentifier: "demo")
+            ?? UITableViewCell(style: .subtitle, reuseIdentifier: "demo")
+        let item = demos[indexPath.row]
+        cell.textLabel?.text = item.title
+        cell.detailTextLabel?.text = item.detail
+        cell.detailTextLabel?.textColor = .secondaryLabel
+        cell.selectionStyle = .none
+        cell.accessoryType = (item.action == .push) ? .disclosureIndicator : .none
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        print("Selected: \(items[indexPath.row])")
+        show(demos[indexPath.row])
     }
 }
+
+private extension ViewController {
+    func presentAsSheet(_ vc: UIViewController, profile: SheetProfile) {
+        let controller = vc.cs.sheetPresentationController
+        let settings = SheetDemoSettingsStore.shared
+        controller.delegate = self
+        controller.prefersGrabberVisible = settings.prefersGrabberVisible
+        controller.preferredCornerRadius = settings.preferredCornerRadius
+        controller.dimmingBackgroundAlpha = settings.dimmingBackgroundAlpha
+        controller.requiresScrollingFromEdgeToDriveSheet = settings.requiresScrollingFromEdgeToDriveSheet
+        controller.allowsScrollViewToDriveSheet = (vc is RefreshSheetDemoViewController)
+            ? false
+            : settings.allowsScrollViewToDriveSheet
+        controller.allowsPanGestureToDriveSheet = settings.allowsPanGestureToDriveSheet
+        controller.prefersScrollingExpandsWhenScrolledToEdge = settings.prefersScrollingExpandsWhenScrolledToEdge
+        controller.prefersSheetPanOverpullWithDamping = settings.prefersSheetPanOverpullWithDamping
+        controller.allowsTapBackgroundToDismiss = settings.allowsTapBackgroundToDismiss
+        controller.isEdgePanGestureEnabled = settings.isEdgePanGestureEnabled
+        controller.edgePanTriggerDistance = settings.edgePanTriggerDistance
+        controller.prefersShadowVisible = settings.prefersShadowVisible
+        controller.prefersFloatingStyle = settings.prefersFloatingStyle
+        if #available(iOS 26, *) {
+            controller.prefersGlassEffect = settings.prefersGlassEffect
+        }
+
+        vc.isModalInPresentation = settings.isModalInPresentation
+
+        switch profile {
+        case .pageSheetLike(let customHeight):
+            controller.detents = [
+                .custom(identifier: .init("pageSheetLike")) { _ in customHeight }
+            ]
+        case .twoDetents:
+            controller.detents = [.large(), .medium()]
+        case .threeDetents:
+            controller.detents = [
+                .large(),
+                .medium(),
+                .custom(identifier: .init("map.small")) { _ in 220 }
+            ]
+            controller.selectedDetentIdentifier = .medium
+        }
+        cs.presentSheetViewController(vc, animated: true) {
+
+        }
+    }
+}
+extension ViewController: SheetPresentationControllerDelegate {
+    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
+        _ sheetPresentationController: SheetPresentationController
+    ) {
+        print("Selected detent: \(sheetPresentationController.selectedDetentIdentifier?.rawValue ?? "nil")")
+    }
+}
+

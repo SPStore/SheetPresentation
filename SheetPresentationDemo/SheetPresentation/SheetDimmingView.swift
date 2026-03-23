@@ -7,15 +7,15 @@
 
 import UIKit
 
-open class SheetDimmingView: UIView {
+class SheetDimmingView: UIView {
     
     // MARK: - Properties
 
     /// 点击回调
-    open var didTap: (() -> Void)?
+    var didTap: (() -> Void)?
     
     /// 背景透明度
-    open var backgroundAlpha: CGFloat = 0.4 {
+    var backgroundAlpha: CGFloat = 0.4 {
         didSet {
             backgroundColor = UIColor.black.withAlphaComponent(backgroundAlpha)
         }
