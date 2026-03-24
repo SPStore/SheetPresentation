@@ -104,6 +104,9 @@ final class CommentsEntryDemoViewController: UIViewController {
         isCommentsSheetPresented = true
 
         let vc = CommentsSheetDemoViewController()
+        vc.onRequestExpandDetents = { [weak self] sheet in
+            self?.expandCommentsSheetDetents(sheet: sheet)
+        }
         vc.onRequestRestoreDetents = { [weak self] sheet in
             self?.restoreCommentsSheetDetents(sheet: sheet)
         }
@@ -122,6 +125,14 @@ final class CommentsEntryDemoViewController: UIViewController {
         sheet.edgePanTriggerDistance = view.bounds.width
 
         cs.presentSheetViewController(vc, animated: true)
+    }
+
+    /// 展开为全屏大档（供评论 Sheet 内按钮调用）。
+    func expandCommentsSheetDetents(sheet: SheetPresentationController) {
+        sheet.animateChanges {
+            sheet.detents = [.large()]
+            sheet.selectedDetentIdentifier = .large
+        }
     }
 
     /// 从全屏大档恢复为评论区比例档（供评论 Sheet 内按钮调用）。

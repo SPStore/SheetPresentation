@@ -7,6 +7,7 @@ final class CommentsSheetDemoViewController: UIViewController {
     private let closeButton = UIButton(type: .system)
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let inputContainer = UIView()
+    var onRequestExpandDetents: ((SheetPresentationController) -> Void)?
     var onRequestRestoreDetents: ((SheetPresentationController) -> Void)?
     var onRequestDismissed: (() -> Void)?
 
@@ -116,10 +117,7 @@ final class CommentsSheetDemoViewController: UIViewController {
         if sheet.selectedDetentIdentifier == SheetPresentationController.Detent.Identifier.large {
             onRequestRestoreDetents?(sheet)
         } else {
-            sheet.animateChanges {
-                sheet.detents = [.large()]
-                sheet.selectedDetentIdentifier = .large
-            }
+            onRequestExpandDetents?(sheet)
         }
     }
 
