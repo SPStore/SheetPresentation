@@ -32,7 +32,6 @@ open class SheetPresentationController: UIPresentationController {
         didSet {
             layoutInfo.detents = detents
             syncDetentYPositionsToInteraction()
-            selectedDetentIdentifier = detents.last?.identifier
         }
     }
 
@@ -125,7 +124,10 @@ open class SheetPresentationController: UIPresentationController {
         didSet { dimmingView?.backgroundAlpha = dimmingBackgroundAlpha }
     }
 
-    open var transitionAnimationDuration: TimeInterval = 0.3
+    open var transitionAnimationDuration: TimeInterval {
+        get { configuration.transitionAnimationDuration }
+        set { configuration.transitionAnimationDuration = newValue }
+    }
 
     // MARK: - 侧滑返回
 
@@ -146,9 +148,7 @@ open class SheetPresentationController: UIPresentationController {
         animateChanges(changes, completion: nil)
     }
 
-    /// 返回指定 detent 对应的 presented view frame，不修改任何状态。
-    /// 可在 `SheetPresentationControllerDelegate.sheetPresentationController(_:didUpdatePresentedFrame:)` 中调用，
-    /// 以获取参考档位的 Y 坐标用于插值计算（如 presenting view 的缩放效果）。
+    /// 获取某档位的frame
     open func frameOfPresentedView(for detentIdentifier: Detent.Identifier) -> CGRect {
         guard containerView != nil else { return .zero }
         return layoutInfo.frameOfPresentedView(for: detentIdentifier)
@@ -161,8 +161,6 @@ open class SheetPresentationController: UIPresentationController {
     private var layoutInfo = SheetLayoutInfo()
 
     private var configuration = SheetConfiguration()
-
-    private var minVerticalVelocityToTriggerDismiss: CGFloat = 800
 
     private var dimmingView: SheetDimmingView?
 
@@ -187,7 +185,6 @@ open class SheetPresentationController: UIPresentationController {
 
     private var isAnimatingToDetent = false
 
-    // 主要是用于区分是程序代码调用dismiss还是用户操作调用dismiss，外部通过调用dismiss(animated:)方法退场的都是程序化代码调用.
     private var isUserInitiatedDismiss = false
 
     private var transitioningManager: SheetTransitioningManager? {
@@ -473,7 +470,7 @@ extension SheetPresentationController {
         guard let shadowView = dropShadowView else { return }
 
         let currentY = shadowView.frame.minY
-        let isHighVelocity = abs(velocity.y) >= minVerticalVelocityToTriggerDismiss
+        let isHighVelocity = abs(velocity.y) >= configuration.minVerticalVelocityToTriggerDismiss
 
         if isHighVelocity {
             if velocity.y < 0 {
@@ -599,7 +596,7 @@ extension SheetPresentationController {
         if finish {
             // 剩余动画时长 = (1 - percentComplete) * 完整时长
             // finishInteraction 默认以 completionSpeed=1 播完剩余段，与 performDismissAnimation 保持一致。
-            let fullDuration: TimeInterval = 0.25
+            let fullDuration = configuration.interactiveDismissFullDuration
             let remaining = 1.0 - (transitioningManager?.interactivePercentComplete ?? 0)
             let dismissDuration = max(TimeInterval(remaining) * fullDuration, 0.08)
             transitioningManager?.finishInteraction()
@@ -733,7 +730,7 @@ extension SheetPresentationController: SheetInteractionDelegate {
             let currentY = dropShadowView?.frame.minY ?? 0
             let containerHeight = containerView?.bounds.height ?? UIScreen.main.bounds.height
             let isBelow = currentY > layoutInfo.smallestDetentYPosition
-            let isHighVelocity = velocity.y >= minVerticalVelocityToTriggerDismiss
+            let isHighVelocity = velocity.y >= configuration.minVerticalVelocityToTriggerDismiss
             let dismissRange = containerHeight - layoutInfo.smallestDetentYPosition
             let isNearBottom = dismissRange > 0
                 && (currentY - layoutInfo.smallestDetentYPosition) / dismissRange > 0.5

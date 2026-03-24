@@ -132,6 +132,7 @@ final class CommentsEntryDemoViewController: UIViewController {
                     ctx.maximumDetentValue * 0.73
                 }
             ]
+            sheet.selectedDetentIdentifier = Self.commentsDetentIdentifier
         }
     }
 

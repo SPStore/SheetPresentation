@@ -118,6 +118,7 @@ final class CommentsSheetDemoViewController: UIViewController {
         } else {
             sheet.animateChanges {
                 sheet.detents = [.large()]
+                sheet.selectedDetentIdentifier = .large
             }
         }
     }
