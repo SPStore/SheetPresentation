@@ -718,8 +718,9 @@ extension SheetPresentationController: SheetInteractionDelegate {
         isDragging = false
         // 手势驱动阶段我们通过 frame 直接更新 dropShadowView；而内容子视图可能是 Auto Layout。
         // 松手到进入 animateToDetent 的交接瞬间，父视图位置通常已经是最新，但子约束可能仍停留在上一轮 layout pass，
-        // 从而出现“父视图先动、子控件慢一帧”的视觉不同步。
+        // 从而出现“父视图先动、子控件慢一帧”的视觉不同步
         // 这里先强制把 presentedViewController.view 的约束同步到当前帧，消除交接窗口，再进入后续吸附/dismiss 决策。
+        // 现象：用力从中档位切到高档位，底部会闪一下背景，因为子控件的高度还没与父视图高度同步。
         presentedViewController.view.setNeedsLayout()
         presentedViewController.view.layoutIfNeeded()
 
