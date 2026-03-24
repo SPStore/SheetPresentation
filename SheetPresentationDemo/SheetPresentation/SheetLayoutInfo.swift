@@ -128,8 +128,10 @@ class SheetLayoutInfo: NSObject {
             entries.append(DetentEntry(identifier: detent.identifier, yPosition: y, height: height))
         }
 
-        sortedDetentEntries = entries.sorted { $0.yPosition < $1.yPosition }
-        detentMap = Dictionary(uniqueKeysWithValues: entries.map { ($0.identifier, $0) })
+        var seen = Set<SheetPresentationController.Detent.Identifier>()
+        let uniqueEntries = entries.filter { seen.insert($0.identifier).inserted }
+        sortedDetentEntries = uniqueEntries.sorted { $0.yPosition < $1.yPosition }
+        detentMap = Dictionary(uniqueKeysWithValues: uniqueEntries.map { ($0.identifier, $0) })
     }
 
     // MARK: - 查询方法
