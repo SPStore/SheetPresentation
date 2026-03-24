@@ -42,8 +42,13 @@ final class CustomTransitionDemoViewController: UIViewController {
         let contentVC = CustomTransitionSheetContentViewController()
         let controller = contentVC.cs.sheetPresentationController
         controller.delegate = self
-        SheetDemoSettingsStore.shared.configure(sheetController: controller, for: contentVC)
-        controller.detents = [.custom(identifier: .init("custom.height")) { _ in 400 }]
+        controller.detents = [.large()]
+        controller.prefersGrabberVisible = false
+        controller.preferredCornerRadius = 0
+        controller.prefersShadowVisible = false
+        controller.dimmingBackgroundAlpha = 0.4
+        controller.allowsPanGestureToDriveSheet = false
+        controller.allowsScrollViewToDriveSheet = false
         cs.presentSheetViewController(contentVC, animated: true)
     }
 }
@@ -72,35 +77,73 @@ private final class CustomTransitionSheetContentViewController: UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .clear
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleBackgroundTap))
+        tap.delegate = self
+        view.addGestureRecognizer(tap)
         setupUI()
     }
 
     private func setupUI() {
-        let grabberPad = sheetDemoGrabberLayoutPadding
-        let sheetNav = SheetDemoSheetNavigationView(title: "Custom Transition", onClose: { [weak self] in
-            self?.dismiss(animated: true)
-        })
+        let card = UIView()
+        card.backgroundColor = .systemBackground
+        card.layer.cornerRadius = 16
+        card.layer.cornerCurve = .continuous
+        card.layer.shadowColor = UIColor.black.cgColor
+        card.layer.shadowOpacity = 0.12
+        card.layer.shadowRadius = 20
+        card.layer.shadowOffset = CGSize(width: 0, height: 6)
+        card.translatesAutoresizingMaskIntoConstraints = false
 
         let label = UILabel()
-        label.text = "此 Sheet 使用了自定义转场动画\npresent：淡入 + 放大\ndismiss：淡出 + 缩小"
-        label.textAlignment = .center
+        label.text = "自定义转场：淡入 + 放大 / 淡出 + 缩小"
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 17)
+        label.font = .systemFont(ofSize: 15)
         label.textColor = .secondaryLabel
         label.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(sheetNav)
-        view.addSubview(label)
+        let closeButton = UIButton(type: .system)
+        closeButton.setTitle("关闭", for: .normal)
+        closeButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+        closeButton.setContentHuggingPriority(.required, for: .horizontal)
+        closeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+        closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(card)
+        card.addSubview(label)
+        card.addSubview(closeButton)
 
         NSLayoutConstraint.activate([
-            sheetNav.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: grabberPad),
-            sheetNav.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            sheetNav.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            card.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            card.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            card.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
 
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            label.topAnchor.constraint(equalTo: card.topAnchor, constant: 16),
+            label.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            label.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -16),
+            label.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -12),
+
+            label.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
+
+            closeButton.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            closeButton.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
         ])
+    }
+
+    @objc private func closeTapped() {
+        dismiss(animated: true)
+    }
+
+    @objc private func handleBackgroundTap() {
+        dismiss(animated: true)
+    }
+}
+
+extension CustomTransitionSheetContentViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        // 只在触摸直接落在背景 view 上时触发，点 card 内部不响应
+        touch.view == view
     }
 }
 
