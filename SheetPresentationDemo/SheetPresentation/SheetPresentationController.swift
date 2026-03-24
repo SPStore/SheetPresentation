@@ -369,6 +369,7 @@ extension SheetPresentationController {
             layoutInfo.prefersFloatingStyle = prefersFloatingStyle
             layoutInfo.detents = detents
         }
+        syncDetentYPositionsToInteraction()
     }
 }
 

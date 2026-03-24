@@ -58,6 +58,10 @@ protocol SheetInteractionDelegate: AnyObject {
 /// 核心交互类，负责处理平移手势与 scrollView 联动。
 class SheetInteraction: NSObject, UIInteraction {
 
+    // MARK: - 代理
+
+    weak var delegate: SheetInteractionDelegate?
+
     // MARK: - 布局数据
 
     /// Detent 的 Y 坐标数组（已排序，最小 Y → 最大 detent 在前）
@@ -69,22 +73,16 @@ class SheetInteraction: NSObject, UIInteraction {
         case sheetPan
     }
 
-    // MARK: - 计算属性
-
     /// 最大 detent 的 Y 坐标（屏幕最靠上 → 最小值）
-    var largestDetentYPosition: CGFloat {
+    private var largestDetentYPosition: CGFloat {
         detentYPositions.min() ?? 0
     }
 
     /// 最小 detent 的 Y 坐标（屏幕最靠下 → 最大值）
-    var smallestDetentYPosition: CGFloat {
+    private var smallestDetentYPosition: CGFloat {
         detentYPositions.max() ?? 0
     }
-
-    // MARK: - 代理
-
-    weak var delegate: SheetInteractionDelegate?
-
+    
     // MARK: - 手势
 
     /// 安装在 view 上的主平移手势

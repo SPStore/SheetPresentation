@@ -63,6 +63,9 @@ final class MapSheetDemoViewController: UIViewController {
 
         mapDemoPlaces = Self.makeMapDemoPlaces(count: 20)
         updateBlurForCurrentTraitCollection()
+        
+        // 让searchTextField立刻产生frame，否则viewDidLayoutSubviews中拿到的h是0
+        searchBar.layoutIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
