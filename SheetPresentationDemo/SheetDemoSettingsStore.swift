@@ -165,7 +165,7 @@ final class SheetDemoSettingsStore {
 
     /// 将当前所有设置值写入 `controller` 及被展示的 `presentedVC`。
     /// 调用后可按需覆写个别属性。
-    func configure(sheetController controller: SheetPresentationController, for presentedVC: UIViewController) {
+    func configure(sheetController controller: SheetPresentationController, for presentedVC: UIViewController? = nil) {
         controller.prefersGrabberVisible = prefersGrabberVisible
         controller.preferredCornerRadius = preferredCornerRadius
         controller.dimmingBackgroundAlpha = dimmingBackgroundAlpha
@@ -182,7 +182,7 @@ final class SheetDemoSettingsStore {
         if #available(iOS 26, *) {
             controller.prefersGlassEffect = prefersGlassEffect
         }
-        presentedVC.isModalInPresentation = isModalInPresentation
+        presentedVC?.isModalInPresentation = isModalInPresentation
     }
 
     // MARK: - 设置页绑定
@@ -234,11 +234,13 @@ final class SheetDemoSettingsStore {
     /// 开关行的副标题；无则返回 nil。
     static func subtitle(for key: SettingKey) -> String? {
         switch key {
+        case .prefersFloatingStyle:
+            return "地图示例比较典型"
         case .isModalInPresentation:
             return "对应被展示控制器的 isModalInPresentation；开启后无法通过下拉等方式关闭"
         case .prefersGrabberVisible: return "顶部小横条"
         case .prefersScrollingExpandsWhenScrolledToEdge:
-            return "在中档位下，向上滑动 scrollView 是否可以驱动 Sheet 展开"
+            return "在低档位下，向上滑动 scrollView 是否可以驱动 Sheet 展开"
         default: return nil
         }
     }

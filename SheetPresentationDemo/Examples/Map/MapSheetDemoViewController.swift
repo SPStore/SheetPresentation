@@ -63,8 +63,6 @@ final class MapSheetDemoViewController: UIViewController {
 
         mapDemoPlaces = Self.makeMapDemoPlaces(count: 20)
         updateBlurForCurrentTraitCollection()
-        
-        view.layoutIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
@@ -117,9 +115,11 @@ final class MapSheetDemoViewController: UIViewController {
     static func makeMapDetents() -> [SheetPresentationController.Detent] {
         [
             .custom(identifier: DetentID.long) { ctx in Self.resolveLongDetentHeight(ctx) },
-            .custom(identifier: DetentID.medium) { _ in 380 },
-            .custom(identifier: DetentID.short) { _ in SheetDemoSettingsStore.shared.prefersFloatingStyle ? 76 : 160
-}
+            .custom(identifier: DetentID.medium) { ctx in min(380, ctx.maximumDetentValue * 0.5) },
+            .custom(identifier: DetentID.short) { ctx in
+                let base: CGFloat = SheetDemoSettingsStore.shared.prefersFloatingStyle ? 76 : 160
+                return min(base, ctx.maximumDetentValue * 0.25)
+            }
         ]
     }
 

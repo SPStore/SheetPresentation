@@ -210,7 +210,7 @@ extension SheetPresentationController {
 
         delegate?.presentationController?(self, willPresentWithAdaptiveStyle: .custom, transitionCoordinator: presentedViewController.transitionCoordinator)
         
-        refreshLayoutInfo(using: containerView, invalidateDetents: true)
+        refreshLayoutInfo(using: containerView)
 
         if selectedDetentIdentifier == nil,
            let smallest = layoutInfo.sortedDetentEntries.last {
@@ -291,7 +291,7 @@ extension SheetPresentationController {
 
         if layoutInfo.containerBounds != containerView.bounds
             || layoutInfo.containerSafeAreaInsets != containerView.safeAreaInsets {
-            refreshLayoutInfo(using: containerView, invalidateDetents: false)
+            refreshLayoutInfo(using: containerView)
         }
 
         return layoutInfo.frameOfPresentedView(for: selectedDetentIdentifier)
@@ -361,15 +361,13 @@ extension SheetPresentationController {
         sheetInteraction.detentYPositions = layoutInfo.sortedDetentEntries.map(\.yPosition)
     }
 
-    private func refreshLayoutInfo(using containerView: UIView, invalidateDetents: Bool) {
+    private func refreshLayoutInfo(using containerView: UIView) {
         layoutInfo.performBatchUpdates {
             layoutInfo.containerBounds = containerView.bounds
             layoutInfo.containerTraitCollection = containerView.traitCollection
             layoutInfo.containerSafeAreaInsets = containerView.safeAreaInsets
-            if invalidateDetents {
-                layoutInfo.prefersFloatingStyle = prefersFloatingStyle
-                layoutInfo.detents = detents
-            }
+            layoutInfo.prefersFloatingStyle = prefersFloatingStyle
+            layoutInfo.detents = detents
         }
     }
 }

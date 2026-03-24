@@ -55,6 +55,12 @@ final class MapDemoEntryViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        if isMovingFromParent {
+            // MKMapView 销毁前断开 delegate 并移出视图层级，
+            // 避免 GPU 命令缓冲区还在引用 Metal drawable 时触发断言崩溃。
+            mapView.delegate = nil
+            mapView.removeFromSuperview()
+        }
     }
 
     override func willMove(toParent parent: UIViewController?) {
@@ -91,29 +97,16 @@ final class MapDemoEntryViewController: UIViewController {
         guard presentedViewController == nil else { return }
 
         let vc = MapSheetDemoViewController()
-        let sheet = vc.cs.sheetPresentationController
-        let settings = SheetDemoSettingsStore.shared
-
-        sheet.prefersGrabberVisible = true
-        sheet.prefersShadowVisible = true
-        sheet.dimmingBackgroundAlpha = 0.05
-        sheet.allowsTapBackgroundToDismiss = false
-        
-        sheet.preferredCornerRadius = settings.preferredCornerRadius
-        sheet.requiresScrollingFromEdgeToDriveSheet = settings.requiresScrollingFromEdgeToDriveSheet
-        sheet.allowsScrollViewToDriveSheet = settings.allowsScrollViewToDriveSheet
-        sheet.allowsPanGestureToDriveSheet = settings.allowsPanGestureToDriveSheet
-        sheet.prefersScrollingExpandsWhenScrolledToEdge = settings.prefersScrollingExpandsWhenScrolledToEdge
-        sheet.prefersSheetPanOverpullWithDamping = settings.prefersSheetPanOverpullWithDamping
-        sheet.isEdgePanGestureEnabled = settings.isEdgePanGestureEnabled
-        sheet.edgePanTriggerDistance = settings.edgePanTriggerDistance
-        sheet.prefersFloatingStyle = settings.prefersFloatingStyle
-        if #available(iOS 26, *) {
-            sheet.prefersGlassEffect = settings.prefersGlassEffect
-        }
-
         vc.isModalInPresentation = true
 
+        let sheet = vc.cs.sheetPresentationController
+        let settings = SheetDemoSettingsStore.shared
+        // 应用全局配置
+        settings.configure(sheetController: sheet)
+        
+        sheet.allowsTapBackgroundToDismiss = false
+        sheet.dimmingBackgroundAlpha = 0
+        sheet.prefersShadowVisible = true
         sheet.detents = MapSheetDemoViewController.makeMapDetents()
         sheet.selectedDetentIdentifier = MapSheetDemoViewController.DetentID.medium
 
@@ -184,6 +177,11 @@ final class MapDemoEntryViewController: UIViewController {
 extension MapDemoEntryViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         guard programmaticRegionChangeDepth == 0, presentedViewController != nil else { return }
+        // 检查内部 scroll 子视图是否有活跃手势，排除屏幕旋转等非用户触发的 region 变化
+        let hasActiveGesture = mapView.subviews.first?.gestureRecognizers?.contains {
+            $0.state == .began || $0.state == .changed
+        } ?? false
+        guard hasActiveGesture else { return }
         (presentedViewController as? MapSheetDemoViewController)?.userMoveMapView()
     }
 
