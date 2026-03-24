@@ -63,9 +63,6 @@ final class ViewController: UIViewController {
         DemoItem(title: "Web", detail: "网页容器", action: .present, profile: .twoDetents) {
             WebSheetDemoViewController()
         },
-        DemoItem(title: "Page Sheet", detail: "类似系统的缩放效果", action: .present, profile: .pageSheetLike(customHeight: 600)) {
-            PageSheetDemoViewController()
-        },
         DemoItem(title: "Double List", detail: "左右双列表", action: .present, profile: .twoDetents) {
             DoubleListSheetDemoViewController()
         },
