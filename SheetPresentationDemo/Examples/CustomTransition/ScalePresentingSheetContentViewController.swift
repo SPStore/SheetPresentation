@@ -2,11 +2,6 @@ import UIKit
 
 // MARK: - ScalePresentingSheetContentViewController
 
-/// 演示「present 时缩放 presenting view」效果：
-/// 当 sheet 处于第 1 档（最大）时，presentingViewController.view 按比例缩小；
-/// 拖拽到第 2 档恢复原大小；第 2、3 档之间切换不触发缩放。
-/// 通过 `SheetPresentationControllerDelegate.sheetPresentationController(_:didUpdatePresentedFrame:)` 实时插值，
-/// 效果与系统 .pageSheet 类似，拖拽过程中连续跟随。
 final class ScalePresentingSheetContentViewController: UIViewController {
 
     enum DetentID {
@@ -21,6 +16,9 @@ final class ScalePresentingSheetContentViewController: UIViewController {
     private let minScale: CGFloat = 0.92
     private let maxCornerRadius: CGFloat = 12
 
+    private static var hintHasBeenShown = false
+    private weak var hintView: UIView?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -28,14 +26,17 @@ final class ScalePresentingSheetContentViewController: UIViewController {
         setupUI()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        showHint()
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         guard isBeingDismissed else { return }
-        // 随 dismiss 转场一起还原缩放，dismiss 取消时转场 coordinator 也会自动回滚
+        dismissHint()
         transitionCoordinator?.animate(
-            alongsideTransition: { [weak self] _ in
-                self?.applyProgress(0)
-            },
+            alongsideTransition: { [weak self] _ in self?.applyProgress(0) },
             completion: { [weak self] ctx in
                 if !ctx.isCancelled {
                     self?.presentingViewController?.view.layer.masksToBounds = false
@@ -44,7 +45,7 @@ final class ScalePresentingSheetContentViewController: UIViewController {
         )
     }
 
-    // MARK: - Private
+    // MARK: - UI
 
     private func setupUI() {
         let grabberPad = sheetDemoGrabberLayoutPadding
@@ -71,7 +72,83 @@ final class ScalePresentingSheetContentViewController: UIViewController {
         ])
     }
 
-    /// progress: 0 = medium 档（identity），1 = large 档（完全缩小）
+    // MARK: - Hint
+
+    private func showHint() {
+        guard !Self.hintHasBeenShown else { return }
+        Self.hintHasBeenShown = true
+        guard let containerView = presentationController?.containerView,
+              let presentedView = presentationController?.presentedView else { return }
+
+        let arrowView = UIImageView(image: UIImage(systemName: "arrow.up"))
+        arrowView.tintColor = .white
+        arrowView.contentMode = .scaleAspectFit
+
+        let label = UILabel()
+        label.text = "上推观察动画"
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = UIColor.white.withAlphaComponent(0.85)
+
+        let stack = UIStackView(arrangedSubviews: [arrowView, label])
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 4
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        arrowView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        arrowView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+
+        let hint = UIView()
+        hint.isUserInteractionEnabled = false
+        hint.addSubview(stack)
+
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: hint.topAnchor),
+            stack.bottomAnchor.constraint(equalTo: hint.bottomAnchor),
+            stack.leadingAnchor.constraint(equalTo: hint.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: hint.trailingAnchor),
+        ])
+
+        // 用 frame 定位，方便在 didUpdatePresentedFrame 中每帧直接更新 origin.y
+        let hintSize = hint.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        let sheetY = presentedView.frame.minY
+        hint.frame = CGRect(
+            x: containerView.bounds.midX - hintSize.width / 2,
+            y: sheetY - hintSize.height - 16,
+            width: hintSize.width,
+            height: hintSize.height
+        )
+
+        containerView.addSubview(hint)
+        hintView = hint
+
+        let bounce = CABasicAnimation(keyPath: "transform.translation.y")
+        bounce.fromValue = 0
+        bounce.toValue = -7
+        bounce.duration = 0.55
+        bounce.autoreverses = true
+        bounce.repeatCount = .infinity
+        bounce.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        hint.layer.add(bounce, forKey: "bounce")
+    }
+
+    private func updateHint(sheetMinY: CGFloat, mediumY: CGFloat) {
+        guard let hint = hintView else { return }
+        hint.frame.origin.y = sheetMinY - hint.frame.height - 16
+        if sheetMinY < mediumY - 1 {
+            dismissHint()
+        }
+    }
+
+    private func dismissHint() {
+        guard let hint = hintView else { return }
+        hintView = nil
+        hint.layer.removeAllAnimations()
+        hint.removeFromSuperview()
+    }
+
+    // MARK: - Scale
+
     private func applyProgress(_ progress: CGFloat) {
         let p = min(max(progress, 0), 1)
         let scale = 1.0 - p * (1.0 - minScale)
@@ -90,13 +167,14 @@ extension ScalePresentingSheetContentViewController: SheetPresentationController
         _ sheetPresentationController: SheetPresentationController,
         didUpdatePresentedFrame frame: CGRect
     ) {
-        // 每帧从 sheetPresentationController 读取参考 Y，无需手动缓存、rotation 后自动刷新
-        let largeY  = sheetPresentationController.frameOfPresentedView(for: DetentID.large).origin.y
         let mediumY = sheetPresentationController.frameOfPresentedView(for: DetentID.medium).origin.y
+
+        updateHint(sheetMinY: frame.origin.y, mediumY: mediumY)
+
+        let largeY = sheetPresentationController.frameOfPresentedView(for: DetentID.large).origin.y
         let range = mediumY - largeY
         guard range > 1 else { return }
-        let progress = (mediumY - frame.origin.y) / range
-        applyProgress(progress)
+        applyProgress((mediumY - frame.origin.y) / range)
     }
 }
 
