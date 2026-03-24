@@ -79,7 +79,7 @@ extension SheetPresentationController {
             identifier: SheetPresentationController.Detent.Identifier? = nil,
             resolver: @escaping (_ context: any SheetPresentationControllerDetentResolutionContext) -> CGFloat?
         ) -> SheetPresentationController.Detent {
-            let id = identifier ?? .init("custom")
+            let id = identifier ?? .init("custom.\(UUID().uuidString)")
             return Detent(identifier: id, heightResolver: resolver)
         }
 
