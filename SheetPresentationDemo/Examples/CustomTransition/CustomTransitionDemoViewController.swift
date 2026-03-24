@@ -49,6 +49,7 @@ final class CustomTransitionDemoViewController: UIViewController {
         controller.dimmingBackgroundAlpha = 0.4
         controller.allowsPanGestureToDriveSheet = false
         controller.allowsScrollViewToDriveSheet = false
+        controller.transitionAnimationDuration = 0.2
         cs.presentSheetViewController(contentVC, animated: true)
     }
 }
@@ -75,6 +76,8 @@ extension CustomTransitionDemoViewController: SheetPresentationControllerTransit
 
 private final class CustomTransitionSheetContentViewController: UIViewController {
 
+    private let card = UIView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
@@ -84,8 +87,30 @@ private final class CustomTransitionSheetContentViewController: UIViewController
         setupUI()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard animated else { return }
+        card.alpha = 0
+        card.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        transitionCoordinator?.animate(alongsideTransition: { _ in
+            self.card.alpha = 1
+            self.card.transform = .identity
+        })
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        guard animated else { return }
+        transitionCoordinator?.animate(alongsideTransition: { _ in
+            self.card.alpha = 0
+            self.card.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        }, completion: { _ in
+            self.card.alpha = 1
+            self.card.transform = .identity
+        })
+    }
+
     private func setupUI() {
-        let card = UIView()
         card.backgroundColor = .systemBackground
         card.layer.cornerRadius = 16
         card.layer.cornerCurve = .continuous
@@ -184,17 +209,13 @@ private final class FadeScaleAnimator: NSObject, UIViewControllerAnimatedTransit
         let finalY = sheetController.frameOfPresentedViewInContainerView.origin.y
         sheetController.updatePresentedViewFrame(forYPosition: finalY)
         presentedView.alpha = 0
-        presentedView.transform = CGAffineTransform(scaleX: 0.88, y: 0.88)
 
         UIView.animate(
             withDuration: duration,
             delay: 0,
-            usingSpringWithDamping: 0.9,
-            initialSpringVelocity: 0,
             options: [.allowUserInteraction, .beginFromCurrentState],
             animations: {
                 presentedView.alpha = 1
-                presentedView.transform = .identity
             },
             completion: { finished in
                 ctx.completeTransition(finished)
@@ -218,7 +239,6 @@ private final class FadeScaleAnimator: NSObject, UIViewControllerAnimatedTransit
             options: [.curveEaseIn, .beginFromCurrentState],
             animations: {
                 presentedView.alpha = 0
-                presentedView.transform = CGAffineTransform(scaleX: 0.88, y: 0.88)
             },
             completion: { _ in
                 presentedView.alpha = 1
