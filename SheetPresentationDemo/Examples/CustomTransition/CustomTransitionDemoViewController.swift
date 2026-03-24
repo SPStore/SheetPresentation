@@ -49,7 +49,6 @@ final class CustomTransitionDemoViewController: UIViewController {
         controller.dimmingBackgroundAlpha = 0.4
         controller.allowsPanGestureToDriveSheet = false
         controller.allowsScrollViewToDriveSheet = false
-        controller.transitionAnimationDuration = 0.2
         cs.presentSheetViewController(contentVC, animated: true)
     }
 }
@@ -57,18 +56,16 @@ final class CustomTransitionDemoViewController: UIViewController {
 extension CustomTransitionDemoViewController: SheetPresentationControllerDelegate {}
 
 extension CustomTransitionDemoViewController: SheetPresentationControllerTransitionAnimating {
-    func sheetPresentationController(
-        _ sheetPresentationController: SheetPresentationController,
-        animatorForNonInteractivePresentTransitionWithDuration duration: TimeInterval
+    func animatorForPresentTransition(
+        _ sheetPresentationController: SheetPresentationController
     ) -> UIViewControllerAnimatedTransitioning? {
-        FadeScaleAnimator(isPresenting: true, duration: duration)
+        FadeScaleAnimator(isPresenting: true)
     }
 
-    func sheetPresentationController(
-        _ sheetPresentationController: SheetPresentationController,
-        animatorForNonInteractiveDismissTransitionWithDuration duration: TimeInterval
+    func animatorForDismissTransition(
+        _ sheetPresentationController: SheetPresentationController
     ) -> UIViewControllerAnimatedTransitioning? {
-        FadeScaleAnimator(isPresenting: false, duration: duration)
+        FadeScaleAnimator(isPresenting: false)
     }
 }
 
@@ -177,15 +174,13 @@ extension CustomTransitionSheetContentViewController: UIGestureRecognizerDelegat
 private final class FadeScaleAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
     private let isPresenting: Bool
-    private let duration: TimeInterval
 
-    init(isPresenting: Bool, duration: TimeInterval) {
+    init(isPresenting: Bool) {
         self.isPresenting = isPresenting
-        self.duration = duration
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        duration
+        0.2
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -206,6 +201,8 @@ private final class FadeScaleAnimator: NSObject, UIViewControllerAnimatedTransit
             return
         }
 
+        let duration = transitionDuration(using: ctx)
+        
         let finalY = sheetController.frameOfPresentedViewInContainerView.origin.y
         sheetController.updatePresentedViewFrame(forYPosition: finalY)
         presentedView.alpha = 0
@@ -213,7 +210,9 @@ private final class FadeScaleAnimator: NSObject, UIViewControllerAnimatedTransit
         UIView.animate(
             withDuration: duration,
             delay: 0,
-            options: [.allowUserInteraction, .beginFromCurrentState],
+            usingSpringWithDamping: 0.7,
+            initialSpringVelocity: 1.2,
+            options: [.allowUserInteraction],
             animations: {
                 presentedView.alpha = 1
             },
@@ -232,6 +231,8 @@ private final class FadeScaleAnimator: NSObject, UIViewControllerAnimatedTransit
             ctx.completeTransition(false)
             return
         }
+
+        let duration = transitionDuration(using: ctx)
 
         UIView.animate(
             withDuration: duration,

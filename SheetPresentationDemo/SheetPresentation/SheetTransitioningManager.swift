@@ -60,7 +60,7 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
     ) -> UIViewControllerAnimatedTransitioning? {
         let sheet = sheetPresentationController
         let duration = transitionAnimationDuration
-        if let custom = sheet.resolvedNonInteractivePresentAnimator(duration: duration) {
+        if let custom = sheet.resolvedNonInteractivePresentAnimator() {
             return custom
         }
         return SheetTransitionAnimator(isPresenting: true, animationDuration: duration)
@@ -74,7 +74,7 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
         if isInteractive {
             return SheetTransitionAnimator(isPresenting: false, animationDuration: duration)
         }
-        if let custom = sheet.resolvedNonInteractiveDismissAnimator(duration: duration) {
+        if let custom = sheet.resolvedNonInteractiveDismissAnimator() {
             return custom
         }
         return SheetTransitionAnimator(isPresenting: false, animationDuration: duration)
