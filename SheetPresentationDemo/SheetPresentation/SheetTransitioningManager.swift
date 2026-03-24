@@ -30,9 +30,8 @@ class SheetTransitioningManager: NSObject, UIViewControllerTransitioningDelegate
         if let pc = _sheetPresentationController {
             return pc
         }
-        guard let presented = presentedViewController else {
-            preconditionFailure("SheetTransitioningManager: presentedViewController is nil")
-        }
+        assert(presentedViewController != nil, "SheetTransitioningManager: presentedViewController is nil")
+        let presented = presentedViewController!
         let pc = SheetPresentationController(presentedViewController: presented, presenting: nil)
         _sheetPresentationController = pc
         return pc
