@@ -161,26 +161,25 @@ class SheetLayoutInfo: NSObject {
     func floatingStyleMargin(at yPosition: CGFloat) -> CGFloat {
         let maxMargin: CGFloat = 28.0
         // 这2个if是临界态，临界态不用函数计算，避免精度问题.
-        let largestOriginY = SheetPresentationController.Detent.preferredLargestDetentOriginY(
+        let minY = SheetPresentationController.Detent.preferredLargestDetentOriginY(
             safeAreaTop: containerSafeAreaInsets.top
         )
-        if yPosition <= largestOriginY  {
+        if yPosition <= minY  {
             return 0
         }
         // 已是最小档或继续往 dismiss 方向：固定为最小档上的插值 margin（侧滑 dismiss 时不会变成 maxMargin）。
         if yPosition >= smallestDetentYPosition {
-            return floatingStyleMarginInterpolated(at: smallestDetentYPosition, maxMargin: maxMargin)
+            return floatingStyleMarginInterpolated(at: smallestDetentYPosition, minY: minY, maxMargin: maxMargin)
         }
         // 靠近容器底且 y 仍小于最小档 Y：满 margin（与上面分支互斥，避免最小档贴底时误进满 margin）。
         if yPosition >= maximumDetentValue - maxMargin {
             return maxMargin
         }
-        return floatingStyleMarginInterpolated(at: yPosition, maxMargin: maxMargin)
+        return floatingStyleMarginInterpolated(at: yPosition, minY: minY, maxMargin: maxMargin)
     }
 
     /// 浮动样式 margin 的幂次插值（`effectiveY = min(y, smallestDetent)` 在调用方按需体现）。
-    private func floatingStyleMarginInterpolated(at yPosition: CGFloat, maxMargin: CGFloat) -> CGFloat {
-        let minY = self.yPosition(for: .large) ?? 0
+    private func floatingStyleMarginInterpolated(at yPosition: CGFloat, minY: CGFloat, maxMargin: CGFloat) -> CGFloat {
         let H = maximumDetentValue - minY
         guard H > 0 else { return 0 }
         let effectiveY = min(yPosition, smallestDetentYPosition)
