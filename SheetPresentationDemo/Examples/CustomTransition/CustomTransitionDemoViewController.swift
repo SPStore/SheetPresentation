@@ -25,17 +25,53 @@ final class CustomTransitionDemoViewController: UIViewController {
         button.addTarget(self, action: #selector(presentSheet), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
 
+        let desc2Label = UILabel()
+        desc2Label.text = "在 SheetPresentationControllerDelegate 中监听 didUpdatePresentedFrame，根据 sheet 当前 Y 与第 1、2 档参考 Y 插值，实时缩放 presentingViewController.view，效果类似系统 pageSheet。"
+        desc2Label.numberOfLines = 0
+        desc2Label.font = .systemFont(ofSize: 15)
+        desc2Label.textColor = .secondaryLabel
+        desc2Label.translatesAutoresizingMaskIntoConstraints = false
+
+        let button2 = UIButton(type: .system)
+        button2.setTitle("Present with Scale Presenting Effect", for: .normal)
+        button2.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
+        button2.addTarget(self, action: #selector(presentScaleSheet), for: .touchUpInside)
+        button2.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(descLabel)
         view.addSubview(button)
+        view.addSubview(desc2Label)
+        view.addSubview(button2)
 
         NSLayoutConstraint.activate([
             descLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             descLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
-            button.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 32),
+            button.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 20),
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            desc2Label.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 32),
+            desc2Label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            desc2Label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+
+            button2.topAnchor.constraint(equalTo: desc2Label.bottomAnchor, constant: 20),
+            button2.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
+    }
+
+    @objc private func presentScaleSheet() {
+        let contentVC = ScalePresentingSheetContentViewController()
+        let controller = contentVC.cs.sheetPresentationController
+        controller.detents = [
+            .large(),
+            .medium(),
+            .custom(identifier: ScalePresentingSheetContentViewController.DetentID.small) { ctx in
+                max(120, ctx.maximumDetentValue * 0.25)
+            },
+        ]
+        controller.prefersGrabberVisible = true
+        cs.presentSheetViewController(contentVC, animated: true)
     }
 
     @objc private func presentSheet() {

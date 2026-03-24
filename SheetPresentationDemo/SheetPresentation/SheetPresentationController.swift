@@ -146,6 +146,14 @@ open class SheetPresentationController: UIPresentationController {
         animateChanges(changes, completion: nil)
     }
 
+    /// 返回指定 detent 对应的 presented view frame，不修改任何状态。
+    /// 可在 `SheetPresentationControllerDelegate.sheetPresentationController(_:didUpdatePresentedFrame:)` 中调用，
+    /// 以获取参考档位的 Y 坐标用于插值计算（如 presenting view 的缩放效果）。
+    open func frameOfPresentedView(for detentIdentifier: Detent.Identifier) -> CGRect {
+        guard containerView != nil else { return .zero }
+        return layoutInfo.frameOfPresentedView(for: detentIdentifier)
+    }
+
     // MARK: - Internal Properties
 
     private var _selectedDetentIdentifier: Detent.Identifier?
