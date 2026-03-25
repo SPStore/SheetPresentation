@@ -154,8 +154,13 @@ final class ScalePresentingSheetContentViewController: UIViewController {
         let scale = 1.0 - p * (1.0 - minScale)
         let v = presentingViewController?.view
         v?.transform = CGAffineTransform(scaleX: scale, y: scale)
-        v?.layer.cornerRadius = p * maxCornerRadius
         v?.layer.masksToBounds = p > 0
+        if #available(iOS 26, *) {
+            let radius: UICornerRadius = p > 0 ? .containerConcentric() : .fixed(0)
+            v?.cornerConfiguration = .corners(radius: radius)
+        } else {
+            v?.layer.cornerRadius = p * maxCornerRadius
+        }
     }
 }
 

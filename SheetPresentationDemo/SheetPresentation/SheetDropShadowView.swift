@@ -61,17 +61,13 @@ class SheetDropShadowView: UIView {
                 view.frame = bounds
                 view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
                 view.cornerConfiguration = .corners(radius: .containerConcentric())
-                // contentView 移入 glassEffectView，使其进入响应链以触发 interactive 动效
-                contentView.removeFromSuperview()
-                view.contentView.addSubview(contentView)
                 glassEffectView = view
                 insertSubview(view, at: 0)
-                bringSubviewToFront(grabber)
+                installInteractiveSubviews(in: view.contentView)
             } else {
-                contentView.removeFromSuperview()
-                insertSubview(contentView, belowSubview: grabber)
                 glassEffectView?.removeFromSuperview()
                 glassEffectView = nil
+                installInteractiveSubviews(in: self)
             }
         }
     }
@@ -95,11 +91,10 @@ class SheetDropShadowView: UIView {
     private func setupUI() {
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(contentView)
 
         grabber.isHidden = !isGrabberVisible
-        addSubview(grabber)
         grabber.addTarget(self, action: #selector(grabberAction), for: .touchUpInside)
+        installInteractiveSubviews(in: self)
 
         applyContentViewCornerMask()
         updateShadow()
@@ -132,6 +127,8 @@ class SheetDropShadowView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
+        ensureGrabberAboveContentView()
 
         if isGrabberVisible {
             let grabberSize = grabber.intrinsicContentSize
@@ -176,6 +173,26 @@ class SheetDropShadowView: UIView {
             contentView.cornerConfiguration = .corners(radius: .containerConcentric())
         } else {
             contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        }
+    }
+
+    private func installInteractiveSubviews(in container: UIView) {
+        if contentView.superview !== container {
+            contentView.removeFromSuperview()
+            container.addSubview(contentView)
+        }
+        if grabber.superview !== container {
+            grabber.removeFromSuperview()
+            container.addSubview(grabber)
+        }
+        container.bringSubviewToFront(grabber)
+    }
+
+    private func ensureGrabberAboveContentView() {
+        if let glassEffectView {
+            installInteractiveSubviews(in: glassEffectView.contentView)
+        } else {
+            installInteractiveSubviews(in: self)
         }
     }
 

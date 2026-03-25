@@ -24,7 +24,7 @@ final class CustomTransitionDemoViewController: UIViewController {
             stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
         ])
 
-        stack.addArrangedSubview(makeButton(title: "淡入 · 淡出", action: #selector(presentSheet)))
+        stack.addArrangedSubview(makeButton(title: "淡入 · 淡出", action: #selector(presentFadeSheet)))
         stack.addArrangedSubview(makeButton(title: "缩放背后视图", action: #selector(presentScaleSheet)))
     }
 
@@ -43,9 +43,23 @@ final class CustomTransitionDemoViewController: UIViewController {
 
     // MARK: - Actions
 
+    @objc private func presentFadeSheet() {
+        let contentVC = CustomTransitionSheetContentViewController()
+        let controller = contentVC.cs.sheetPresentationController
+        controller.delegate = self
+        
+        SheetDemoSettingsStore.shared.configure(sheetController: controller)
+        controller.detents = [.large()]
+        controller.prefersGrabberVisible = false
+        controller.allowsPanGestureToDriveSheet = false
+        controller.allowsScrollViewToDriveSheet = false
+        cs.presentSheetViewController(contentVC, animated: true)
+    }
+    
     @objc private func presentScaleSheet() {
         let contentVC = ScalePresentingSheetContentViewController()
         let controller = contentVC.cs.sheetPresentationController
+        SheetDemoSettingsStore.shared.configure(sheetController: controller)
         controller.detents = [
             .large(),
             .medium(),
@@ -53,21 +67,8 @@ final class CustomTransitionDemoViewController: UIViewController {
                 max(120, ctx.maximumDetentValue * 0.25)
             },
         ]
+        controller.dimmingBackgroundAlpha = 0.0
         controller.prefersGrabberVisible = true
-        cs.presentSheetViewController(contentVC, animated: true)
-    }
-
-    @objc private func presentSheet() {
-        let contentVC = CustomTransitionSheetContentViewController()
-        let controller = contentVC.cs.sheetPresentationController
-        controller.delegate = self
-        controller.detents = [.large()]
-        controller.prefersGrabberVisible = false
-        controller.preferredCornerRadius = 0
-        controller.prefersShadowVisible = false
-        controller.dimmingBackgroundAlpha = 0.4
-        controller.allowsPanGestureToDriveSheet = false
-        controller.allowsScrollViewToDriveSheet = false
         cs.presentSheetViewController(contentVC, animated: true)
     }
 }

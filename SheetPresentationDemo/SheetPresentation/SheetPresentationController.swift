@@ -395,11 +395,10 @@ extension SheetPresentationController {
         if _prefersFloatingStyle {
             let floatingFrame = layoutInfo.floatingPresentedLayout(at: yPosition)
             shadowView.frame = floatingFrame
-            sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: floatingFrame)
         } else {
             shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
-            sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: shadowView.frame)
         }
+        sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: shadowView.frame)
     }
 
     private func animateToDetent(_ identifier: Detent.Identifier) {
@@ -788,4 +787,3 @@ extension SheetPresentationController: SheetInteractionDelegate {
         completeScreenEdgeInteractiveTransition(finish: finish)
     }
 }
-

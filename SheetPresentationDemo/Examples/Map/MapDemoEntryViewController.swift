@@ -104,8 +104,10 @@ final class MapDemoEntryViewController: UIViewController {
         // 应用全局配置
         settings.configure(sheetController: sheet)
         
+        sheet.delegate = self
         sheet.allowsTapBackgroundToDismiss = false
         sheet.dimmingBackgroundAlpha = 0
+        sheet.prefersGrabberVisible = true
         sheet.prefersShadowVisible = true
         sheet.detents = MapSheetDemoViewController.makeMapDetents()
         sheet.selectedDetentIdentifier = MapSheetDemoViewController.DetentID.medium
@@ -126,7 +128,7 @@ final class MapDemoEntryViewController: UIViewController {
         // 1. 通过KVC的方式上设置 sheet.containerView 的私有属性 ignoreDirectTouchEvents 为 true
         // 2. 关闭 sheet 组件内部的 dimmingView 的交互
         // 由于穿透场景较为特殊，就没封装在组件内部.
-        container.applyIgnoreDirectTouchEventsIfSupported(true)
+        applyIgnoreDirectTouchEventsIfSupported(true, for: container)
 
         guard let dimming = dimmingSubview(of: sheet) else { return }
         dimming.isUserInteractionEnabled = false
@@ -170,6 +172,13 @@ final class MapDemoEntryViewController: UIViewController {
             mapView.setRegion(region, animated: animated)
         }
     }
+    
+    /// `ignoreDirectTouchEvents` 为 UIKit 内部属性；通过 KVC 写入，仅在 `responds(to:)` 为真时生效。
+    static func applyIgnoreDirectTouchEventsIfSupported(_ ignore: Bool, for containerView: UIView) {
+        let key = "ignoreDirectTouchEvents"
+        guard containerView.responds(to: NSSelectorFromString(key)) else { return }
+        containerView.setValue(ignore, forKey: key)
+    }
 }
 
 // MARK: - MKMapViewDelegate
@@ -192,18 +201,28 @@ extension MapDemoEntryViewController: MKMapViewDelegate {
     }
 }
 
+extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
+    func sheetPresentationController(_ sheetPresentationController: SheetPresentationController, didUpdatePresentedFrame frame: CGRect) {
+        // 通过设置背景色，在到达某个位置后，遮住模糊效果
+        if frame.origin.y <= view.bounds.height * 0.35 {
+            sheetPresentationController.presentedViewController.view.backgroundColor = .systemBackground
+        } else {
+            sheetPresentationController.presentedViewController.view.backgroundColor = .clear
+        }
+    }
+    
+    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
+        _ sheetPresentationController: SheetPresentationController
+    ) {
+        // 切到 long 往往是为了搜索框聚焦输入，不在此收键盘；其它档位（拖动手柄、地图联动收短等）收起键盘。
+        if sheetPresentationController.selectedDetentIdentifier == MapSheetDemoViewController.DetentID.long {
+            return
+        }
+        view.endEditing(true)
+    }
+}
+
 // MARK: - CLLocationManagerDelegate
 
 extension MapDemoEntryViewController: CLLocationManagerDelegate {}
 
-// MARK: - 系统 touch 穿透
-
-private extension UIView {
-
-    /// `ignoreDirectTouchEvents` 为 UIKit 内部属性；通过 KVC 写入，仅在 `responds(to:)` 为真时生效。
-    func applyIgnoreDirectTouchEventsIfSupported(_ ignore: Bool) {
-        let key = "ignoreDirectTouchEvents"
-        guard responds(to: NSSelectorFromString(key)) else { return }
-        setValue(ignore, forKey: key)
-    }
-}

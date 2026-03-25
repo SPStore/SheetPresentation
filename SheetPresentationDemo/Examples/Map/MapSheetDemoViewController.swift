@@ -66,8 +66,6 @@ final class MapSheetDemoViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        cs.sheetPresentationController.delegate = self
-
         mapDemoPlaces = Self.makeMapDemoPlaces(count: 20)
         updateBlurForCurrentTraitCollection()
         
@@ -210,21 +208,6 @@ final class MapSheetDemoViewController: UIViewController {
 
     deinit {
         print("[SheetDemo] MapSheetDemoViewController deinit")
-    }
-}
-
-// MARK: - SheetPresentationControllerDelegate
-
-extension MapSheetDemoViewController: SheetPresentationControllerDelegate {
-
-    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
-        _ sheetPresentationController: SheetPresentationController
-    ) {
-        // 切到 long 往往是为了搜索框聚焦输入，不在此收键盘；其它档位（拖动手柄、地图联动收短等）收起键盘。
-        if sheetPresentationController.selectedDetentIdentifier == DetentID.long {
-            return
-        }
-        view.endEditing(true)
     }
 }
 

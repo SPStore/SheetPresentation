@@ -19,6 +19,7 @@ private final class SheetFloatSettingCell: UITableViewCell {
     static let reuseId = "float"
 
     private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
     private let valueLabel = UILabel()
     private let slider = UISlider()
 
@@ -32,6 +33,11 @@ private final class SheetFloatSettingCell: UITableViewCell {
         titleLabel.numberOfLines = 2
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        subtitleLabel.font = .preferredFont(forTextStyle: .caption1)
+        subtitleLabel.textColor = .secondaryLabel
+        subtitleLabel.numberOfLines = 2
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+
         valueLabel.font = .monospacedDigitSystemFont(ofSize: 15, weight: .regular)
         valueLabel.textAlignment = .right
         valueLabel.textColor = .secondaryLabel
@@ -41,6 +47,7 @@ private final class SheetFloatSettingCell: UITableViewCell {
         slider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
 
         contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
         contentView.addSubview(valueLabel)
         contentView.addSubview(slider)
 
@@ -53,7 +60,11 @@ private final class SheetFloatSettingCell: UITableViewCell {
             valueLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             valueLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
 
-            slider.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            subtitleLabel.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+
+            slider.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 10),
             slider.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
             slider.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             slider.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)
@@ -72,6 +83,8 @@ private final class SheetFloatSettingCell: UITableViewCell {
         self.floatKey = key
         self.onCommit = onCommit
         titleLabel.text = SheetDemoSettingsStore.title(for: key)
+        subtitleLabel.text = SheetDemoSettingsStore.subtitle(for: key)
+        subtitleLabel.isHidden = subtitleLabel.text == nil
         let r = key.range
         let span = r.upperBound - r.lowerBound
         if span > 0 {
@@ -89,7 +102,10 @@ private final class SheetFloatSettingCell: UITableViewCell {
         case .dimmingBackgroundAlpha:
             return String(format: "%.2f", Double(value))
         case .preferredCornerRadius, .edgePanTriggerDistance:
-            return String(format: "%.0f", Double(value))
+            if value.rounded() == value {
+                return String(format: "%.0f", Double(value))
+            }
+            return String(format: "%.1f", Double(value))
         }
     }
 
@@ -183,7 +199,7 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let s = SettingsSection(rawValue: indexPath.section) else { return 48 }
         switch s {
-        case .floats: return 80
+        case .floats: return 98
         case .bools: return UITableView.automaticDimension
         }
     }
