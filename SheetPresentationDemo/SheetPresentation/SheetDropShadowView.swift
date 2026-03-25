@@ -124,34 +124,45 @@ class SheetDropShadowView: UIView {
         updateAppliedCornerRadius()
     }
 
-    /// 将逻辑 `cornerRadius` 钳到当前 `contentView` 尺寸下可用的最大值并同步到 layer。
     private func updateAppliedCornerRadius() {
-        contentView.layer.cornerRadius = effectiveCornerRadius(for: contentView.bounds)
+        if #available(iOS 26, *) {
+            cornerConfiguration = makeCornerConfiguration()
+        } else {
+            contentView.layer.cornerRadius = effectiveCornerRadius(for: contentView.bounds)
+        }
     }
 
-    /// 几何上限：四角圆角时不超过半宽/半高；仅顶角时不超过 `min(半宽, 高)`。
+    /// iOS 26：顶角由用户控制（fixed），底角跟随父视图（containerConcentric）。
+    @available(iOS 26, *)
+    private func makeCornerConfiguration() -> UICornerConfiguration {
+        let top = UICornerRadius.fixed(cornerRadius)
+        if contentViewRoundsAllCorners {
+            return .uniformTopRadius(top, bottomLeftRadius: .containerConcentric(), bottomRightRadius: .containerConcentric())
+        } else {
+            return .uniformTopRadius(top)
+        }
+    }
+
+    /// 几何上限（iOS 25 及以下）：四角圆角时不超过半宽/半高；仅顶角时不超过 `min(半宽, 高)`。
     private func effectiveCornerRadius(for bounds: CGRect) -> CGFloat {
         let requested = max(0, cornerRadius)
         guard requested > 0 else { return 0 }
         guard bounds.width > 0, bounds.height > 0,
               bounds.width.isFinite, bounds.height.isFinite else { return 0 }
-        let cap: CGFloat
-        if contentViewRoundsAllCorners {
-            cap = min(bounds.width, bounds.height) * 0.5
-        } else {
-            cap = min(bounds.width * 0.5, bounds.height)
-        }
+        let cap: CGFloat = contentViewRoundsAllCorners
+            ? min(bounds.width, bounds.height) * 0.5
+            : min(bounds.width * 0.5, bounds.height)
         return min(requested, cap)
     }
 
     private func applyContentViewCornerMask() {
-        if contentViewRoundsAllCorners {
-            contentView.layer.maskedCorners = [
-                .layerMinXMinYCorner, .layerMaxXMinYCorner,
-                .layerMinXMaxYCorner, .layerMaxXMaxYCorner
-            ]
+        if #available(iOS 26, *) {
+            // contentView 整体跟随 self 同心圆角
+            contentView.cornerConfiguration = .corners(radius: .containerConcentric())
         } else {
-            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            contentView.layer.maskedCorners = contentViewRoundsAllCorners
+                ? [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                : [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
     }
 
