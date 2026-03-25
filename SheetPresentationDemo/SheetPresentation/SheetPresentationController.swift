@@ -96,13 +96,14 @@ open class SheetPresentationController: UIPresentationController {
         didSet { dropShadowView?.isGrabberVisible = prefersGrabberVisible }
     }
 
-    /// 是否以浮动样式展示，如果为true，那么左、右、底都有间距（iOS 26+）
+    /// 是否以浮动样式展示（iOS 26+）。开启后四周留白，同时自动启用 glass 视觉 + 按压动效。
     @available(iOS 26, *)
     open var prefersFloatingStyle: Bool {
         get { _prefersFloatingStyle }
         set {
             _prefersFloatingStyle = newValue
             layoutInfo.prefersFloatingStyle = newValue
+            dropShadowView?.isGlassEffectEnabled = newValue
             if let id = selectedDetentIdentifier, let y = layoutInfo.yPosition(for: id) {
                 updatePresentedViewFrame(forYPosition: y)
             }
@@ -318,6 +319,9 @@ extension SheetPresentationController {
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
+        if #available(iOS 26, *) {
+            shadowView.isGlassEffectEnabled = _prefersFloatingStyle
+        }
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 

@@ -47,6 +47,37 @@ class SheetDropShadowView: UIView {
         }
     }
 
+    /// 是否启用 glass 视觉 + 按压动效（iOS 26+）。
+    @available(iOS 26, *)
+    var isGlassEffectEnabled: Bool {
+        get { _isGlassEffectEnabled }
+        set {
+            guard _isGlassEffectEnabled != newValue else { return }
+            _isGlassEffectEnabled = newValue
+            if newValue {
+                let effect = UIGlassEffect(style: .regular)
+                effect.isInteractive = true
+                let view = UIVisualEffectView(effect: effect)
+                view.frame = bounds
+                view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                view.cornerConfiguration = .corners(radius: .containerConcentric())
+                // contentView 移入 glassEffectView，使其进入响应链以触发 interactive 动效
+                contentView.removeFromSuperview()
+                view.contentView.addSubview(contentView)
+                glassEffectView = view
+                insertSubview(view, at: 0)
+                bringSubviewToFront(grabber)
+            } else {
+                contentView.removeFromSuperview()
+                insertSubview(contentView, belowSubview: grabber)
+                glassEffectView?.removeFromSuperview()
+                glassEffectView = nil
+            }
+        }
+    }
+    private var _isGlassEffectEnabled: Bool = false
+    private var glassEffectView: UIVisualEffectView?
+
     // MARK: - Initialization
 
     override init(frame: CGRect) {

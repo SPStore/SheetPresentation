@@ -212,7 +212,7 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
             cell.detailTextLabel?.numberOfLines = 0
             cell.selectionStyle = .none
 
-            let isUnavailable = key == .prefersFloatingStyle && !isFloatingStyleAvailable
+            let isUnavailable = (key == .prefersFloatingStyle && !isFloatingStyleAvailable)
             if isUnavailable {
                 cell.detailTextLabel?.text = "需 iOS 26+ 系统"
                 cell.detailTextLabel?.textColor = .secondaryLabel
