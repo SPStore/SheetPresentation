@@ -20,8 +20,10 @@ final class MapSheetDemoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
-        effectView.translatesAutoresizingMaskIntoConstraints = false
-        effectView.alpha = 0.92
+        if #unavailable(iOS 26) {
+            effectView.translatesAutoresizingMaskIntoConstraints = false
+            effectView.alpha = 0.92
+        }
 
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.placeholder = "搜索地点或地址"
@@ -38,17 +40,22 @@ final class MapSheetDemoViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.register(MapLocationTableViewCell.self, forCellReuseIdentifier: MapLocationTableViewCell.reuseId)
 
-        view.addSubview(effectView)
+        if #unavailable(iOS 26) {
+            view.addSubview(effectView)
+        }
         view.addSubview(searchBar)
         view.addSubview(tableView)
 
         let grabberPad = sheetDemoGrabberLayoutPadding
+        if #unavailable(iOS 26) {
+            NSLayoutConstraint.activate([
+                effectView.topAnchor.constraint(equalTo: view.topAnchor),
+                effectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                effectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                effectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
+        }
         NSLayoutConstraint.activate([
-            effectView.topAnchor.constraint(equalTo: view.topAnchor),
-            effectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            effectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            effectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: grabberPad + 10),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7),
@@ -95,6 +102,7 @@ final class MapSheetDemoViewController: UIViewController {
     }
 
     private func updateBlurForCurrentTraitCollection() {
+        guard #unavailable(iOS 26) else { return }
         let style: UIBlurEffect.Style =
             traitCollection.userInterfaceStyle == .dark ? .dark : .extraLight
         effectView.effect = UIBlurEffect(style: style)
