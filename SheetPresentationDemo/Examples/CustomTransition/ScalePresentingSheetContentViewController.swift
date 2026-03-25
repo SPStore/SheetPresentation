@@ -13,7 +13,6 @@ final class ScalePresentingSheetContentViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let items = Array(1...20).map { "列表项 \($0)" }
 
-    private let minScale: CGFloat = 0.92
     private let maxCornerRadius: CGFloat = 12
 
     private static var hintHasBeenShown = false
@@ -149,8 +148,19 @@ final class ScalePresentingSheetContentViewController: UIViewController {
 
     // MARK: - Scale
 
+    private func minimumScaleForPresentingView() -> CGFloat {
+        guard let presentingView = presentingViewController?.view else { return 1.0 }
+        let height = presentingView.bounds.height
+        guard height > 0 else { return 1.0 }
+
+        let safeTop = presentingView.safeAreaInsets.top - 8
+        let scale = 1.0 - (2.0 * safeTop / height)
+        return min(max(scale, 0), 1)
+    }
+
     private func applyProgress(_ progress: CGFloat) {
         let p = min(max(progress, 0), 1)
+        let minScale = minimumScaleForPresentingView()
         let scale = 1.0 - p * (1.0 - minScale)
         let v = presentingViewController?.view
         v?.transform = CGAffineTransform(scaleX: scale, y: scale)
