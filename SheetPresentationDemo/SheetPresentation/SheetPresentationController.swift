@@ -96,16 +96,19 @@ open class SheetPresentationController: UIPresentationController {
         didSet { dropShadowView?.isGrabberVisible = prefersGrabberVisible }
     }
 
-    /// 是否以浮动样式展示，如果为true，那么左、右、底都有间距
-    open var prefersFloatingStyle: Bool = false {
-        didSet {
-            layoutInfo.prefersFloatingStyle = prefersFloatingStyle
-            dropShadowView?.contentViewRoundsAllCorners = prefersFloatingStyle
+    /// 是否以浮动样式展示，如果为true，那么左、右、底都有间距（iOS 26+）
+    @available(iOS 26, *)
+    open var prefersFloatingStyle: Bool {
+        get { _prefersFloatingStyle }
+        set {
+            _prefersFloatingStyle = newValue
+            layoutInfo.prefersFloatingStyle = newValue
             if let id = selectedDetentIdentifier, let y = layoutInfo.yPosition(for: id) {
                 updatePresentedViewFrame(forYPosition: y)
             }
         }
     }
+    private var _prefersFloatingStyle: Bool = false
     
     /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {
@@ -315,7 +318,6 @@ extension SheetPresentationController {
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
-        shadowView.contentViewRoundsAllCorners = prefersFloatingStyle
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 
@@ -356,7 +358,7 @@ extension SheetPresentationController {
             layoutInfo.containerBounds = containerView.bounds
             layoutInfo.containerTraitCollection = containerView.traitCollection
             layoutInfo.containerSafeAreaInsets = containerView.safeAreaInsets
-            layoutInfo.prefersFloatingStyle = prefersFloatingStyle
+            layoutInfo.prefersFloatingStyle = _prefersFloatingStyle
             layoutInfo.detents = detents
         }
         syncDetentYPositionsToInteraction()
@@ -386,7 +388,7 @@ extension SheetPresentationController {
     func updatePresentedViewFrame(forYPosition yPosition: CGFloat) {
         guard let shadowView = dropShadowView else { return }
 
-        if prefersFloatingStyle {
+        if _prefersFloatingStyle {
             let floatingFrame = layoutInfo.floatingPresentedLayout(at: yPosition)
             shadowView.frame = floatingFrame
             sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: floatingFrame)

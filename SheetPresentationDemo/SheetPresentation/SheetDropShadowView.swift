@@ -47,14 +47,6 @@ class SheetDropShadowView: UIView {
         }
     }
 
-    /// 浮动样式时 contentView 四个角均为圆角；否则仅顶部两角。
-    var contentViewRoundsAllCorners: Bool = false {
-        didSet {
-            applyContentViewCornerMask()
-            updateAppliedCornerRadius()
-        }
-    }
-
     // MARK: - Initialization
 
     override init(frame: CGRect) {
@@ -132,37 +124,27 @@ class SheetDropShadowView: UIView {
         }
     }
 
-    /// iOS 26：顶角由用户控制（fixed），底角跟随父视图（containerConcentric）。
+    /// iOS 26：顶角用户控制（fixed），底角跟随父视图（containerConcentric）；pre-iOS 26 仅顶角。
     @available(iOS 26, *)
     private func makeCornerConfiguration() -> UICornerConfiguration {
         let top = UICornerRadius.fixed(cornerRadius)
-        if contentViewRoundsAllCorners {
-            return .uniformTopRadius(top, bottomLeftRadius: .containerConcentric(), bottomRightRadius: .containerConcentric())
-        } else {
-            return .uniformTopRadius(top)
-        }
+        return .uniformTopRadius(top, bottomLeftRadius: .containerConcentric(), bottomRightRadius: .containerConcentric())
     }
 
-    /// 几何上限（iOS 25 及以下）：四角圆角时不超过半宽/半高；仅顶角时不超过 `min(半宽, 高)`。
+    /// 几何上限（iOS 25 及以下）：顶角不超过 `min(半宽, 高)`。
     private func effectiveCornerRadius(for bounds: CGRect) -> CGFloat {
         let requested = max(0, cornerRadius)
         guard requested > 0 else { return 0 }
         guard bounds.width > 0, bounds.height > 0,
               bounds.width.isFinite, bounds.height.isFinite else { return 0 }
-        let cap: CGFloat = contentViewRoundsAllCorners
-            ? min(bounds.width, bounds.height) * 0.5
-            : min(bounds.width * 0.5, bounds.height)
-        return min(requested, cap)
+        return min(requested, min(bounds.width * 0.5, bounds.height))
     }
 
     private func applyContentViewCornerMask() {
         if #available(iOS 26, *) {
-            // contentView 整体跟随 self 同心圆角
             contentView.cornerConfiguration = .corners(radius: .containerConcentric())
         } else {
-            contentView.layer.maskedCorners = contentViewRoundsAllCorners
-                ? [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-                : [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
     }
 

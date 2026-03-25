@@ -172,7 +172,9 @@ final class SheetDemoSettingsStore {
         controller.isEdgePanGestureEnabled = isEdgePanGestureEnabled
         controller.edgePanTriggerDistance = edgePanTriggerDistance
         controller.prefersShadowVisible = prefersShadowVisible
-        controller.prefersFloatingStyle = prefersFloatingStyle
+        if #available(iOS 26, *) {
+            controller.prefersFloatingStyle = prefersFloatingStyle
+        }
         presentedVC?.isModalInPresentation = isModalInPresentation
     }
 

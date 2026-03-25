@@ -120,7 +120,7 @@ final class MapSheetDemoViewController: UIViewController {
             .custom(identifier: DetentID.long) { ctx in Self.resolveLongDetentHeight(ctx) },
             .custom(identifier: DetentID.medium) { ctx in min(380, ctx.maximumDetentValue * 0.5) },
             .custom(identifier: DetentID.short) { ctx in
-                let base: CGFloat = SheetDemoSettingsStore.shared.prefersFloatingStyle ? 76 : 160
+                let base: CGFloat = if #available(iOS 26, *) { SheetDemoSettingsStore.shared.prefersFloatingStyle ? 76 : 160 } else { 160 }
                 return min(base, ctx.maximumDetentValue * 0.25)
             }
         ]
