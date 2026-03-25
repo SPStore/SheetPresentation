@@ -107,18 +107,6 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
     
-    /// 是否开启iOS26+的液态玻璃效果，
-    /// 开启后，除了视觉上有液态玻璃效果外，交互上也会有按压放大、光晕等效果.
-    @available(iOS 26, *)
-    open var prefersGlassEffect: Bool {
-        get { _prefersGlassEffect }
-        set {
-            _prefersGlassEffect = newValue
-            dropShadowView?.isGlassEffectEnabled = newValue
-        }
-    }
-    private var _prefersGlassEffect: Bool = false
-
     /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {
         didSet { dimmingView?.backgroundAlpha = dimmingBackgroundAlpha }
@@ -328,9 +316,6 @@ extension SheetPresentationController {
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
         shadowView.contentViewRoundsAllCorners = prefersFloatingStyle
-        if #available(iOS 26, *) {
-            shadowView.isGlassEffectEnabled = prefersGlassEffect
-        }
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 

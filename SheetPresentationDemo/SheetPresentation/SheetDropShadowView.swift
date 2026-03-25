@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SheetDropShadowView: UIButton {
+class SheetDropShadowView: UIView {
 
     // MARK: - Properties
 
@@ -55,33 +55,6 @@ class SheetDropShadowView: UIButton {
         }
     }
 
-    /// 是否启用 glass press 缩放效果（iOS 26+）。
-    /// 开启后触摸 sheet 空白区域会触发 UIButton 的 _UISelectionInteraction 缩放动画。
-    var isGlassEffectEnabled: Bool = false {
-        didSet {
-            guard oldValue != isGlassEffectEnabled else { return }
-            if #available(iOS 26, *) {
-                if isGlassEffectEnabled {
-                    var config = UIButton.Configuration.glass()
-                    config.cornerStyle = .fixed
-                    configuration = config
-                    // configuration 设置后才有意义，集中在此处理，不放入通用方法
-                    changesSelectionAsPrimaryAction = false
-                    configurationUpdateHandler = nil
-                    toolTip = nil
-                    updateAppliedCornerRadius()
-                    applyUIViewLikeChromeBehavior()
-                    // UIButton 内部会插入背景视图，确保 contentView/grabber 在其上方
-                    bringSubviewToFront(contentView)
-                    bringSubviewToFront(grabber)
-                } else {
-                    configuration = nil
-                    applyUIViewLikeChromeBehavior()
-                }
-            }
-        }
-    }
-
     // MARK: - Initialization
 
     override init(frame: CGRect) {
@@ -97,12 +70,6 @@ class SheetDropShadowView: UIButton {
     // MARK: - Setup
 
     private func setupUI() {
-        applyUIViewLikeChromeBehavior()
-
-        gestureRecognizers?.forEach {
-            removeGestureRecognizer($0)
-        }
-
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(contentView)
@@ -143,11 +110,6 @@ class SheetDropShadowView: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        if #available(iOS 26, *), isGlassEffectEnabled {
-            bringSubviewToFront(contentView)
-            bringSubviewToFront(grabber)
-        }
-
         if isGrabberVisible {
             let grabberSize = grabber.intrinsicContentSize
             grabber.frame = CGRect(
@@ -162,13 +124,9 @@ class SheetDropShadowView: UIButton {
         updateAppliedCornerRadius()
     }
 
-    /// 将逻辑 `cornerRadius` 钳到当前 `contentView` 尺寸下可用的最大值，并同步到 layer 与 glass 背景。
+    /// 将逻辑 `cornerRadius` 钳到当前 `contentView` 尺寸下可用的最大值并同步到 layer。
     private func updateAppliedCornerRadius() {
-        let applied = effectiveCornerRadius(for: contentView.bounds)
-        contentView.layer.cornerRadius = applied
-        if #available(iOS 26, *) {
-            applyGlassBackgroundCornerRadius(applied)
-        }
+        contentView.layer.cornerRadius = effectiveCornerRadius(for: contentView.bounds)
     }
 
     /// 几何上限：四角圆角时不超过半宽/半高；仅顶角时不超过 `min(半宽, 高)`。
@@ -186,13 +144,6 @@ class SheetDropShadowView: UIButton {
         return min(requested, cap)
     }
 
-    @available(iOS 26, *)
-    private func applyGlassBackgroundCornerRadius(_ applied: CGFloat) {
-        guard isGlassEffectEnabled, var config = configuration else { return }
-        config.background.cornerRadius = applied
-        configuration = config
-    }
-
     private func applyContentViewCornerMask() {
         if contentViewRoundsAllCorners {
             contentView.layer.maskedCorners = [
@@ -201,37 +152,6 @@ class SheetDropShadowView: UIButton {
             ]
         } else {
             contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        }
-    }
-
-    /// 弱化 `UIControl` / `UIButton` 的默认交互与无障碍语义，使整块 chrome 更接近普通 `UIView` 容器（仅保留 iOS 26+ glass 所需能力）。
-    private func applyUIViewLikeChromeBehavior() {
-        isAccessibilityElement = false
-        accessibilityTraits = []
-
-        isExclusiveTouch = false
-        isEnabled = true
-        isSelected = false
-
-        // 无 title/image，仅让内部 configuration 背景更易铺满 bounds（与 UIView「整区可布局」接近）。
-        contentHorizontalAlignment = .fill
-        contentVerticalAlignment = .fill
-
-        tintAdjustmentMode = .normal
-        contentView.tintAdjustmentMode = .normal
-
-        isContextMenuInteractionEnabled = false
-        if #available(iOS 13.4, *) {
-            isPointerInteractionEnabled = false
-        }
-        if #available(iOS 14.0, *) {
-            menu = nil
-            showsMenuAsPrimaryAction = false
-            role = .normal
-        }
-        if #available(iOS 17.0, *) {
-            isSymbolAnimationEnabled = false
-            hoverStyle = .none
         }
     }
 

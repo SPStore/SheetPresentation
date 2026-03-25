@@ -207,10 +207,7 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
             cell.detailTextLabel?.numberOfLines = 0
             cell.selectionStyle = .none
 
-            if key == .prefersGlassEffect, #unavailable(iOS 26) {
-                cell.detailTextLabel?.text = "需 iOS 26+ 系统"
-                cell.detailTextLabel?.textColor = .secondaryLabel
-            } else if let sub = SheetDemoSettingsStore.subtitle(for: key) {
+            if let sub = SheetDemoSettingsStore.subtitle(for: key) {
                 cell.detailTextLabel?.text = sub
                 cell.detailTextLabel?.textColor = .secondaryLabel
             } else {
@@ -219,11 +216,7 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
 
             let sw = UISwitch()
             sw.isOn = store.boolValue(forSetting: key)
-            if key == .prefersGlassEffect, #unavailable(iOS 26) {
-                sw.isEnabled = false
-            } else {
-                sw.isEnabled = true
-            }
+            sw.isEnabled = true
             sw.tag = indexPath.row
             sw.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
             cell.accessoryView = sw
@@ -235,9 +228,6 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
         let keys = SheetDemoSettingsStore.boolSettingsInOrder
         guard sender.tag >= 0, sender.tag < keys.count else { return }
         let key = keys[sender.tag]
-        if key == .prefersGlassEffect, #unavailable(iOS 26) {
-            return
-        }
         store.setBool(sender.isOn, forSetting: key)
     }
 }

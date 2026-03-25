@@ -27,7 +27,6 @@ final class SheetDemoSettingsStore {
         case isEdgePanGestureEnabled
         case prefersShadowVisible
         case prefersFloatingStyle
-        case prefersGlassEffect
         case isModalInPresentation
     }
 
@@ -76,7 +75,6 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return false
         case .prefersShadowVisible: return false
         case .prefersFloatingStyle: return false
-        case .prefersGlassEffect: return false
         case .isModalInPresentation: return false
         }
     }
@@ -157,10 +155,6 @@ final class SheetDemoSettingsStore {
         bool(for: .prefersFloatingStyle)
     }
 
-    var prefersGlassEffect: Bool {
-        bool(for: .prefersGlassEffect)
-    }
-
     // MARK: - 批量配置
 
     /// 将当前所有设置值写入 `controller` 及被展示的 `presentedVC`。
@@ -179,9 +173,6 @@ final class SheetDemoSettingsStore {
         controller.edgePanTriggerDistance = edgePanTriggerDistance
         controller.prefersShadowVisible = prefersShadowVisible
         controller.prefersFloatingStyle = prefersFloatingStyle
-        if #available(iOS 26, *) {
-            controller.prefersGlassEffect = prefersGlassEffect
-        }
         presentedVC?.isModalInPresentation = isModalInPresentation
     }
 
@@ -226,7 +217,6 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return "侧滑返回手势"
         case .prefersShadowVisible: return "显示阴影"
         case .prefersFloatingStyle: return "浮动样式（四周留白）"
-        case .prefersGlassEffect: return "液态玻璃效果 (iOS 26+)"
         case .isModalInPresentation: return "模态锁定"
         }
     }

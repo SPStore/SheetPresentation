@@ -109,8 +109,5 @@ final class DynamicHeightDemoViewController: UIViewController {
         sheet.prefersSheetPanOverpullWithDamping = settings.prefersSheetPanOverpullWithDamping
         sheet.prefersShadowVisible = settings.prefersShadowVisible
         sheet.prefersFloatingStyle = settings.prefersFloatingStyle
-        if #available(iOS 26, *) {
-            sheet.prefersGlassEffect = settings.prefersGlassEffect
-        }
     }
 }
