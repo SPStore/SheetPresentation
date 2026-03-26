@@ -43,24 +43,29 @@ class SheetDropShadowView: UIView {
         didSet { updateShadow() }
     }
 
-    /// 是否启用 glass 视觉 + 按压动效（iOS 26+）
+    private var _isGlassEffectEnabled = false
+
     @available(iOS 26, *)
     var isGlassEffectEnabled: Bool {
         get { _isGlassEffectEnabled }
         set {
-            guard _isGlassEffectEnabled != newValue else { return }
             _isGlassEffectEnabled = newValue
-            if newValue {
-                let effect = UIGlassEffect(style: .regular)
-                effect.isInteractive = true
-                effectContainerView.effect = effect
-                effectContainerView.cornerConfiguration = .corners(radius: .containerConcentric())
-            } else {
-                effectContainerView.effect = nil
-            }
+            applyGlassEffectIfNeeded()
         }
     }
-    private var _isGlassEffectEnabled: Bool = false
+
+    /// 液态玻璃按压交互动效开关。
+    private var _isGlassInteractionEnabled = true
+
+    @available(iOS 26, *)
+    var isGlassInteractionEnabled: Bool {
+        get { _isGlassInteractionEnabled }
+        set {
+            _isGlassInteractionEnabled = newValue
+            updateGlassInteractionIfNeeded()
+            nudgeFrameForGlassEffectRefreshIfNeeded()
+        }
+    }
 
     /// 常驻容器：effect = nil 时退化为普通透明容器，iOS 26+ 启用 glass 时切换为 UIGlassEffect。
     private let effectContainerView = UIVisualEffectView(effect: nil)
@@ -166,6 +171,39 @@ class SheetDropShadowView: UIView {
             contentView.cornerConfiguration = .corners(radius: .containerConcentric())
         } else {
             contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        }
+    }
+
+    private func applyGlassEffectIfNeeded() {
+        guard #available(iOS 26, *) else { return }
+
+        guard isGlassEffectEnabled else {
+            effectContainerView.effect = nil
+            return
+        }
+
+        let effect = UIGlassEffect(style: .regular)
+        effect.isInteractive = isGlassInteractionEnabled
+        effectContainerView.effect = effect
+        effectContainerView.cornerConfiguration = .corners(radius: .containerConcentric())
+    }
+
+    private func updateGlassInteractionIfNeeded() {
+        guard #available(iOS 26, *),
+              let effect = effectContainerView.effect as? UIGlassEffect else { return }
+        effect.isInteractive = isGlassInteractionEnabled
+        effectContainerView.effect = effect
+    }
+
+    private func nudgeFrameForGlassEffectRefreshIfNeeded() {
+        guard #available(iOS 26, *), window != nil else { return }
+
+        let originalFrame = frame
+        let delta = 1.0 / UIScreen.main.scale
+
+        UIView.performWithoutAnimation {
+            frame = originalFrame.insetBy(dx: 0, dy: -delta)
+            frame = originalFrame
         }
     }
 

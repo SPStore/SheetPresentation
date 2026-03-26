@@ -96,7 +96,9 @@ open class SheetPresentationController: UIPresentationController {
         didSet { dropShadowView?.isGrabberVisible = prefersGrabberVisible }
     }
 
-    /// 是否以浮动样式展示（iOS 26+）。开启后四周留白，同时自动启用 glass 视觉 + 按压动效。
+    private var _prefersFloatingStyle: Bool = false
+
+    /// 是否以浮动样式展示（iOS 26+）。开启后四周留白并启用 glass 视觉效果。
     @available(iOS 26, *)
     open var prefersFloatingStyle: Bool {
         get { _prefersFloatingStyle }
@@ -110,8 +112,19 @@ open class SheetPresentationController: UIPresentationController {
             }
         }
     }
-    private var _prefersFloatingStyle: Bool = false
     
+    /// 是否启用液态玻璃的按压交互动效（iOS 26+），默认 true。
+    @available(iOS 26, *)
+    open var prefersInteractiveGlassEffect: Bool {
+        get { _prefersInteractiveGlassEffect }
+        set {
+            _prefersInteractiveGlassEffect = newValue
+            dropShadowView?.isGlassInteractionEnabled = newValue
+        }
+    }
+    
+    private var _prefersInteractiveGlassEffect = true
+
     /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {
         didSet { dimmingView?.backgroundAlpha = dimmingBackgroundAlpha }
@@ -325,6 +338,7 @@ extension SheetPresentationController {
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
         if #available(iOS 26, *) {
+            shadowView.isGlassInteractionEnabled = prefersInteractiveGlassEffect
             shadowView.isGlassEffectEnabled = _prefersFloatingStyle
         }
         containerView.addSubview(shadowView)
@@ -396,6 +410,7 @@ extension SheetPresentationController {
 
     func updatePresentedViewFrame(forYPosition yPosition: CGFloat) {
         guard let shadowView = dropShadowView else { return }
+        let previousFrame = shadowView.frame
 
         if _prefersFloatingStyle {
             let floatingFrame = layoutInfo.floatingPresentedLayout(at: yPosition)
@@ -403,6 +418,8 @@ extension SheetPresentationController {
         } else {
             shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
         }
+
+        guard shadowView.frame != previousFrame else { return }
         sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: shadowView.frame)
     }
 

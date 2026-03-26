@@ -112,7 +112,6 @@ final class MapDemoEntryViewController: UIViewController {
         sheet.detents = MapSheetDemoViewController.makeMapDetents()
         sheet.selectedDetentIdentifier = MapSheetDemoViewController.DetentID.medium
 
-        // `containerView` / 内部 dimming 仅在 present 完成后才就绪。在业务侧用 KVC + 公开属性组合配置穿透，
         cs.presentSheetViewController(vc, animated: false) {
             Self.configureMapSheetTouchPassThrough(for: vc)
         }
