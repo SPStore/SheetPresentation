@@ -43,8 +43,7 @@ class SheetDropShadowView: UIView {
         didSet { updateShadow() }
     }
 
-    /// 是否启用 glass 视觉 + 按压动效（iOS 26+）。
-    /// 切换时只改 effectContainerView 的 effect，不涉及视图层级变化。
+    /// 是否启用 glass 视觉 + 按压动效（iOS 26+）
     @available(iOS 26, *)
     var isGlassEffectEnabled: Bool {
         get { _isGlassEffectEnabled }
@@ -64,7 +63,6 @@ class SheetDropShadowView: UIView {
     private var _isGlassEffectEnabled: Bool = false
 
     /// 常驻容器：effect = nil 时退化为普通透明容器，iOS 26+ 启用 glass 时切换为 UIGlassEffect。
-    /// contentView / grabber 始终是其 contentView 的子视图，不存在运行时 reparent。
     private let effectContainerView = UIVisualEffectView(effect: nil)
 
     // MARK: - Initialization

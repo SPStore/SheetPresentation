@@ -225,7 +225,7 @@ extension SheetPresentationController {
 
     open override func presentationTransitionDidEnd(_ completed: Bool) {
         super.presentationTransitionDidEnd(completed)
-        if !completed {
+        if !completed{
             cleanupViews()
         }
     }
