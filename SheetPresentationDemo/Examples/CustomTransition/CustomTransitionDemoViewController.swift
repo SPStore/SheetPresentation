@@ -67,7 +67,7 @@ final class CustomTransitionDemoViewController: UIViewController {
                 max(120, ctx.maximumDetentValue * 0.25)
             },
         ]
-        controller.dimmingBackgroundAlpha = 0.0
+        controller.dimmingBackgroundAlpha = 0.3
         controller.prefersGrabberVisible = true
         cs.presentSheetViewController(contentVC, animated: true)
     }

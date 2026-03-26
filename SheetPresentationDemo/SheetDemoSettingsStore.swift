@@ -38,7 +38,7 @@ final class SheetDemoSettingsStore {
         var range: ClosedRange<CGFloat> {
             switch self {
             case .dimmingBackgroundAlpha: return 0...1
-            case .preferredCornerRadius: return -1...80
+            case .preferredCornerRadius: return 0...80
             case .edgePanTriggerDistance: return 8...500
             }
         }
@@ -242,15 +242,6 @@ final class SheetDemoSettingsStore {
         case .dimmingBackgroundAlpha: return "背景蒙层透明度"
         case .preferredCornerRadius: return "圆角半径 (pt)"
         case .edgePanTriggerDistance: return "侧滑触发距离 (pt)"
-        }
-    }
-
-    static func subtitle(for key: FloatSettingKey) -> String? {
-        switch key {
-        case .preferredCornerRadius:
-            return "设为 -1 表示 iOS 26+ 使用容器同心圆角；旧系统下等价于 0"
-        default:
-            return nil
         }
     }
 

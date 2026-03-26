@@ -57,11 +57,11 @@ extension SheetPresentationController {
 
         /// 内置 `large()` 顶边目标 Y（容器坐标）：随 safe area 变化，避免写死常量 pt。
         public static func preferredLargestDetentOriginY(safeAreaTop: CGFloat) -> CGFloat {
-            safeAreaTop + largeDetentGapBelowSafeArea
+            max(safeAreaTop + largeDetentGapBelowSafeArea, 20)
         }
 
         /// 与 `large()` 顶边一致：相对容器 safe area 顶下沿的间距（pt）。
-        public static let largeDetentGapBelowSafeArea: CGFloat = 8
+        public static let largeDetentGapBelowSafeArea: CGFloat = 0
 
         public static func medium() -> Detent {
             .custom(identifier: .medium) { $0.maximumDetentValue * 0.5 }

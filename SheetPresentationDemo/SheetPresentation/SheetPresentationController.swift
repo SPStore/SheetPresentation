@@ -103,6 +103,7 @@ open class SheetPresentationController: UIPresentationController {
         set {
             _prefersFloatingStyle = newValue
             layoutInfo.prefersFloatingStyle = newValue
+            syncDetentYPositionsToInteraction()
             dropShadowView?.isGlassEffectEnabled = newValue
             if let id = selectedDetentIdentifier, let y = layoutInfo.yPosition(for: id) {
                 updatePresentedViewFrame(forYPosition: y)
@@ -265,8 +266,12 @@ extension SheetPresentationController {
 
     open override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
-
-        dimmingView?.frame = containerView?.bounds ?? .zero
+        guard let containerView = containerView else { return }
+        
+        // 宽高给大点，保证动画、交互、旋转等情况下始终“覆盖无缝、不露底”
+        dimmingView?.bounds = CGRect(x: 0, y: 0, width: 1206, height: 2622)
+        dimmingView?.center = CGPoint(x: containerView.bounds.midX,
+                                      y: containerView.bounds.midY)
 
         let allowFrameUpdate =
             !isDragging &&

@@ -110,12 +110,10 @@ class SheetDropShadowView: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard !isHidden, alpha > 0.01, isUserInteractionEnabled else { return nil }
-        guard self.point(inside: point, with: event) else { return nil }
 
         // grabber 优先
         if isGrabberVisible,
            !grabber.isHidden,
-           grabber.alpha > 0.01,
            grabber.isUserInteractionEnabled {
             let pointInGrabber = grabber.convert(point, from: self)
             if grabber.point(inside: pointInGrabber, with: event) {

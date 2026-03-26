@@ -203,6 +203,7 @@ extension ScalePresentingSheetContentViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "scalePresentingCell", for: indexPath)
+        cell.selectionStyle = .none
         cell.textLabel?.text = items[indexPath.row]
         return cell
     }
