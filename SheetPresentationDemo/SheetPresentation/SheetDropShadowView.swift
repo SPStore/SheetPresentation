@@ -33,21 +33,18 @@ class SheetDropShadowView: UIView {
         }
     }
 
-    /// 期望圆角半径（逻辑值）；实际绘制会按 `contentView` 尺寸钳制，避免大于半宽/半高或超过高度时出现畸形。
+    /// 圆角半径
     var cornerRadius: CGFloat = 0 {
-        didSet {
-            updateAppliedCornerRadius()
-        }
+        didSet { updateAppliedCornerRadius() }
     }
 
     /// 是否显示阴影
     var isShadowVisible: Bool = false {
-        didSet {
-            updateShadow()
-        }
+        didSet { updateShadow() }
     }
 
     /// 是否启用 glass 视觉 + 按压动效（iOS 26+）。
+    /// 切换时只改 effectContainerView 的 effect，不涉及视图层级变化。
     @available(iOS 26, *)
     var isGlassEffectEnabled: Bool {
         get { _isGlassEffectEnabled }
@@ -57,22 +54,18 @@ class SheetDropShadowView: UIView {
             if newValue {
                 let effect = UIGlassEffect(style: .regular)
                 effect.isInteractive = true
-                let view = UIVisualEffectView(effect: effect)
-                view.frame = bounds
-                view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                view.cornerConfiguration = .corners(radius: .containerConcentric())
-                glassEffectView = view
-                insertSubview(view, at: 0)
-                installInteractiveSubviews(in: view.contentView)
+                effectContainerView.effect = effect
+                effectContainerView.cornerConfiguration = .corners(radius: .containerConcentric())
             } else {
-                glassEffectView?.removeFromSuperview()
-                glassEffectView = nil
-                installInteractiveSubviews(in: self)
+                effectContainerView.effect = nil
             }
         }
     }
     private var _isGlassEffectEnabled: Bool = false
-    private var glassEffectView: UIVisualEffectView?
+
+    /// 常驻容器：effect = nil 时退化为普通透明容器，iOS 26+ 启用 glass 时切换为 UIGlassEffect。
+    /// contentView / grabber 始终是其 contentView 的子视图，不存在运行时 reparent。
+    private let effectContainerView = UIVisualEffectView(effect: nil)
 
     // MARK: - Initialization
 
@@ -89,12 +82,18 @@ class SheetDropShadowView: UIView {
     // MARK: - Setup
 
     private func setupUI() {
-        contentView.frame = bounds
+        effectContainerView.frame = bounds
+        effectContainerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(effectContainerView)
+
+        let inner = effectContainerView.contentView
+        contentView.frame = inner.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        inner.addSubview(contentView)
 
         grabber.isHidden = !isGrabberVisible
         grabber.addTarget(self, action: #selector(grabberAction), for: .touchUpInside)
-        installInteractiveSubviews(in: self)
+        inner.addSubview(grabber)
 
         applyContentViewCornerMask()
         updateShadow()
@@ -126,8 +125,6 @@ class SheetDropShadowView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        ensureGrabberAboveContentView()
-
         if isGrabberVisible {
             let grabberSize = grabber.intrinsicContentSize
             grabber.frame = CGRect(
@@ -150,14 +147,14 @@ class SheetDropShadowView: UIView {
         }
     }
 
-    /// iOS 26：顶角用户控制（fixed），底角跟随父视图（containerConcentric）；pre-iOS 26 仅顶角。
+    /// iOS 26：顶角 fixed，底角 containerConcentric。
     @available(iOS 26, *)
     private func makeCornerConfiguration() -> UICornerConfiguration {
         let top = UICornerRadius.fixed(cornerRadius)
         return .uniformTopRadius(top, bottomLeftRadius: .containerConcentric(), bottomRightRadius: .containerConcentric())
     }
 
-    /// 几何上限（iOS 25 及以下）：顶角不超过 `min(半宽, 高)`。
+    /// pre-iOS 26：顶角不超过 min(半宽, 高)。
     private func effectiveCornerRadius(for bounds: CGRect) -> CGFloat {
         let requested = max(0, cornerRadius)
         guard requested > 0 else { return 0 }
@@ -171,26 +168,6 @@ class SheetDropShadowView: UIView {
             contentView.cornerConfiguration = .corners(radius: .containerConcentric())
         } else {
             contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        }
-    }
-
-    private func installInteractiveSubviews(in container: UIView) {
-        if contentView.superview !== container {
-            contentView.removeFromSuperview()
-            container.addSubview(contentView)
-        }
-        if grabber.superview !== container {
-            grabber.removeFromSuperview()
-            container.addSubview(grabber)
-        }
-        container.bringSubviewToFront(grabber)
-    }
-
-    private func ensureGrabberAboveContentView() {
-        if let glassEffectView {
-            installInteractiveSubviews(in: glassEffectView.contentView)
-        } else {
-            installInteractiveSubviews(in: self)
         }
     }
 
