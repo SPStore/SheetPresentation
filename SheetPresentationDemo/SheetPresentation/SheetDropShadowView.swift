@@ -14,7 +14,6 @@ class SheetDropShadowView: UIView {
     /// 内容视图容器
     let contentView: UIView = {
         let view = UIView()
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.masksToBounds = true
         return view
     }()
@@ -87,7 +86,7 @@ class SheetDropShadowView: UIView {
         grabber.addTarget(self, action: #selector(grabberAction), for: .touchUpInside)
         inner.addSubview(grabber)
 
-        applyContentViewCornerMask()
+        updateAppliedCornerRadius()
         updateEffectStyle()
         updateShadow()
     }
@@ -117,7 +116,6 @@ class SheetDropShadowView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
         if isGrabberVisible {
             let grabberSize = grabber.intrinsicContentSize
             grabber.frame = CGRect(
@@ -128,19 +126,14 @@ class SheetDropShadowView: UIView {
             )
             grabber.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         }
-
         updateAppliedCornerRadius()
     }
 
     private func updateAppliedCornerRadius() {
         if #available(iOS 26, *) {
-            cornerConfiguration = makeCornerConfiguration()
+            applyModernCornerAppearance()
         } else {
-            let radius = effectiveCornerRadius(for: contentView.bounds)
-            contentView.layer.cornerRadius = radius
-            effectContainerView.layer.cornerRadius = radius
-            effectContainerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-            effectContainerView.layer.masksToBounds = true
+            applyLegacyCornerAppearance()
         }
     }
 
@@ -149,6 +142,26 @@ class SheetDropShadowView: UIView {
     private func makeCornerConfiguration() -> UICornerConfiguration {
         let top = UICornerRadius.fixed(cornerRadius)
         return .uniformTopRadius(top, bottomLeftRadius: .containerConcentric(), bottomRightRadius: .containerConcentric())
+    }
+
+    @available(iOS 26, *)
+    private func applyModernCornerAppearance() {
+        cornerConfiguration = makeCornerConfiguration()
+        contentView.cornerConfiguration = .corners(radius: .containerConcentric())
+        effectContainerView.cornerConfiguration = .corners(radius: .containerConcentric())
+    }
+
+    private func applyLegacyCornerAppearance() {
+        let radius = effectiveCornerRadius(for: contentView.bounds)
+        let maskedCorners: CACornerMask = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+
+        contentView.layer.cornerRadius = radius
+        contentView.layer.maskedCorners = maskedCorners
+        contentView.layer.masksToBounds = true
+
+        effectContainerView.layer.cornerRadius = radius
+        effectContainerView.layer.maskedCorners = maskedCorners
+        effectContainerView.layer.masksToBounds = true
     }
 
     /// pre-iOS 26：顶角不超过 min(半宽, 高)。
@@ -160,20 +173,11 @@ class SheetDropShadowView: UIView {
         return min(requested, min(bounds.width * 0.5, bounds.height))
     }
 
-    private func applyContentViewCornerMask() {
-        if #available(iOS 26, *) {
-            contentView.cornerConfiguration = .corners(radius: .containerConcentric())
-        } else {
-            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        }
-    }
-
     private func updateEffectStyle() {
         if #available(iOS 26, *) {
             let effect = UIGlassEffect(style: .regular)
             effect.isInteractive = isGlassInteractionEnabled
             effectContainerView.effect = effect
-            effectContainerView.cornerConfiguration = .corners(radius: .containerConcentric())
         } else {
             effectContainerView.effect = UIBlurEffect(style: .light)
         }
