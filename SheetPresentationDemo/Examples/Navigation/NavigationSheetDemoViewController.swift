@@ -17,6 +17,8 @@ final class NavigationSheetDemoViewController: UIViewController {
             action: #selector(openNextPage)
         )
         installSheetDismissButtonOnly()
+
+        navigationController?.cs.sheetPresentationController.selectedDetentIdentifier = .large
     }
 
     @objc private func openNextPage() {

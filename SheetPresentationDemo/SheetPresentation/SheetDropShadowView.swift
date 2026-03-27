@@ -43,7 +43,7 @@ class SheetDropShadowView: UIView {
     }
 
     /// 液态玻璃按压交互动效开关。
-    private var _isGlassInteractionEnabled = true
+    private var _isGlassInteractionEnabled = false
 
     @available(iOS 26, *)
     var isGlassInteractionEnabled: Bool {
@@ -180,7 +180,7 @@ class SheetDropShadowView: UIView {
             effect.isInteractive = isGlassInteractionEnabled
             effectContainerView.effect = effect
         } else {
-            effectContainerView.effect = UIBlurEffect(style: .light)
+            effectContainerView.effect = UIBlurEffect(style: .systemMaterial)
         }
     }
 
