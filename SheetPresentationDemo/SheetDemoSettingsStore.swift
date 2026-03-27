@@ -225,7 +225,7 @@ final class SheetDemoSettingsStore {
         case .prefersGrabberVisible: return "显示手柄"
         case .isEdgePanGestureEnabled: return "侧滑返回手势"
         case .prefersShadowVisible: return "显示阴影"
-        case .prefersFloatingStyle: return "浮动样式 + 液态玻璃效果 (iOS 26+)"
+        case .prefersFloatingStyle: return "浮动样式 (iOS 26+)"
         case .prefersInteractiveGlassEffect: return "液态玻璃交互动效 (iOS 26+)"
         case .isModalInPresentation: return "模态锁定"
         }
