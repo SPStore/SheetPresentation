@@ -76,7 +76,7 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return false
         case .prefersShadowVisible: return false
         case .prefersFloatingStyle: return false
-        case .prefersInteractiveGlassEffect: return true
+        case .prefersInteractiveGlassEffect: return false
         case .isModalInPresentation: return false
         }
     }
