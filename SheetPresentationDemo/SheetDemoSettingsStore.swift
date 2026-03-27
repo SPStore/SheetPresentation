@@ -27,6 +27,7 @@ final class SheetDemoSettingsStore {
         case isEdgePanGestureEnabled
         case prefersShadowVisible
         case prefersFloatingStyle
+        case prefersInteractiveGlassEffect
         case isModalInPresentation
     }
 
@@ -75,6 +76,7 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return false
         case .prefersShadowVisible: return false
         case .prefersFloatingStyle: return false
+        case .prefersInteractiveGlassEffect: return true
         case .isModalInPresentation: return false
         }
     }
@@ -155,6 +157,10 @@ final class SheetDemoSettingsStore {
         bool(for: .prefersFloatingStyle)
     }
 
+    var prefersInteractiveGlassEffect: Bool {
+        bool(for: .prefersInteractiveGlassEffect)
+    }
+
     // MARK: - 批量配置
 
     /// 将当前所有设置值写入 `controller` 及被展示的 `presentedVC`。
@@ -174,6 +180,7 @@ final class SheetDemoSettingsStore {
         controller.prefersShadowVisible = prefersShadowVisible
         if #available(iOS 26, *) {
             controller.prefersFloatingStyle = prefersFloatingStyle
+            controller.prefersInteractiveGlassEffect = prefersInteractiveGlassEffect
         }
         presentedVC?.isModalInPresentation = isModalInPresentation
     }
@@ -219,6 +226,7 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return "侧滑返回手势"
         case .prefersShadowVisible: return "显示阴影"
         case .prefersFloatingStyle: return "浮动样式 + 液态玻璃效果 (iOS 26+)"
+        case .prefersInteractiveGlassEffect: return "液态玻璃交互动效 (iOS 26+)"
         case .isModalInPresentation: return "模态锁定"
         }
     }
@@ -228,6 +236,8 @@ final class SheetDemoSettingsStore {
         switch key {
         case .prefersFloatingStyle:
             return "地图示例比较典型"
+        case .prefersInteractiveGlassEffect:
+            return "仅在开启浮动样式后生效"
         case .isModalInPresentation:
             return "对应被展示控制器的 isModalInPresentation；开启后无法通过下拉等方式关闭"
         case .prefersGrabberVisible: return "顶部小横条"

@@ -98,7 +98,7 @@ open class SheetPresentationController: UIPresentationController {
 
     private var _prefersFloatingStyle: Bool = false
 
-    /// 是否以浮动样式展示（iOS 26+）。开启后四周留白并启用 glass 视觉效果。
+    /// 是否以浮动样式展示（iOS 26+）。开启后四周留白。
     @available(iOS 26, *)
     open var prefersFloatingStyle: Bool {
         get { _prefersFloatingStyle }
@@ -106,7 +106,6 @@ open class SheetPresentationController: UIPresentationController {
             _prefersFloatingStyle = newValue
             layoutInfo.prefersFloatingStyle = newValue
             syncDetentYPositionsToInteraction()
-            dropShadowView?.isGlassEffectEnabled = newValue
             if let id = selectedDetentIdentifier, let y = layoutInfo.yPosition(for: id) {
                 updatePresentedViewFrame(forYPosition: y)
             }
@@ -339,7 +338,6 @@ extension SheetPresentationController {
         shadowView.isGrabberVisible = prefersGrabberVisible
         if #available(iOS 26, *) {
             shadowView.isGlassInteractionEnabled = prefersInteractiveGlassEffect
-            shadowView.isGlassEffectEnabled = _prefersFloatingStyle
         }
         containerView.addSubview(shadowView)
         dropShadowView = shadowView

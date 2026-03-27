@@ -212,7 +212,14 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
             cell.detailTextLabel?.numberOfLines = 0
             cell.selectionStyle = .none
 
-            let isUnavailable = (key == .prefersFloatingStyle && !isFloatingStyleAvailable)
+            let isUnavailable: Bool = {
+                switch key {
+                case .prefersFloatingStyle, .prefersInteractiveGlassEffect:
+                    return !isFloatingStyleAvailable
+                default:
+                    return false
+                }
+            }()
             if isUnavailable {
                 cell.detailTextLabel?.text = "需 iOS 26+ 系统"
                 cell.detailTextLabel?.textColor = .secondaryLabel
@@ -237,7 +244,12 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
         let keys = SheetDemoSettingsStore.boolSettingsInOrder
         guard sender.tag >= 0, sender.tag < keys.count else { return }
         let key = keys[sender.tag]
-        if key == .prefersFloatingStyle && !isFloatingStyleAvailable { return }
+        switch key {
+        case .prefersFloatingStyle, .prefersInteractiveGlassEffect:
+            guard isFloatingStyleAvailable else { return }
+        default:
+            break
+        }
         store.setBool(sender.isOn, forSetting: key)
     }
 }
