@@ -122,7 +122,7 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
     
-    private var _prefersInteractiveGlassEffect = false
+    private var _prefersInteractiveGlassEffect = true
 
     /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {
@@ -336,9 +336,6 @@ extension SheetPresentationController {
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
-        if #available(iOS 26, *) {
-            updateGlassInteractionIfNeeded()
-        }
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 

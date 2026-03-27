@@ -255,7 +255,6 @@ extension SheetInteraction {
         
         if isTopLockLatchedInCurrentGesture {
             scrollView.lockToTop()
-            isTopLockLatchedInCurrentGesture = true
             return
         }
 
@@ -305,7 +304,7 @@ extension SheetInteraction {
                 scrollState.canDriveSheetInChangedPhase = true
             }
         } else {
-            scrollState.canDriveSheetInChangedPhase = scrollState.initialContentOffsetY >= (detectedScrollView.topOffsetY - 5)
+            scrollState.canDriveSheetInChangedPhase = scrollState.initialContentOffsetY >= (detectedScrollView.topOffsetY - tolerance)
         }
         isTopLockLatchedInCurrentGesture = false
     }
