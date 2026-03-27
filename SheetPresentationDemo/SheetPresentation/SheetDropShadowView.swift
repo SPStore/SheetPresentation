@@ -49,6 +49,7 @@ class SheetDropShadowView: UIView {
     var isGlassInteractionEnabled: Bool {
         get { _isGlassInteractionEnabled }
         set {
+            guard _isGlassInteractionEnabled != newValue else { return }
             _isGlassInteractionEnabled = newValue
             updateGlassInteractionIfNeeded()
             nudgeFrameForGlassEffectRefreshIfNeeded()

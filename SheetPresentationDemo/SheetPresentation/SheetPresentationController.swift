@@ -118,7 +118,7 @@ open class SheetPresentationController: UIPresentationController {
         get { _prefersInteractiveGlassEffect }
         set {
             _prefersInteractiveGlassEffect = newValue
-            dropShadowView?.isGlassInteractionEnabled = newValue
+            updateGlassInteractionIfNeeded()
         }
     }
     
@@ -337,7 +337,7 @@ extension SheetPresentationController {
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
         if #available(iOS 26, *) {
-            shadowView.isGlassInteractionEnabled = prefersInteractiveGlassEffect
+            updateGlassInteractionIfNeeded()
         }
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
@@ -356,6 +356,12 @@ extension SheetPresentationController {
         shadowView.grabberDidClickHandler = { [weak self] in
             self?.toggleNextDetent()
         }
+    }
+
+    @available(iOS 26, *)
+    private func updateGlassInteractionIfNeeded() {
+        guard let shadowView = dropShadowView else { return }
+        shadowView.isGlassInteractionEnabled = _prefersInteractiveGlassEffect && shadowView.frame.minX >= 4
     }
 
     private func cleanupViews() {
@@ -415,6 +421,9 @@ extension SheetPresentationController {
             shadowView.frame = floatingFrame
         } else {
             shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
+        }
+        if #available(iOS 26, *) {
+            updateGlassInteractionIfNeeded()
         }
 
         guard shadowView.frame != previousFrame else { return }

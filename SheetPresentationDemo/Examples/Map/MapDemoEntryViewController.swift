@@ -208,11 +208,6 @@ extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
         } else {
             sheetPresentationController.presentedViewController.view.backgroundColor = .clear
         }
-        if #available(iOS 26, *) {
-            if let presentedView = sheetPresentationController.presentedView {
-                sheetPresentationController.prefersInteractiveGlassEffect = presentedView.frame.minX >= 2.0
-            }
-        }
     }
     
     func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
