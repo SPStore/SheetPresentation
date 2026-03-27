@@ -1,7 +1,7 @@
 import MapKit
 import UIKit
 
-/// 地图 Sheet：毛玻璃底、搜索栏、地点列表；搜索聚焦时切长档，地图被用户拖动时收短档。
+/// 地图 Sheet：搜索栏、地点列表；搜索聚焦时切长档，地图被用户拖动时收短档。
 final class MapSheetDemoViewController: UIViewController {
 
     enum DetentID {
@@ -10,7 +10,6 @@ final class MapSheetDemoViewController: UIViewController {
         static let long = SheetPresentationController.Detent.Identifier("map.long")
     }
 
-    private let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
     private let searchBar = UISearchBar(frame: .zero)
     private let tableView = UITableView(frame: .zero, style: .plain)
 
@@ -20,10 +19,6 @@ final class MapSheetDemoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
-        if #unavailable(iOS 26) {
-            effectView.translatesAutoresizingMaskIntoConstraints = false
-            effectView.alpha = 0.92
-        }
 
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.placeholder = "搜索地点或地址"
@@ -40,21 +35,10 @@ final class MapSheetDemoViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.register(MapLocationTableViewCell.self, forCellReuseIdentifier: MapLocationTableViewCell.reuseId)
 
-        if #unavailable(iOS 26) {
-            view.addSubview(effectView)
-        }
         view.addSubview(searchBar)
         view.addSubview(tableView)
 
         let grabberPad = sheetDemoGrabberLayoutPadding
-        if #unavailable(iOS 26) {
-            NSLayoutConstraint.activate([
-                effectView.topAnchor.constraint(equalTo: view.topAnchor),
-                effectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                effectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                effectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            ])
-        }
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: grabberPad + 10),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
@@ -67,8 +51,7 @@ final class MapSheetDemoViewController: UIViewController {
         ])
 
         mapDemoPlaces = Self.makeMapDemoPlaces(count: 20)
-        updateBlurForCurrentTraitCollection()
-        
+
         // 让searchTextField立刻产生frame，否则viewDidLayoutSubviews中拿到的h是0
         searchBar.layoutIfNeeded()
     }
@@ -92,18 +75,6 @@ final class MapSheetDemoViewController: UIViewController {
         tf.backgroundColor = .tertiarySystemFill
         tf.layer.masksToBounds = true
         tf.layer.cornerCurve = .continuous
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateBlurForCurrentTraitCollection()
-    }
-
-    private func updateBlurForCurrentTraitCollection() {
-        guard #unavailable(iOS 26) else { return }
-        let style: UIBlurEffect.Style =
-            traitCollection.userInterfaceStyle == .dark ? .dark : .extraLight
-        effectView.effect = UIBlurEffect(style: style)
     }
 
     /// 由地图页在用户拖动地图时调用，将 Sheet 收回到短档。
@@ -245,4 +216,3 @@ extension MapSheetDemoViewController: UITableViewDataSource, UITableViewDelegate
         view.endEditing(true)
     }
 }
-
