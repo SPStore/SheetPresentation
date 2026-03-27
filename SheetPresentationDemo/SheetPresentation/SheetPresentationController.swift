@@ -98,7 +98,7 @@ open class SheetPresentationController: UIPresentationController {
 
     private var _prefersFloatingStyle: Bool = false
 
-    /// 是否以浮动样式展示（iOS 26+）。开启后四周留白。
+    /// 是否以浮动样式展示，开启后左、右、底有间距，默认false
     @available(iOS 26, *)
     open var prefersFloatingStyle: Bool {
         get { _prefersFloatingStyle }
@@ -112,7 +112,7 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
     
-    /// 是否启用液态玻璃的按压交互动效（iOS 26+），默认 true。
+    /// 是否启用液态玻璃的按压交互动效，默认 true
     @available(iOS 26, *)
     open var prefersInteractiveGlassEffect: Bool {
         get { _prefersInteractiveGlassEffect }
@@ -122,7 +122,7 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
     
-    private var _prefersInteractiveGlassEffect = true
+    private var _prefersInteractiveGlassEffect = false
 
     /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {

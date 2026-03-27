@@ -190,6 +190,8 @@ class SheetDropShadowView: UIView {
         effectContainerView.effect = effect
     }
 
+    // 这个做一个frame微调整然后再还原，目的是触发effectContainerView重新应用effect，
+    // 这应该是属于 iOS26 系统的bug，如果不做这一步，运行时修改effect不会生效.
     private func nudgeFrameForGlassEffectRefreshIfNeeded() {
         guard window != nil else { return }
 
