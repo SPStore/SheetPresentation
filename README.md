@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Assets/logo.png" title="SheetPresentation logo" width="480">
+  <img src="Assets/banner.png" title="SheetPresentation" width="960">
 </p>
 <p align="center">
   iOS 底部抽屉（Bottom Sheet）展示库，提供多档位、ScrollView 联动、侧滑返回、浮动样式等能力
