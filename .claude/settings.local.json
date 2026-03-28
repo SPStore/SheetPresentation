@@ -17,7 +17,10 @@
       "Bash(sips --version)",
       "Bash(pkill -f 'brew vendor-install ruby')",
       "Bash(/dev/null ls:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(wc -l echo --- grep -r \"Claude\\\\|Anthropic\\\\|noreply@anthropic\" --include=*.swift --include=*.md --include=*.json -l)",
+      "Bash(git stash:*)",
+      "Bash(git filter-branch -f --msg-filter ':*)"
     ]
   }
 }
