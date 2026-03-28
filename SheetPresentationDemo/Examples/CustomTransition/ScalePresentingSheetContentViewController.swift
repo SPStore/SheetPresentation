@@ -13,7 +13,8 @@ final class ScalePresentingSheetContentViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let items = Array(1...20).map { "列表项 \($0)" }
 
-    private let maxCornerRadius: CGFloat = 12
+    private let maxCornerRadius: CGFloat = 50
+    private let minCornerRadius: CGFloat = 16
 
     private static var hintHasBeenShown = false
     private weak var hintView: UIView?
@@ -166,10 +167,11 @@ final class ScalePresentingSheetContentViewController: UIViewController {
         v?.transform = CGAffineTransform(scaleX: scale, y: scale)
         v?.layer.masksToBounds = p > 0
         if #available(iOS 26, *) {
-            let radius: UICornerRadius = p > 0 ? .containerConcentric() : .fixed(0)
+            let radius: UICornerRadius = p > 0 ? .containerConcentric(minimum: 10) : .fixed(0)
             v?.cornerConfiguration = .corners(radius: radius)
         } else {
-            v?.layer.cornerRadius = p * maxCornerRadius
+            // 半径最小值16，最大50（这里给死的，没有融合设备的圆角半径）
+            v?.layer.cornerRadius = (minCornerRadius - maxCornerRadius) * p + maxCornerRadius
         }
     }
 }

@@ -111,7 +111,14 @@ final class MapDemoEntryViewController: UIViewController {
         sheet.prefersShadowVisible = true
         sheet.detents = MapSheetDemoViewController.makeMapDetents()
         sheet.selectedDetentIdentifier = MapSheetDemoViewController.DetentID.medium
-
+        if #available(iOS 26.0, *) {
+            let glassEffect = UIGlassEffect(style: .regular)
+            // 开启按压动效
+            glassEffect.isInteractive = sheet.prefersFloatingStyle
+            sheet.backgroundEffect = glassEffect
+        } else {
+            sheet.backgroundEffect = UIBlurEffect(style: .systemMaterial)
+        }
         cs.presentSheetViewController(vc, animated: false) {
             Self.configureMapSheetTouchPassThrough(for: vc)
         }
@@ -207,6 +214,16 @@ extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
             sheetPresentationController.presentedViewController.view.backgroundColor = .systemBackground
         } else {
             sheetPresentationController.presentedViewController.view.backgroundColor = .clear
+        }
+        
+        if let presentedView = sheetPresentationController.presentedView {
+            let backgroundEffect = sheetPresentationController.backgroundEffect
+            if #available(iOS 26.0, *) {
+                if let glassEffect = backgroundEffect as? UIGlassEffect {
+                    glassEffect.isInteractive = presentedView.frame.minX >= 4
+                    sheetPresentationController.backgroundEffect = glassEffect
+                }
+            }
         }
     }
     

@@ -133,6 +133,15 @@ final class NestedVerticalScrollDemoViewController: UIViewController {
         tv.textContainerInset = UIEdgeInsets(top: 0, left: 12, bottom: 12, right: 12)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.heightAnchor.constraint(equalToConstant: height).isActive = true
+        // transfersVerticalScrollingToParent表示的是子scrollView是否将其滚动行为转化为父scrollView上
+        // 在本例中：
+        // 如果开启(默认)，当textView出于最顶部状态，滑动textView，是无法驱动sheet的，因为此时组件内部检测到的scrollView是textView，而textView将其滚动行为传递给了父scrollView，组件内部监听不到父scrollView的滚动
+        // 如果为false，滑动textView可以驱动sheet，因为没有传递给父scrollView，组件内部监听的就是textView本身.
+        if #available(iOS 17.4, *) {
+            tv.transfersVerticalScrollingToParent = false
+        } else {
+            // Fallback on earlier versions
+        }
         return tv
     }
 
