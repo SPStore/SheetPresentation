@@ -112,17 +112,12 @@ open class SheetPresentationController: UIPresentationController {
         }
     }
     
-    /// 是否启用液态玻璃的按压交互动效，默认 true
-    @available(iOS 26, *)
-    open var prefersInteractiveGlassEffect: Bool {
-        get { _prefersInteractiveGlassEffect }
-        set {
-            _prefersInteractiveGlassEffect = newValue
-            updateGlassInteractionIfNeeded()
+    /// 背景视觉效果，nil 时背景完全透明；默认 iOS 26+ 使用开启了交互动效的 UIGlassEffect，低版本使用 systemMaterial 模糊。
+    open var backgroundEffect: UIVisualEffect? = nil {
+        didSet {
+            dropShadowView?.backgroundEffect = backgroundEffect
         }
     }
-    
-    private var _prefersInteractiveGlassEffect = true
 
     /// 背景蒙层透明度
     open var dimmingBackgroundAlpha: CGFloat = 0.4 {
@@ -336,6 +331,7 @@ extension SheetPresentationController {
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
+        shadowView.backgroundEffect = backgroundEffect
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 
@@ -353,12 +349,6 @@ extension SheetPresentationController {
         shadowView.grabberDidClickHandler = { [weak self] in
             self?.toggleNextDetent()
         }
-    }
-
-    @available(iOS 26, *)
-    private func updateGlassInteractionIfNeeded() {
-        guard let shadowView = dropShadowView else { return }
-        shadowView.isGlassInteractionEnabled = _prefersInteractiveGlassEffect && shadowView.frame.minX >= 4
     }
 
     private func cleanupViews() {
@@ -414,15 +404,11 @@ extension SheetPresentationController {
         let previousFrame = shadowView.frame
 
         if _prefersFloatingStyle {
-            let floatingFrame = layoutInfo.floatingPresentedLayout(at: yPosition)
-            shadowView.frame = floatingFrame
+            shadowView.frame = layoutInfo.floatingPresentedLayout(at: yPosition)
         } else {
             shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
         }
-        if #available(iOS 26, *) {
-            updateGlassInteractionIfNeeded()
-        }
-
+        
         guard shadowView.frame != previousFrame else { return }
         sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: shadowView.frame)
     }

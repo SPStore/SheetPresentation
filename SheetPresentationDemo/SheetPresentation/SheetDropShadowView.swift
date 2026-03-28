@@ -42,16 +42,10 @@ class SheetDropShadowView: UIView {
         didSet { updateShadow() }
     }
 
-    /// 液态玻璃按压交互动效开关。
-    private var _isGlassInteractionEnabled = false
-
-    @available(iOS 26, *)
-    var isGlassInteractionEnabled: Bool {
-        get { _isGlassInteractionEnabled }
-        set {
-            guard _isGlassInteractionEnabled != newValue else { return }
-            _isGlassInteractionEnabled = newValue
-            updateGlassInteractionIfNeeded()
+    /// 背景视觉效果，nil 时背景完全透明。
+    var backgroundEffect: UIVisualEffect? {
+        didSet {
+            updateEffectStyle()
             nudgeFrameForGlassEffectRefreshIfNeeded()
         }
     }
@@ -175,20 +169,7 @@ class SheetDropShadowView: UIView {
     }
 
     private func updateEffectStyle() {
-        if #available(iOS 26, *) {
-            let effect = UIGlassEffect(style: .regular)
-            effect.isInteractive = isGlassInteractionEnabled
-            effectContainerView.effect = effect
-        } else {
-            effectContainerView.effect = UIBlurEffect(style: .systemMaterial)
-        }
-    }
-
-    @available(iOS 26, *)
-    private func updateGlassInteractionIfNeeded() {
-        guard let effect = effectContainerView.effect as? UIGlassEffect else { return }
-        effect.isInteractive = isGlassInteractionEnabled
-        effectContainerView.effect = effect
+        effectContainerView.effect = backgroundEffect
     }
 
     // 这个做一个frame微调整然后再还原，目的是触发effectContainerView重新应用effect，

@@ -214,7 +214,7 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
 
             let isUnavailable: Bool = {
                 switch key {
-                case .prefersFloatingStyle, .prefersInteractiveGlassEffect:
+                case .prefersFloatingStyle:
                     return !isFloatingStyleAvailable
                 default:
                     return false
@@ -245,7 +245,7 @@ extension SheetDemoSettingsViewController: UITableViewDataSource, UITableViewDel
         guard sender.tag >= 0, sender.tag < keys.count else { return }
         let key = keys[sender.tag]
         switch key {
-        case .prefersFloatingStyle, .prefersInteractiveGlassEffect:
+        case .prefersFloatingStyle:
             guard isFloatingStyleAvailable else { return }
         default:
             break
