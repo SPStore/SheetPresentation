@@ -1,7 +1,22 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(swift package:*)",
+      "Bash(grep -l \"import SheetPresentation\" /Users/shengping_le/SheetPresentation/Example/SheetPresentationExample/Examples/**/*.swift)",
+      "Bash(git -C /Users/shengping_le/SheetPresentation log --oneline --all)",
+      "Bash(git -C /Users/shengping_le/SheetPresentation show HEAD:SheetPresentationDemo/SheetDemoSettingsStore.swift)",
+      "Bash(git -C /Users/shengping_le/SheetPresentation show HEAD:SheetPresentationDemo/ViewController.swift)",
+      "Bash(git -C /Users/shengping_le/SheetPresentation log --all --full-history -- \"**/SheetDemoSettingsStore.swift\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls /Users/shengping_le/SheetPresentation/*.md)",
+      "Bash(pip3 install:*)",
+      "Bash(python3:*)",
+      "Bash(brew install:*)",
+      "Bash(sips --version)",
+      "Bash(pkill -f 'brew vendor-install ruby')",
+      "Bash(/dev/null ls:*)"
     ]
   }
 }
