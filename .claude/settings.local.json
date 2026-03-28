@@ -16,7 +16,8 @@
       "Bash(brew install:*)",
       "Bash(sips --version)",
       "Bash(pkill -f 'brew vendor-install ruby')",
-      "Bash(/dev/null ls:*)"
+      "Bash(/dev/null ls:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
