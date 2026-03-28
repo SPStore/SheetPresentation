@@ -43,7 +43,7 @@
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yourname/SheetPresentation.git", from: "1.0.0")
+    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.0")
 ]
 ```
 
