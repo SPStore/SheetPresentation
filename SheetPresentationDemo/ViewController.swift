@@ -57,7 +57,7 @@ final class ViewController: UIViewController {
         DemoItem(title: "Dynamic Height", detail: "高度自适应内容", action: .push, profile: .twoDetents) {
             DynamicHeightDemoViewController()
         },
-        DemoItem(title: "Map", detail: "3个档位", action: .push, profile: .threeDetents) {
+        DemoItem(title: "Map", detail: "3个档位（加了模糊效果）", action: .push, profile: .threeDetents) {
             MapDemoEntryViewController()
         },
         DemoItem(title: "Web", detail: "网页容器", action: .present, profile: .twoDetents) {

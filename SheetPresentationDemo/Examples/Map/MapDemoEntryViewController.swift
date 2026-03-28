@@ -220,7 +220,7 @@ extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
             let backgroundEffect = sheetPresentationController.backgroundEffect
             if #available(iOS 26.0, *) {
                 if let glassEffect = backgroundEffect as? UIGlassEffect {
-                    glassEffect.isInteractive = presentedView.frame.minX >= 4
+                    glassEffect.isInteractive = presentedView.frame.minX >= 2
                     sheetPresentationController.backgroundEffect = glassEffect
                 }
             }
