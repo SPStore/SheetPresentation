@@ -10,6 +10,7 @@
   <a href="https://developer.apple.com/ios/"><img src="https://img.shields.io/badge/iOS-13.0%2B-blue.svg"></a>
   <a href="https://github.com/SPStore/SheetPresentation/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg"></a>
   <a href="https://swift.org/package-manager/"><img src="https://img.shields.io/badge/SPM-compatible-brightgreen.svg"></a>
+  <a href="https://cocoapods.org/pods/SheetPresentation"><img src="https://img.shields.io/badge/CocoaPods-compatible-brightgreen.svg"></a>
 </p>
 
 ---
@@ -45,6 +46,20 @@
 dependencies: [
     .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.0")
 ]
+```
+
+### CocoaPods
+
+在 `Podfile` 中添加：
+
+```ruby
+pod 'SheetPresentation', '~> 1.0'
+```
+
+然后执行：
+
+```bash
+pod install
 ```
 
 ---

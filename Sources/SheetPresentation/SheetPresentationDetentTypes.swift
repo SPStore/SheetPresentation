@@ -63,10 +63,12 @@ extension SheetPresentationController {
         /// 与 `large()` 顶边一致：相对容器 safe area 顶下沿的间距（pt）。
         public static let largeDetentGapBelowSafeArea: CGFloat = 0
 
+        @MainActor
         public static func medium() -> Detent {
             .custom(identifier: .medium) { $0.maximumDetentValue * 0.5 }
         }
 
+        @MainActor
         public static func large() -> Detent {
             .custom(identifier: .large) { ctx in
                 let originY = preferredLargestDetentOriginY(safeAreaTop: ctx.containerSafeAreaTopInset)
