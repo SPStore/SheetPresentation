@@ -1,0 +1,21 @@
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# SPM Xcode 生成的工作区（用户专属，不应提交）
+.swiftpm/xcode/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# CocoaPods（如有）
+Pods/
+
+# Build
+build/

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BB60B61E2F77D3DF0090ECF0 /* SheetPresentation in Frameworks */ = {isa = PBXBuildFile; productRef = BB60B61D2F77D3DF0090ECF0 /* SheetPresentation */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		BB797AA02F77CF7400512231 /* SheetPresentationExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SheetPresentationExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB60B61E2F77D3DF0090ECF0 /* SheetPresentation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = SheetPresentationExample;
 			packageProductDependencies = (
+				BB60B61D2F77D3DF0090ECF0 /* SheetPresentation */,
 			);
 			productName = SheetPresentationExample;
 			productReference = BB797AA02F77CF7400512231 /* SheetPresentationExample.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = BB797A972F77CF7400512231;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BB60B61C2F77D3DF0090ECF0 /* XCLocalSwiftPackageReference "../../SheetPresentation" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BB797AA12F77CF7400512231 /* Products */;
 			projectDirPath = "";
@@ -153,6 +162,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -185,6 +195,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -345,6 +356,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		BB60B61C2F77D3DF0090ECF0 /* XCLocalSwiftPackageReference "../../SheetPresentation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../SheetPresentation;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB60B61D2F77D3DF0090ECF0 /* SheetPresentation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SheetPresentation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BB797A982F77CF7400512231 /* Project object */;
 }
