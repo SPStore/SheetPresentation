@@ -53,13 +53,19 @@ dependencies: [
 在 `Podfile` 中添加：
 
 ```ruby
-pod 'SheetPresentation', '~> 1.0'
+pod 'SPSheetPresentation', '~> 1.0'
 ```
 
 然后执行：
 
 ```bash
 pod install
+```
+
+安装后代码中仍然使用：
+
+```swift
+import SheetPresentation
 ```
 
 ---
