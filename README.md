@@ -50,6 +50,8 @@ dependencies: [
 
 ### CocoaPods
 
+由于 `SheetPresentation` 在 CocoaPods 上已被其他库占用，因此安装名使用了带 `SP` 前缀的 `SPSheetPresentation`。
+
 在 `Podfile` 中添加：
 
 ```ruby
