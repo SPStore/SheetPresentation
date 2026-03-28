@@ -1,0 +1,237 @@
+import CoreLocation
+import MapKit
+import UIKit
+import SheetPresentation
+
+/// 全屏地图、定位，进入后自动弹出地点搜索 Sheet。
+final class MapDemoEntryViewController: UIViewController {
+
+    /// `setRegion` 等会触发 `regionWillChange`；用深度计数跳过，避免首屏定位时误把 Sheet 收成短档。
+    private var programmaticRegionChangeDepth = 0
+
+    private let mapView: MKMapView = {
+        let v = MKMapView(frame: .zero)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.showsUserLocation = true
+        return v
+    }()
+
+    private lazy var locationManager: CLLocationManager = {
+        let m = CLLocationManager()
+        m.delegate = self
+        return m
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Map"
+        view.backgroundColor = .white
+        mapView.delegate = self
+        view.addSubview(mapView)
+        NSLayoutConstraint.activate([
+            mapView.topAnchor.constraint(equalTo: view.topAnchor),
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+
+        configureMapCustomBackBarButtonItem()
+        
+        DispatchQueue.main.async {
+            self.presentLocationSheetIfNeeded()
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        centerMapOnUserOrDefault(animated: animated)
+        // 本示例禁用全屏侧滑返回，避免与地图穿透、sheet 生命周期搅在一起；离开本页时恢复。
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        if isMovingFromParent {
+            // MKMapView 销毁前断开 delegate 并移出视图层级，
+            // 避免 GPU 命令缓冲区还在引用 Metal drawable 时触发断言崩溃。
+            mapView.delegate = nil
+            mapView.removeFromSuperview()
+        }
+    }
+
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        // 兜底：非自定义返回路径（如将来恢复侧滑）仍会在移出容器时收起 sheet。
+        if parent == nil, presentedViewController != nil {
+            dismiss(animated: false)
+        }
+    }
+
+    /// 用 `leftBarButtonItem` 自定义返回（`backBarButtonItem` 是上一页设置的，不作用在当前页导航栏左侧）。
+    private func configureMapCustomBackBarButtonItem() {
+        let item = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.backward"),
+            style: .plain,
+            target: self,
+            action: #selector(mapCustomBackTapped)
+        )
+        item.accessibilityLabel = NSLocalizedString("Back", comment: "")
+        navigationItem.leftBarButtonItem = item
+    }
+
+    @objc private func mapCustomBackTapped() {
+        dismissPresentedSheetIfNeeded()
+        navigationController?.popViewController(animated: true)
+    }
+
+    private func dismissPresentedSheetIfNeeded() {
+        guard presentedViewController != nil else { return }
+        dismiss(animated: false)
+    }
+
+    private func presentLocationSheetIfNeeded() {
+        guard presentedViewController == nil else { return }
+
+        let vc = MapSheetDemoViewController()
+        vc.isModalInPresentation = true
+
+        let sheet = vc.cs.sheetPresentationController
+        let settings = SheetDemoSettingsStore.shared
+        // 应用全局配置
+        settings.configure(sheetController: sheet)
+        
+        sheet.delegate = self
+        sheet.allowsTapBackgroundToDismiss = false
+        sheet.dimmingBackgroundAlpha = 0
+        sheet.prefersGrabberVisible = true
+        sheet.prefersShadowVisible = true
+        sheet.detents = MapSheetDemoViewController.makeMapDetents()
+        sheet.selectedDetentIdentifier = MapSheetDemoViewController.DetentID.medium
+        if #available(iOS 26.0, *) {
+            let glassEffect = UIGlassEffect(style: .regular)
+            // 开启按压动效
+            glassEffect.isInteractive = sheet.prefersFloatingStyle
+            sheet.backgroundEffect = glassEffect
+        } else {
+            sheet.backgroundEffect = UIBlurEffect(style: .systemMaterial)
+        }
+        cs.presentSheetViewController(vc, animated: false) {
+            Self.configureMapSheetTouchPassThrough(for: vc)
+        }
+    }
+
+    /// 地图场景：容器 `ignoreDirectTouchEvents` + 关闭蒙层交互。
+    /// 蒙层在 `setupViews` 里先于 sheet 加入 `containerView`；用运行时类名识别，避免依赖跨模块不可见的 `SheetDimmingView` 类型。
+    private static func configureMapSheetTouchPassThrough(for presented: UIViewController) {
+        guard let sheet = presented.presentationController as? SheetPresentationController,
+              let container = sheet.containerView else { return }
+
+        // 实现穿透一共做2件事：
+        // 1. 通过KVC的方式上设置 sheet.containerView 的私有属性 ignoreDirectTouchEvents 为 true
+        // 2. 关闭 sheet 组件内部的 dimmingView 的交互
+        // 由于穿透场景较为特殊，就没封装在组件内部.
+        applyIgnoreDirectTouchEventsIfSupported(true, for: container)
+
+        guard let dimming = dimmingSubview(of: sheet) else { return }
+        dimming.isUserInteractionEnabled = false
+    }
+
+    private static func dimmingSubview(of sheet: SheetPresentationController) -> UIView? {
+        guard let cls = sheetDimmingViewRuntimeClass else { return nil }
+        return sheet.containerView?.subviews.first { $0.isKind(of: cls) }
+    }
+
+
+    /// 运行时类名因集成方式不同而异：
+    /// - SPM / CocoaPods：`SheetPresentation.SheetDimmingView`
+    /// - 源码直接加入 App target：`AppModule.SheetDimmingView`
+    private static let sheetDimmingViewRuntimeClass: AnyClass? = {
+        let appModule = (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String)?
+            .replacingOccurrences(of: " ", with: "_") ?? ""
+        let candidates = [
+            "SheetPresentation.SheetDimmingView",
+            "\(appModule).SheetDimmingView"
+        ]
+        return candidates.lazy.compactMap { NSClassFromString($0) }.first
+    }()
+
+    private func centerMapOnUserOrDefault(animated: Bool) {
+        programmaticRegionChangeDepth += 1
+        if let coord = mapView.userLocation.location?.coordinate {
+            let region = MKCoordinateRegion(center: coord, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            mapView.setRegion(region, animated: animated)
+        } else {
+            let shanghai = CLLocationCoordinate2D(latitude: 31.23, longitude: 121.47)
+            let region = MKCoordinateRegion(center: shanghai, latitudinalMeters: 2000, longitudinalMeters: 2000)
+            mapView.setRegion(region, animated: animated)
+        }
+    }
+    
+    /// `ignoreDirectTouchEvents` 为 UIKit 内部属性；通过 KVC 写入，仅在 `responds(to:)` 为真时生效。
+    static func applyIgnoreDirectTouchEventsIfSupported(_ ignore: Bool, for containerView: UIView) {
+        let key = "ignoreDirectTouchEvents"
+        guard containerView.responds(to: NSSelectorFromString(key)) else { return }
+        containerView.setValue(ignore, forKey: key)
+    }
+}
+
+// MARK: - MKMapViewDelegate
+
+extension MapDemoEntryViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        guard programmaticRegionChangeDepth == 0, presentedViewController != nil else { return }
+        // 检查内部 scroll 子视图是否有活跃手势，排除屏幕旋转等非用户触发的 region 变化
+        let hasActiveGesture = mapView.subviews.first?.gestureRecognizers?.contains {
+            $0.state == .began || $0.state == .changed
+        } ?? false
+        guard hasActiveGesture else { return }
+        (presentedViewController as? MapSheetDemoViewController)?.userMoveMapView()
+    }
+
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        if programmaticRegionChangeDepth > 0 {
+            programmaticRegionChangeDepth -= 1
+        }
+    }
+}
+
+extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
+    func sheetPresentationController(_ sheetPresentationController: SheetPresentationController, didUpdatePresentedFrame frame: CGRect) {
+        // 通过设置背景色，在到达某个位置后，遮住模糊效果
+        if frame.origin.y <= view.bounds.height * 0.35 {
+            sheetPresentationController.presentedViewController.view.backgroundColor = .systemBackground
+        } else {
+            sheetPresentationController.presentedViewController.view.backgroundColor = .clear
+        }
+        
+        if let presentedView = sheetPresentationController.presentedView {
+            let backgroundEffect = sheetPresentationController.backgroundEffect
+            if #available(iOS 26.0, *) {
+                if let glassEffect = backgroundEffect as? UIGlassEffect {
+                    glassEffect.isInteractive = presentedView.frame.minX >= 2
+                    sheetPresentationController.backgroundEffect = glassEffect
+                }
+            }
+        }
+    }
+    
+    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
+        _ sheetPresentationController: SheetPresentationController
+    ) {
+        // 切到 long 往往是为了搜索框聚焦输入，不在此收键盘；其它档位（拖动手柄、地图联动收短等）收起键盘。
+        if sheetPresentationController.selectedDetentIdentifier == MapSheetDemoViewController.DetentID.long {
+            return
+        }
+        view.endEditing(true)
+    }
+}
+
+// MARK: - CLLocationManagerDelegate
+
+extension MapDemoEntryViewController: CLLocationManagerDelegate {}
+
