@@ -126,7 +126,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
 private extension ViewController {
     func presentAsSheet(_ vc: UIViewController, profile: SheetProfile) {
-        let controller = vc.cs.sheetPresentationController
+        let controller = vc.sp.sheetPresentationController
         controller.delegate = self
         
         // 根据配置，设置sheetPresentationController
@@ -152,7 +152,7 @@ private extension ViewController {
             ]
             controller.selectedDetentIdentifier = .medium
         }
-        cs.presentSheetViewController(vc, animated: true) {
+        sp.presentSheetViewController(vc, animated: true) {
 
         }
     }

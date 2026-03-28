@@ -114,7 +114,7 @@ final class CommentsEntryDemoViewController: UIViewController {
         vc.onRequestDismissed = { [weak self] in
             self?.handleCommentsSheetDismissed()
         }
-        let sheet = vc.cs.sheetPresentationController
+        let sheet = vc.sp.sheetPresentationController
         sheet.delegate = self
         sheet.detents = [
             .custom(identifier: Self.commentsDetentIdentifier) { ctx in
@@ -125,7 +125,7 @@ final class CommentsEntryDemoViewController: UIViewController {
         sheet.isEdgePanGestureEnabled = true
         sheet.edgePanTriggerDistance = view.bounds.width
 
-        cs.presentSheetViewController(vc, animated: true)
+        sp.presentSheetViewController(vc, animated: true)
     }
 
     /// 展开为全屏大档（供评论 Sheet 内按钮调用）。

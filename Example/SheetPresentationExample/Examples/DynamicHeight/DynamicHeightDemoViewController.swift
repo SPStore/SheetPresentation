@@ -60,7 +60,7 @@ final class DynamicHeightDemoViewController: UIViewController {
 
     @objc private func showReminderToSleepPop() {
         let vc = ReminderToSleepSheetViewController()
-        let sheet = vc.cs.sheetPresentationController
+        let sheet = vc.sp.sheetPresentationController
         let settings = SheetDemoSettingsStore.shared
         applySharedSheetSettings(sheet, settings: settings)
 
@@ -76,12 +76,12 @@ final class DynamicHeightDemoViewController: UIViewController {
         sheet.selectedDetentIdentifier = ReminderToSleepSheetViewController.detentId
 
         vc.isModalInPresentation = settings.isModalInPresentation
-        cs.presentSheetViewController(vc, animated: true)
+        sp.presentSheetViewController(vc, animated: true)
     }
 
     @objc private func showPermissionSettingPop() {
         let vc = PermissionSettingSheetViewController()
-        let sheet = vc.cs.sheetPresentationController
+        let sheet = vc.sp.sheetPresentationController
         let settings = SheetDemoSettingsStore.shared
         applySharedSheetSettings(sheet, settings: settings)
 
@@ -101,7 +101,7 @@ final class DynamicHeightDemoViewController: UIViewController {
         sheet.selectedDetentIdentifier = PermissionSettingSheetViewController.detentId
 
         vc.isModalInPresentation = settings.isModalInPresentation
-        cs.presentSheetViewController(vc, animated: true)
+        sp.presentSheetViewController(vc, animated: true)
     }
 
     private func applySharedSheetSettings(_ sheet: SheetPresentationController, settings: SheetDemoSettingsStore) {

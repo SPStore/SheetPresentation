@@ -23,7 +23,7 @@ final class ScalePresentingSheetContentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        cs.sheetPresentationController.delegate = self
+        sp.sheetPresentationController.delegate = self
         setupUI()
     }
 

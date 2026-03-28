@@ -46,7 +46,7 @@ final class CustomTransitionDemoViewController: UIViewController {
 
     @objc private func presentFadeSheet() {
         let contentVC = CustomTransitionSheetContentViewController()
-        let controller = contentVC.cs.sheetPresentationController
+        let controller = contentVC.sp.sheetPresentationController
         controller.delegate = self
         
         SheetDemoSettingsStore.shared.configure(sheetController: controller)
@@ -54,12 +54,12 @@ final class CustomTransitionDemoViewController: UIViewController {
         controller.prefersGrabberVisible = false
         controller.allowsPanGestureToDriveSheet = false
         controller.allowsScrollViewToDriveSheet = false
-        cs.presentSheetViewController(contentVC, animated: true)
+        sp.presentSheetViewController(contentVC, animated: true)
     }
     
     @objc private func presentScaleSheet() {
         let contentVC = ScalePresentingSheetContentViewController()
-        let controller = contentVC.cs.sheetPresentationController
+        let controller = contentVC.sp.sheetPresentationController
         SheetDemoSettingsStore.shared.configure(sheetController: controller)
         controller.detents = [
             .large(),
@@ -70,7 +70,7 @@ final class CustomTransitionDemoViewController: UIViewController {
         ]
         controller.dimmingBackgroundAlpha = 0.3
         controller.prefersGrabberVisible = true
-        cs.presentSheetViewController(contentVC, animated: true)
+        sp.presentSheetViewController(contentVC, animated: true)
     }
 }
 

@@ -93,7 +93,7 @@ final class CommentsSheetDemoViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        syncExpandDetentButton(with: cs.sheetPresentationController)
+        syncExpandDetentButton(with: sp.sheetPresentationController)
     }
 
     func syncExpandDetentButton(with sheet: SheetPresentationController) {
@@ -114,7 +114,7 @@ final class CommentsSheetDemoViewController: UIViewController {
     }
 
     @objc private func toggleCommentsDetentHeight() {
-        let sheet = cs.sheetPresentationController
+        let sheet = sp.sheetPresentationController
         if sheet.selectedDetentIdentifier == SheetPresentationController.Detent.Identifier.large {
             onRequestRestoreDetents?(sheet)
         } else {

@@ -80,14 +80,14 @@ final class MapSheetDemoViewController: UIViewController {
 
     /// 由地图页在用户拖动地图时调用，将 Sheet 收回到短档。
     func userMoveMapView() {
-        let sheet = cs.sheetPresentationController
+        let sheet = sp.sheetPresentationController
         sheet.animateChanges {
             sheet.selectedDetentIdentifier = DetentID.short
         }
     }
 
     private func transitionToLongDetent() {
-        let sheet = cs.sheetPresentationController
+        let sheet = sp.sheetPresentationController
         sheet.animateChanges {
             sheet.selectedDetentIdentifier = DetentID.long
         }

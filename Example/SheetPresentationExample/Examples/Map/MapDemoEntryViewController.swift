@@ -100,7 +100,7 @@ final class MapDemoEntryViewController: UIViewController {
         let vc = MapSheetDemoViewController()
         vc.isModalInPresentation = true
 
-        let sheet = vc.cs.sheetPresentationController
+        let sheet = vc.sp.sheetPresentationController
         let settings = SheetDemoSettingsStore.shared
         // 应用全局配置
         settings.configure(sheetController: sheet)
@@ -120,7 +120,7 @@ final class MapDemoEntryViewController: UIViewController {
         } else {
             sheet.backgroundEffect = UIBlurEffect(style: .systemMaterial)
         }
-        cs.presentSheetViewController(vc, animated: false) {
+        sp.presentSheetViewController(vc, animated: false) {
             Self.configureMapSheetTouchPassThrough(for: vc)
         }
     }

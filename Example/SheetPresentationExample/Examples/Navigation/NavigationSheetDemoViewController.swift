@@ -19,7 +19,7 @@ final class NavigationSheetDemoViewController: UIViewController {
         )
         installSheetDismissButtonOnly()
 
-        navigationController?.cs.sheetPresentationController.selectedDetentIdentifier = .large
+        navigationController?.sp.sheetPresentationController.selectedDetentIdentifier = .large
     }
 
     @objc private func openNextPage() {

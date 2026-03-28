@@ -1,6 +1,6 @@
 //
 //  SheetDemoSettingsViewController.swift
-//  SheetPresentationDemo
+//  SheetPresentationExample
 //
 
 import UIKit

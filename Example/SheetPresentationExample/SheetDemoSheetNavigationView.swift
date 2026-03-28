@@ -1,6 +1,6 @@
 //
 //  SheetDemoSheetNavigationView.swift
-//  SheetPresentationDemo
+//  SheetPresentationExample
 //
 //  Sheet 内 Demo 顶栏：标题 + 可选副标题 + 右侧关闭；置于 grabber 下方（由外层 top = safeArea + grabberPad）。
 //  高度由子视图与约束撑开。
