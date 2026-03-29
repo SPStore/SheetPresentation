@@ -65,7 +65,7 @@ dependencies: [
 在 `Podfile` 中添加：
 
 ```ruby
-pod 'SPSheetPresentation', '~> 1.0'
+pod 'SPSheetPresentation', '~> 1.0.0'
 ```
 
 然后执行：
@@ -73,6 +73,9 @@ pod 'SPSheetPresentation', '~> 1.0'
 ```bash
 pod install
 ```
+
+> 注意：注意：如果CocoaPods的方式安装，编译报错：SheetPresentation.framework/PrivacyInfo.xcprivacy: utimensat (2): Operation not permitted，请在你的主工程中的Targets -> Build Settings -> User Script Sandboxing 改为No
+
 
 安装后代码中仍然使用：
 
