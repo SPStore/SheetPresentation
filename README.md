@@ -28,6 +28,14 @@
 
 ---
 
+## 功能演示
+
+<p align="center">
+  <img src="Assets/demo.gif" width="300">
+</p>
+
+---
+
 ## 系统要求
 
 - iOS 13+
