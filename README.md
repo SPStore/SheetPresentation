@@ -32,6 +32,8 @@
 
 <p align="center">
   <img src="Assets/demo.gif" width="300">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="Assets/demo2.gif" width="300">
 </p>
 
 ---
