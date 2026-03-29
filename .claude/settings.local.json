@@ -20,7 +20,9 @@
       "Bash(git rm:*)",
       "Bash(wc -l echo --- grep -r \"Claude\\\\|Anthropic\\\\|noreply@anthropic\" --include=*.swift --include=*.md --include=*.json -l)",
       "Bash(git stash:*)",
-      "Bash(git filter-branch -f --msg-filter ':*)"
+      "Bash(git filter-branch -f --msg-filter ':*)",
+      "Bash(gifsicle -O3 --lossy=30 Assets/demo.gif -o Assets/demo_lossy.gif)",
+      "Bash(gifsicle -O3 Assets/demo2.gif -o Assets/demo2_opt.gif)"
     ]
   }
 }

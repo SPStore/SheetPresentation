@@ -171,9 +171,9 @@ final class CommentsEntryDemoViewController: UIViewController {
         }
 
         let detentId = sheet.selectedDetentIdentifier
-        if newFrame.origin.y == oldFrame.origin.y, detentId == lastPreviewTransformDetent {
-            return
-        }
+//        if newFrame.origin.y == oldFrame.origin.y, detentId == lastPreviewTransformDetent {
+//            return
+//        }
 
         let screenH = UIScreen.main.bounds.height
         let topOffset = view.window?.safeAreaInsets.top ?? 0

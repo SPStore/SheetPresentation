@@ -227,7 +227,7 @@ extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
         if sheetPresentationController.selectedDetentIdentifier == MapSheetDemoViewController.DetentID.long {
             return
         }
-        view.endEditing(true)
+        sheetPresentationController.presentedView?.endEditing(true)
     }
 }
 
