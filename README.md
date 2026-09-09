@@ -23,7 +23,7 @@
 - [x] **侧滑返回**：可选的屏幕边缘 Pan 手势，触发交互式横向 dismiss
 - [x] **浮动样式（iOS 26+）**：`prefersFloatingStyle` 开启后四周带圆角与间距，随档位高度动态插值
 - [x] **自定义转场动画**：通过 `SheetPresentationControllerTransitionAnimating` 协议注入自定义 present/dismiss 动画
-- [x] **背景视觉效果**：`backgroundEffect` 支持 `UIBlurEffect`/`UIGlassEffect`（iOS 26+）或完全透明
+- [x] **背景视觉效果**：`sheetBackgroundEffect` 支持 `UIBlurEffect`/`UIGlassEffect`（iOS 26+）或完全透明
 - [x] **支持旋转**：横竖屏切换时 Sheet 位置与档位自动重新计算
 
 ---
@@ -54,7 +54,7 @@
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.0")
+    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.1")
 ]
 ```
 
@@ -65,7 +65,7 @@ dependencies: [
 在 `Podfile` 中添加：
 
 ```ruby
-pod 'SPSheetPresentation', '~> 1.0.0'
+pod 'SPSheetPresentation', '~> 1.0.1'
 ```
 
 然后执行：
@@ -184,7 +184,7 @@ sheet.animateChanges {
 | `prefersGrabberVisible` | `Bool` | `false` | 顶部手柄 |
 | `prefersShadowVisible` | `Bool` | `false` | 投影 |
 | `dimmingBackgroundAlpha` | `CGFloat` | `0.4` | 背景遮罩透明度 |
-| `backgroundEffect` | `UIVisualEffect?` | `nil` | Sheet 背景模糊/玻璃效果 |
+| `sheetBackgroundEffect` | `UIVisualEffect?` | `nil` | Sheet 背景模糊/玻璃效果 |
 | `prefersFloatingStyle` | `Bool` | `false` | 浮动样式（iOS 26+） |
 
 ### 交互行为
@@ -235,15 +235,15 @@ func presentationControllerDidAttemptToDismiss(_ presentationController: UIPrese
 
 ```swift
 // 使用系统模糊
-sheet.backgroundEffect = UIBlurEffect(style: .systemMaterial)
+sheet.sheetBackgroundEffect = UIBlurEffect(style: .systemMaterial)
 
 // iOS 26+ 使用玻璃效果
 if #available(iOS 26, *) {
-    sheet.backgroundEffect = UIGlassEffect()
+    sheet.sheetBackgroundEffect = UIGlassEffect()
 }
 
 // 无效果（透明背景）
-sheet.backgroundEffect = nil
+sheet.sheetBackgroundEffect = nil
 ```
 
 ### 浮动样式（iOS 26+）

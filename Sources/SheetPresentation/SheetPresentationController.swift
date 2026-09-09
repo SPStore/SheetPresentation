@@ -113,9 +113,9 @@ open class SheetPresentationController: UIPresentationController {
     }
     
     /// 背景视觉效果，nil 时背景完全透明；默认 iOS 26+ 使用开启了交互动效的 UIGlassEffect，低版本使用 systemMaterial 模糊。
-    open var backgroundEffect: UIVisualEffect? = nil {
+    open var sheetBackgroundEffect: UIVisualEffect? = nil {
         didSet {
-            dropShadowView?.backgroundEffect = backgroundEffect
+            dropShadowView?.backgroundEffect = sheetBackgroundEffect
         }
     }
 
@@ -331,7 +331,7 @@ extension SheetPresentationController {
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
-        shadowView.backgroundEffect = backgroundEffect
+        shadowView.backgroundEffect = sheetBackgroundEffect
         containerView.addSubview(shadowView)
         dropShadowView = shadowView
 

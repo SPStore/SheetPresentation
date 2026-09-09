@@ -116,9 +116,9 @@ final class MapDemoEntryViewController: UIViewController {
             let glassEffect = UIGlassEffect(style: .regular)
             // 开启按压动效
             glassEffect.isInteractive = sheet.prefersFloatingStyle
-            sheet.backgroundEffect = glassEffect
+            sheet.sheetBackgroundEffect = glassEffect
         } else {
-            sheet.backgroundEffect = UIBlurEffect(style: .systemMaterial)
+            sheet.sheetBackgroundEffect = UIBlurEffect(style: .systemMaterial)
         }
         sp.presentSheetViewController(vc, animated: false) {
             Self.configureMapSheetTouchPassThrough(for: vc)
@@ -210,11 +210,11 @@ extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
         }
         
         if let presentedView = sheetPresentationController.presentedView {
-            let backgroundEffect = sheetPresentationController.backgroundEffect
+            let backgroundEffect = sheetPresentationController.sheetBackgroundEffect
             if #available(iOS 26.0, *) {
                 if let glassEffect = backgroundEffect as? UIGlassEffect {
                     glassEffect.isInteractive = presentedView.frame.minX >= 2
-                    sheetPresentationController.backgroundEffect = glassEffect
+                    sheetPresentationController.sheetBackgroundEffect = glassEffect
                 }
             }
         }
@@ -234,4 +234,3 @@ extension MapDemoEntryViewController: SheetPresentationControllerDelegate {
 // MARK: - CLLocationManagerDelegate
 
 extension MapDemoEntryViewController: CLLocationManagerDelegate {}
-
