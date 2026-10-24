@@ -27,6 +27,8 @@ final class SheetDemoSettingsStore {
         case isEdgePanGestureEnabled
         case prefersShadowVisible
         case prefersFloatingStyle
+        case prefersFullWidth
+        case usesAutomaticCornerRadius
         case isModalInPresentation
     }
 
@@ -75,6 +77,8 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return false
         case .prefersShadowVisible: return false
         case .prefersFloatingStyle: return false
+        case .prefersFullWidth: return false
+        case .usesAutomaticCornerRadius: return true
         case .isModalInPresentation: return false
         }
     }
@@ -161,7 +165,8 @@ final class SheetDemoSettingsStore {
     /// 调用后可按需覆写个别属性。
     func configure(sheetController controller: SheetPresentationController, for presentedVC: UIViewController? = nil) {
         controller.prefersGrabberVisible = prefersGrabberVisible
-        controller.preferredCornerRadius = preferredCornerRadius
+        controller.preferredCornerRadius = bool(for: .usesAutomaticCornerRadius) ? nil : preferredCornerRadius
+        controller.prefersFullWidth = bool(for: .prefersFullWidth)
         controller.dimmingBackgroundAlpha = dimmingBackgroundAlpha
         controller.requiresScrollingFromEdgeToDriveSheet = requiresScrollingFromEdgeToDriveSheet
         controller.allowsScrollViewToDriveSheet = allowsScrollViewToDriveSheet
@@ -219,6 +224,8 @@ final class SheetDemoSettingsStore {
         case .isEdgePanGestureEnabled: return "侧滑返回手势"
         case .prefersShadowVisible: return "显示阴影"
         case .prefersFloatingStyle: return "浮动样式 (iOS 26+)"
+        case .prefersFullWidth: return "强制全宽"
+        case .usesAutomaticCornerRadius: return "自动同心圆角"
         case .isModalInPresentation: return "模态锁定"
         }
     }
@@ -228,6 +235,10 @@ final class SheetDemoSettingsStore {
         switch key {
         case .prefersFloatingStyle:
             return "地图示例比较典型"
+        case .prefersFullWidth:
+            return "关闭时，宽屏会自动限宽并居中；浮动样式的边距另行计算"
+        case .usesAutomaticCornerRadius:
+            return "iOS 26+ 贴边角同心、独立面板角为 40pt；关闭后使用下方设置的固定圆角半径"
         case .isModalInPresentation:
             return "对应被展示控制器的 isModalInPresentation；开启后无法通过下拉等方式关闭"
         case .prefersGrabberVisible: return "顶部小横条"

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'SPSheetPresentation'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'iOS bottom sheet presentation library with detents and scroll coordination.'
   s.description      = <<-DESC
 SheetPresentation 是一个 iOS 底部抽屉展示库，支持多档位、ScrollView 联动、交互式 dismiss、

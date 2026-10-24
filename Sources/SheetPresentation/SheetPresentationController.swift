@@ -81,9 +81,19 @@ open class SheetPresentationController: UIPresentationController {
 
     // MARK: - 外观配置
 
-    /// 圆角半径
-    open var preferredCornerRadius: CGFloat = 13.0 {
+    /// 默认 nil 表示自动样式，与 UIKit Swift 接口一致（Objective-C 对应 AutomaticDimension）。
+    /// iOS 26+ 以当前档位的停靠布局选择逐角样式，拖拽关闭时保持不变；低版本沿用 13pt。
+    /// 非 nil 时现代系统四角优先使用指定半径；0 明确表示直角，而非自动模式。
+    open var preferredCornerRadius: CGFloat? {
         didSet { dropShadowView?.cornerRadius = preferredCornerRadius }
+    }
+
+    /// 默认按当前容器自适应宽度并居中。设为 true 恢复原有的全宽布局。
+    open var prefersFullWidth: Bool = false {
+        didSet {
+            layoutInfo.prefersFullWidth = prefersFullWidth
+            containerView?.setNeedsLayout()
+        }
     }
 
     // 是否显示阴影效果
@@ -98,7 +108,8 @@ open class SheetPresentationController: UIPresentationController {
 
     private var _prefersFloatingStyle: Bool = false
 
-    /// 是否以浮动样式展示，开启后左、右、底有间距，默认false
+    /// 是否采用动态浮动布局，默认 false。部分高度档位留白、large 贴底，拖动时连续过渡。
+    /// 浮动宽度与自适应限宽取更严格约束，不额外叠加间距；关闭时保留普通贴底布局。
     @available(iOS 26, *)
     open var prefersFloatingStyle: Bool {
         get { _prefersFloatingStyle }
@@ -275,19 +286,24 @@ extension SheetPresentationController {
         super.containerViewWillLayoutSubviews()
         guard let containerView = containerView else { return }
         
-        // 宽高给大点，保证动画、交互、旋转等情况下始终“覆盖无缝、不露底”
-        dimmingView?.bounds = CGRect(x: 0, y: 0, width: 1206, height: 2622)
-        dimmingView?.center = CGPoint(x: containerView.bounds.midX,
-                                      y: containerView.bounds.midY)
+        // 遮罩覆盖当前窗口，不能使用某台设备的固定尺寸，否则展开或分屏后可能露底。
+        dimmingView?.frame = containerView.bounds
 
         let allowFrameUpdate =
             !isDragging &&
             interactiveDismissSource == .none &&
             !isAnimatingToDetent &&
             !isNonInteractiveTransitioning
+        let layoutChanged = needsLayoutInfoRefresh(using: containerView)
+        if layoutChanged {
+            refreshLayoutInfo(using: containerView)
+        }
         if allowFrameUpdate {
             let targetY = frameOfPresentedViewInContainerView.origin.y
             updatePresentedViewFrame(forYPosition: targetY)
+        } else if layoutChanged, let shadowView = dropShadowView {
+            // 展开/折叠和窗口缩放也可能发生在拖拽中，只更新当前落点的几何，不跳回 detent。
+            updatePresentedViewFrame(forYPosition: shadowView.frame.minY)
         }
     }
 
@@ -298,8 +314,7 @@ extension SheetPresentationController {
     open override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView else { return .zero }
 
-        if layoutInfo.containerBounds != containerView.bounds
-            || layoutInfo.containerSafeAreaInsets != containerView.safeAreaInsets {
+        if needsLayoutInfoRefresh(using: containerView) {
             refreshLayoutInfo(using: containerView)
         }
 
@@ -328,6 +343,7 @@ extension SheetPresentationController {
         dimmingView = dimming
 
         let shadowView = SheetDropShadowView()
+        updateAutomaticCornerReference(for: shadowView)
         shadowView.cornerRadius = preferredCornerRadius
         shadowView.isShadowVisible = prefersShadowVisible
         shadowView.isGrabberVisible = prefersGrabberVisible
@@ -367,12 +383,20 @@ extension SheetPresentationController {
         sheetInteraction.detentYPositions = layoutInfo.sortedDetentEntries.map(\.yPosition)
     }
 
+    private func needsLayoutInfoRefresh(using containerView: UIView) -> Bool {
+        layoutInfo.containerBounds != containerView.bounds
+            || layoutInfo.containerSafeAreaInsets != containerView.safeAreaInsets
+            || layoutInfo.containerTraitCollection.horizontalSizeClass != containerView.traitCollection.horizontalSizeClass
+            || layoutInfo.containerTraitCollection.verticalSizeClass != containerView.traitCollection.verticalSizeClass
+    }
+
     private func refreshLayoutInfo(using containerView: UIView) {
         layoutInfo.performBatchUpdates {
             layoutInfo.containerBounds = containerView.bounds
             layoutInfo.containerTraitCollection = containerView.traitCollection
             layoutInfo.containerSafeAreaInsets = containerView.safeAreaInsets
             layoutInfo.prefersFloatingStyle = _prefersFloatingStyle
+            layoutInfo.prefersFullWidth = prefersFullWidth
             layoutInfo.detents = detents
         }
         syncDetentYPositionsToInteraction()
@@ -399,15 +423,26 @@ extension SheetPresentationController {
         }
     }
 
+    /// 参照和底角策略同源于停靠布局，拖拽关闭时不根据临时位置重新分类。
+    private func updateAutomaticCornerReference(for shadowView: SheetDropShadowView) {
+        let restingFrame = layoutInfo.frameOfPresentedView(for: selectedDetentIdentifier)
+        let tolerance = 1 / max(1, layoutInfo.containerTraitCollection.displayScale)
+        let isBottomAttached = abs(restingFrame.maxY - layoutInfo.containerBounds.maxY) <= tolerance
+        shadowView.automaticCornerReferenceFrame = restingFrame
+        // 自定义高度也可能贴底；按实际停靠位置判断，不以 large 标识代替几何状态。
+        shadowView.usesSquareAutomaticBottomCorners = isBottomAttached
+            && (layoutInfo.containerTraitCollection.horizontalSizeClass == .regular
+                || restingFrame.width < layoutInfo.containerBounds.width - tolerance)
+    }
+
     func updatePresentedViewFrame(forYPosition yPosition: CGFloat) {
         guard let shadowView = dropShadowView else { return }
         let previousFrame = shadowView.frame
 
-        if _prefersFloatingStyle {
-            shadowView.frame = layoutInfo.floatingPresentedLayout(at: yPosition)
-        } else {
-            shadowView.frame = layoutInfo.frameOfPresentedView(at: yPosition)
-        }
+        // 圆角跟随停靠档位和窗口几何，不跟随手指拖动或关闭转场的临时 yPosition。
+        updateAutomaticCornerReference(for: shadowView)
+        shadowView.frame = layoutInfo.presentedFrame(at: yPosition)
+        shadowView.updateAppliedCornerRadius()
         
         guard shadowView.frame != previousFrame else { return }
         sheetDelegate?.sheetPresentationController?(self, didUpdatePresentedFrame: shadowView.frame)

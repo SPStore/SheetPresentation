@@ -57,7 +57,10 @@ extension SheetPresentationController {
 
         /// 内置 `large()` 顶边目标 Y（容器坐标）：随 safe area 变化，避免写死常量 pt。
         public static func preferredLargestDetentOriginY(safeAreaTop: CGFloat) -> CGFloat {
-            max(safeAreaTop + largeDetentGapBelowSafeArea, 20)
+            if #available(iOS 26, *) {
+                return max(safeAreaTop + largeDetentGapBelowSafeArea, SheetLayoutInfo.minimumEdgeInset)
+            }
+            return max(safeAreaTop + largeDetentGapBelowSafeArea, 20)
         }
 
         /// 与 `large()` 顶边一致：相对容器 safe area 顶下沿的间距（pt）。

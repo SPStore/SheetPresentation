@@ -12,12 +12,16 @@ import UIKit
 @MainActor
 class SheetLayoutInfo: NSObject {
 
+    /// 现代 Sheet 的窗口边缘留白；底部是否留白由档位和浮动样式决定，不能一律叠加。
+    nonisolated static let minimumEdgeInset: CGFloat = 8
+
     // MARK: - 一级条目（detent entry）
 
     struct DetentEntry {
         let identifier: SheetPresentationController.Detent.Identifier
         let yPosition: CGFloat
         let height: CGFloat
+        let bottomInset: CGFloat
     }
 
     enum LandingTarget {
@@ -43,10 +47,13 @@ class SheetLayoutInfo: NSObject {
         didSet { invalidateDetents() }
     }
 
-    /// 浮动样式开启时，detent Y 坐标会预减底部 margin，使 frame.origin.y 始终是最终 Y（无逻辑/视觉区分）。
+    /// 浮动样式参与档位落点计算；最终 frame、手势吸附和转场共用同一份几何。
     var prefersFloatingStyle: Bool = false {
         didSet { invalidateDetents() }
     }
+
+    /// 跳过自适应限宽，保持容器全宽；不影响浮动样式自身的边距。
+    var prefersFullWidth: Bool = false
 
     // MARK: - 计算属性
 
@@ -124,9 +131,14 @@ class SheetLayoutInfo: NSObject {
             let rawHeight = detent.resolvedValue(in: context) ?? detent.height
             let height = min(max(rawHeight, 0), maximumDetentValue)
             let baseY = containerBounds.height - height
-            // 浮动样式：预减底部 margin
-            let y = prefersFloatingStyle ? baseY - floatingStyleMargin(at: baseY) : baseY
-            entries.append(DetentEntry(identifier: detent.identifier, yPosition: y, height: height))
+            let bottomInset = floatingInset(forRestingY: baseY)
+            // resolver 返回的高度不被底部间距挤压，也不在展示时再次减掉间距。
+            entries.append(DetentEntry(
+                identifier: detent.identifier,
+                yPosition: baseY - bottomInset,
+                height: height,
+                bottomInset: bottomInset
+            ))
         }
 
         var seen = Set<SheetPresentationController.Detent.Identifier>()
@@ -142,63 +154,73 @@ class SheetLayoutInfo: NSObject {
         detentMap[identifier]?.yPosition
     }
 
-    /// 根据 Y 坐标计算 presented view 的 frame
-    func frameOfPresentedView(at yPosition: CGFloat) -> CGRect {
-        // 最小高度限制为“最低 detent 对应的高度”，避免高度被压到 0 引发子约束告警。
-        let minimumHeight = max(containerBounds.height - smallestDetentYPosition, 1)
-        let height = max(containerBounds.height - yPosition, minimumHeight)
-        return CGRect(x: 0, y: yPosition, width: containerBounds.width, height: height)
+    /// 宽屏采用居中的页面比例，不让横向展开把 sheet 拉成横跨整个窗口的长条。
+    /// 窗口没有顶部安全区时保留侧边留白；使用当前容器而非主屏尺寸，兼容折叠和分屏。
+    private var resolvedWidth: CGFloat {
+        guard !prefersFullWidth else { return containerBounds.width }
+        let topInset = max(0, containerSafeAreaInsets.top)
+        let edgeInset = resolvedEdgeInset
+        let availableWidth = max(0, containerBounds.width - edgeInset * 2)
+        guard containerTraitCollection.horizontalSizeClass == .regular else { return availableWidth }
+        let maximumWidth = max(0, containerBounds.height - max(topInset, Self.minimumEdgeInset) * 2)
+        return min(availableWidth, maximumWidth)
+    }
+
+    private var resolvedEdgeInset: CGFloat {
+        guard !prefersFullWidth else { return 0 }
+        let topInset = max(0, containerSafeAreaInsets.top)
+        if #available(iOS 26, *) {
+            return topInset < Self.minimumEdgeInset ? Self.minimumEdgeInset : 0
+        }
+        return containerTraitCollection.verticalSizeClass == .compact ? 0 : max(Self.minimumEdgeInset - topInset, 0)
+    }
+
+    /// 唯一的 frame 出口：限宽与浮动留白取更严格的约束，不在限宽之后再缩小一遍。
+    func presentedFrame(at yPosition: CGFloat) -> CGRect {
+        let bottomInset = floatingInset(at: yPosition)
+        let availableWidth = max(0, containerBounds.width - bottomInset * 2)
+        let width = min(resolvedWidth, availableWidth)
+        // 关闭过程中保持最低档的最小高度，避免内容约束被临时压缩到 0。
+        let minimumHeight = max(sortedDetentEntries.last?.height ?? 0, 1)
+        let height = max(containerBounds.height - bottomInset - yPosition, minimumHeight)
+        return CGRect(x: containerBounds.midX - width * 0.5, y: yPosition, width: width, height: height)
     }
 
     /// 根据 detent identifier 计算 frame
     func frameOfPresentedView(for identifier: SheetPresentationController.Detent.Identifier?) -> CGRect {
         guard let id = identifier, let y = yPosition(for: id) else {
-            return frameOfPresentedView(at: largestDetentYPosition)
+            return presentedFrame(at: largestDetentYPosition)
         }
-        return frameOfPresentedView(at: y)
+        return presentedFrame(at: y)
     }
 
     // MARK: - 浮动样式布局
 
-    /// 浮动样式左右 margin。
-    func floatingStyleMargin(at yPosition: CGFloat) -> CGFloat {
-        let maxMargin: CGFloat = 28.0
-        // 这2个if是临界态，临界态不用函数计算，避免精度问题.
-        let minY = SheetPresentationController.Detent.preferredLargestDetentOriginY(
+    /// 系统对照中，部分高度档位使用 8pt 留白，最大展开档贴底；不会因面板更短而无限收窄。
+    private func floatingInset(forRestingY yPosition: CGFloat) -> CGFloat {
+        guard #available(iOS 26, *), prefersFloatingStyle else { return 0 }
+        let topY = SheetPresentationController.Detent.preferredLargestDetentOriginY(
             safeAreaTop: containerSafeAreaInsets.top
         )
-        if yPosition <= minY  {
-            return 0
-        }
-        // 已是最小档或继续往 dismiss 方向：固定为最小档上的插值 margin（侧滑 dismiss 时不会变成 maxMargin）。
-        if yPosition >= smallestDetentYPosition {
-            return floatingStyleMarginInterpolated(at: smallestDetentYPosition, minY: minY, maxMargin: maxMargin)
-        }
-        // 靠近容器底且 y 仍小于最小档 Y：满 margin（与上面分支互斥，避免最小档贴底时误进满 margin）。
-        if yPosition >= maximumDetentValue - maxMargin {
-            return maxMargin
-        }
-        return floatingStyleMarginInterpolated(at: yPosition, minY: minY, maxMargin: maxMargin)
+        // 接近最大高度时最多取剩余距离的一半，让相近自定义档位的落点仍严格递增，不越过 large。
+        return min(Self.minimumEdgeInset, max(0, (yPosition - topY) * 0.5))
     }
 
-    /// 浮动样式 margin 的幂次插值（`effectiveY = min(y, smallestDetent)` 在调用方按需体现）。
-    private func floatingStyleMarginInterpolated(at yPosition: CGFloat, minY: CGFloat, maxMargin: CGFloat) -> CGFloat {
-        let H = maximumDetentValue - minY
-        guard H > 0 else { return 0 }
-        let effectiveY = min(yPosition, smallestDetentYPosition)
-        let h = max(H - effectiveY, 0)
-        let k: CGFloat = 2.0
-        let normalized = max(0, min(1, 1 - h / H))
-        return maxMargin * pow(normalized, k)
-    }
-
-    func floatingPresentedLayout(at yPosition: CGFloat) -> CGRect {
-        let baseFrame = frameOfPresentedView(at: yPosition)
-        let margin = floatingStyleMargin(at: yPosition)
-        let narrowedWidth = max(baseFrame.width - 2 * margin, 0)
-        let height = max(baseFrame.height - margin, 1)
-        let reportFrame = CGRect(x: margin, y: yPosition, width: narrowedWidth, height: height)
-        return reportFrame
+    /// 在相邻档位的最终落点之间连续插值；越过最低档关闭时保持间距，不继续缩窄。
+    private func floatingInset(at yPosition: CGFloat) -> CGFloat {
+        guard prefersFloatingStyle,
+              let first = sortedDetentEntries.first,
+              let last = sortedDetentEntries.last else { return 0 }
+        if yPosition <= first.yPosition { return first.bottomInset }
+        if yPosition >= last.yPosition { return last.bottomInset }
+        for (upper, lower) in zip(sortedDetentEntries, sortedDetentEntries.dropFirst()) {
+            guard yPosition <= lower.yPosition else { continue }
+            let distance = lower.yPosition - upper.yPosition
+            guard distance > 0 else { return lower.bottomInset }
+            let progress = (yPosition - upper.yPosition) / distance
+            return upper.bottomInset + (lower.bottomInset - upper.bottomInset) * progress
+        }
+        return last.bottomInset
     }
 
     /// 获取指定 detent 条目。
