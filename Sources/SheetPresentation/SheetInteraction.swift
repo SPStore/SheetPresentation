@@ -55,6 +55,23 @@ protocol SheetInteractionDelegate: AnyObject {
 
 // MARK: - SheetInteraction
 
+/// 跟随 UIKit 重置起点，避免上次取消或识别失败影响下一次拖动。
+private final class SheetPanGestureRecognizer: UIPanGestureRecognizer {
+    enum TouchOrigin {
+        case slider
+        case content
+    }
+
+    var touchOrigin: TouchOrigin?
+    weak var originSlider: UISlider?
+
+    override func reset() {
+        super.reset()
+        touchOrigin = nil
+        originSlider = nil
+    }
+}
+
 /// 核心交互类，负责处理平移手势与 scrollView 联动。
 class SheetInteraction: NSObject, UIInteraction {
 
@@ -86,7 +103,7 @@ class SheetInteraction: NSObject, UIInteraction {
     // MARK: - 手势
 
     /// 安装在 view 上的主平移手势
-    private(set) var panGestureRecognizer: UIPanGestureRecognizer!
+    private var panGestureRecognizer: SheetPanGestureRecognizer!
 
     /// 侧滑返回手势（从屏幕左侧边缘向右拖动触发）
     private(set) var screenEdgePanGestureRecognizer: UIPanGestureRecognizer!
@@ -141,7 +158,7 @@ class SheetInteraction: NSObject, UIInteraction {
     override init() {
         super.init()
 
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        let pan = SheetPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.delegate = self
         panGestureRecognizer = pan
 
@@ -629,12 +646,35 @@ extension SheetInteraction {
 
 extension SheetInteraction: UIGestureRecognizerDelegate {
 
+    private func slider(for touch: UITouch) -> UISlider? {
+        var hitView = touch.view
+        while let candidate = hitView, candidate !== view {
+            if let slider = candidate as? UISlider { return slider }
+            hitView = candidate.superview
+        }
+        return nil
+    }
+
     /// 是否接收触摸：自动检测 scrollView，重置手势状态
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldReceive touch: UITouch
     ) -> Bool {
+        if gestureRecognizer === screenEdgePanGestureRecognizer {
+            return slider(for: touch) == nil
+        }
         guard gestureRecognizer === panGestureRecognizer else { return true }
+        // 滑块起始的候选手势只追踪第一根手指；普通拖动也不纳入落在滑块上的额外触点。
+        guard panGestureRecognizer.touchOrigin != .slider else { return false }
+        if let slider = slider(for: touch) {
+            guard panGestureRecognizer.touchOrigin == nil, currentTouchingScrollView?.isDragging != true else { return false }
+            // 由主手势一次性裁决，避免滚动联动绕过滑块的方向判断。
+            currentTouchingScrollView = nil
+            configureScrollStateForNewTouch(detectedScrollView: nil)
+            panGestureRecognizer.touchOrigin = .slider
+            panGestureRecognizer.originSlider = slider
+            return true
+        }
 
         let detected = detectScrollView(for: touch)
         if detected !== currentTouchingScrollView {
@@ -645,8 +685,25 @@ extension SheetInteraction: UIGestureRecognizerDelegate {
         }
 
         configureScrollStateForNewTouch(detectedScrollView: detected)
+        panGestureRecognizer.touchOrigin = .content
 
         return true
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        guard gestureRecognizer === panGestureRecognizer, let slider = panGestureRecognizer.originSlider,
+              let otherView = otherGestureRecognizer.view,
+              delegate?.sheetConfiguration.allowsPanGestureToDriveSheet != false else { return false }
+        // 滑块自己的拖动和外层纵向滚动须等本次方向裁决；其他触点不建立依赖。
+        if otherView === slider || otherView.isDescendant(of: slider) {
+            return otherGestureRecognizer is UIPanGestureRecognizer || otherGestureRecognizer is UILongPressGestureRecognizer
+        }
+        guard let scrollView = otherView as? UIScrollView,
+              otherGestureRecognizer === scrollView.panGestureRecognizer else { return false }
+        return slider.isDescendant(of: scrollView) && scrollView.isVerticalScrollDirection
     }
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -655,6 +712,12 @@ extension SheetInteraction: UIGestureRecognizerDelegate {
         if gestureRecognizer === panGestureRecognizer {
             guard delegate?.sheetConfiguration.allowsPanGestureToDriveSheet != false else { return false }
             let velocity = panGesture.velocity(in: panGesture.view)
+            if panGestureRecognizer.touchOrigin == .slider {
+                let translation = panGesture.translation(in: panGesture.view)
+                let direction = translation == .zero ? velocity : translation
+                // 初始向下分量需明显占优。主手势若失败，本次触摸不会再尝试驱动 Sheet。
+                return direction.y > abs(direction.x) * 1.5
+            }
             guard abs(velocity.y) > 0 else { return true }
             let ratio = abs(velocity.x) / abs(velocity.y)
             let shouldLimitHorizontalRatio = screenEdgePanGestureRecognizer.isEnabled == true
