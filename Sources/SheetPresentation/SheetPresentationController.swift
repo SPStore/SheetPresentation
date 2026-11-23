@@ -144,11 +144,11 @@ open class SheetPresentationController: UIPresentationController {
 
     /// 是否开启侧滑交互
     open var isEdgePanGestureEnabled: Bool {
-        get { sheetInteraction.screenEdgePanGestureRecognizer.isEnabled }
-        set { sheetInteraction.screenEdgePanGestureRecognizer.isEnabled = newValue }
+        get { sheetInteraction.isEdgePanGestureEnabled }
+        set { sheetInteraction.isEdgePanGestureEnabled = newValue }
     }
 
-    /// 距离屏幕边缘多少距离可触发侧滑手势
+    /// 手指落点距窗口起始边缘的最大距离（LTR 左边缘，RTL 右边缘）
     open var edgePanTriggerDistance: CGFloat {
         get { configuration.edgePanTriggerDistance }
         set { configuration.edgePanTriggerDistance = newValue }

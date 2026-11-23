@@ -54,7 +54,7 @@
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.3")
+    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.4")
 ]
 ```
 
@@ -65,7 +65,7 @@ dependencies: [
 在 `Podfile` 中通过 Git 标签指定版本：
 
 ```ruby
-pod 'SPSheetPresentation', :git => 'https://github.com/SPStore/SheetPresentation.git', :tag => '1.0.3'
+pod 'SPSheetPresentation', :git => 'https://github.com/SPStore/SheetPresentation.git', :tag => '1.0.4'
 ```
 
 然后执行：

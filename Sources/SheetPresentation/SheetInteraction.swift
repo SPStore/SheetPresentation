@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import UIKit.UIGestureRecognizerSubclass
 
 // MARK: - SheetInteractionDelegate
 
@@ -72,6 +73,23 @@ private final class SheetPanGestureRecognizer: UIPanGestureRecognizer {
     }
 }
 
+private final class SheetEdgePanGestureRecognizer: UIPanGestureRecognizer {
+    private(set) var initialTouchX: CGFloat?
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        // 在 UIKit 开始识别前记录落点，后续移动不应改变边缘资格。
+        if initialTouchX == nil, touches.count == 1, let touch = touches.first, let window = view?.window {
+            initialTouchX = touch.location(in: window).x
+        }
+        super.touchesBegan(touches, with: event)
+    }
+
+    override func reset() {
+        super.reset()
+        initialTouchX = nil
+    }
+}
+
 /// 核心交互类，负责处理平移手势与 scrollView 联动。
 class SheetInteraction: NSObject, UIInteraction {
 
@@ -106,7 +124,12 @@ class SheetInteraction: NSObject, UIInteraction {
     private var panGestureRecognizer: SheetPanGestureRecognizer!
 
     /// 侧滑返回手势（从屏幕左侧边缘向右拖动触发）
-    private(set) var screenEdgePanGestureRecognizer: UIPanGestureRecognizer!
+    private var screenEdgePanGestureRecognizer: SheetEdgePanGestureRecognizer!
+
+    var isEdgePanGestureEnabled: Bool {
+        get { screenEdgePanGestureRecognizer.isEnabled }
+        set { screenEdgePanGestureRecognizer.isEnabled = newValue }
+    }
 
     /// 触点在 scrollView 内时，改由 scrollView 自己的 pan 驱动 sheet。
     private weak var boundScrollPanGesture: UIPanGestureRecognizer?
@@ -162,7 +185,7 @@ class SheetInteraction: NSObject, UIInteraction {
         pan.delegate = self
         panGestureRecognizer = pan
 
-        let screenEdgePan = UIPanGestureRecognizer(target: self, action: #selector(handleScreenEdgePan(_:)))
+        let screenEdgePan = SheetEdgePanGestureRecognizer(target: self, action: #selector(handleScreenEdgePan(_:)))
         screenEdgePan.isEnabled = false
         screenEdgePan.delegate = self
         screenEdgePan.maximumNumberOfTouches = 1
@@ -720,7 +743,7 @@ extension SheetInteraction: UIGestureRecognizerDelegate {
             }
             guard abs(velocity.y) > 0 else { return true }
             let ratio = abs(velocity.x) / abs(velocity.y)
-            let shouldLimitHorizontalRatio = screenEdgePanGestureRecognizer.isEnabled == true
+            let shouldLimitHorizontalRatio = isEdgePanGestureEnabled
             if shouldLimitHorizontalRatio, ratio > 2 {
                 if currentTouchingScrollView?.panGestureRecognizer.isEnabled == true {
                     currentTouchingScrollView?.panGestureRecognizer.isEnabled = false
@@ -733,18 +756,15 @@ extension SheetInteraction: UIGestureRecognizerDelegate {
         }
 
         if gestureRecognizer === screenEdgePanGestureRecognizer {
-            guard let delegate else { return false }
-            let config = delegate.sheetConfiguration
-            guard !delegate.isNonInteractiveTransitioning else { return false }
+            guard let delegate, !delegate.isNonInteractiveTransitioning,
+                  let window = panGesture.view?.window,
+                  let initialTouchX = screenEdgePanGestureRecognizer.initialTouchX else { return false }
 
             // 起点必须在距 leading 边缘的有效范围内（LTR：左边缘，RTL：右边缘）
-            let window = panGesture.view?.window
-            let windowX = panGesture.location(in: window).x
-            let screenWidth = window?.bounds.width ?? UIScreen.main.bounds.width
-            let maxDistance = config.edgePanTriggerDistance
+            let maxDistance = delegate.sheetConfiguration.edgePanTriggerDistance
             let isNearLeadingEdge = isRTL
-                ? windowX >= screenWidth - maxDistance
-                : windowX <= maxDistance
+                ? initialTouchX >= window.bounds.maxX - maxDistance
+                : initialTouchX <= window.bounds.minX + maxDistance
             guard isNearLeadingEdge else { return false }
 
             // 主方向必须朝 trailing 方向（LTR：向右，RTL：向左），且水平分量主导
