@@ -54,7 +54,7 @@
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.4")
+    .package(url: "https://github.com/SPStore/SheetPresentation.git", from: "1.0.5")
 ]
 ```
 
@@ -65,7 +65,7 @@ dependencies: [
 在 `Podfile` 中通过 Git 标签指定版本：
 
 ```ruby
-pod 'SPSheetPresentation', :git => 'https://github.com/SPStore/SheetPresentation.git', :tag => '1.0.4'
+pod 'SPSheetPresentation', :git => 'https://github.com/SPStore/SheetPresentation.git', :tag => '1.0.5'
 ```
 
 然后执行：
@@ -180,7 +180,7 @@ sheet.animateChanges {
 
 | 属性 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `preferredCornerRadius` | `CGFloat?` | `nil` | nil 时 iOS 26+ 逐角选择贴边同心或独立面板 40pt 样式，不设最小半径；显式值优先覆盖四角，0 为直角。低版本仍只设置顶角，默认 13pt |
+| `preferredCornerRadius` | `CGFloat?` | `nil` | nil 时 iOS 26+ 逐角选择贴边同心或独立面板 32pt 样式，不设最小半径；显式值优先覆盖四角，0 为直角。低版本仍只设置顶角，默认 13pt |
 | `prefersFullWidth` | `Bool` | `false` | 默认按容器尺寸与 Size Class 自适应限宽并居中；开启后恢复全宽布局 |
 | `prefersGrabberVisible` | `Bool` | `false` | 顶部手柄 |
 | `prefersShadowVisible` | `Bool` | `false` | 投影 |
@@ -201,14 +201,14 @@ sheet.animateChanges {
 自动圆角用隐藏且不参与交互的窗口坐标参考视图承接公开的 `containerConcentric` API，
 避免自定义转场容器缺少圆角上下文时把所有角解析为 0；不访问私有 API，也不按机型硬编码物理半径。
 Swift 接口的 `nil` 表示自动样式，对应 UIKit Objective-C 的 `UISheetPresentationControllerAutomaticDimension`，不是半径 0。
-圆角以当前档位的停靠布局为参照；下拉、回弹和关闭转场的临时位移不会改变这一参照或把顶部圆角切换为 40pt。
+圆角以当前档位的停靠布局为参照；下拉、回弹和关闭转场的临时位移不会改变这一参照或切换为独立面板圆角。
 自动模式下，regular 宽布局或有侧边留白的面板，在停靠 frame 实际贴底时使用底部直角，包含 `large` 与自定义高度档位。
 浮动面板不贴底时保留底部圆角，compact 全宽面板保留设备同心底角；判断基于停靠几何与 Size Class，而非档位名称或设备型号。
 显式设置的圆角半径仍优先，包括 `0`。
 贴边范围由窗口四角中最大的设备圆角决定，避免非对称设备的小角被面板边距误判为独立面板。
 该范围内逐角使用 UIKit 的同心解析结果；较小设备角被边距完全抵消时保留该设备角本身的半径，不补成大圆角。
-例如外屏设备角为 8pt/59pt、面板边距为 8pt 时，面板顶部采用 8pt/51pt，而非 40pt/51pt。
-停靠布局位于窗口圆角范围之外时，采用独立面板的 40pt 设计值；这是组件的默认样式，不是全局最小半径，也不承诺与系统 Sheet 完全一致。
+例如外屏设备角为 8pt/59pt、面板边距为 8pt 时，面板顶部采用 8pt/51pt，而非 32pt/51pt。
+停靠布局位于窗口圆角范围之外时，采用独立面板的 32pt 设计值；这是组件的默认样式，不是全局最小半径，也不承诺与系统 Sheet 完全一致。
 没有固定 8pt/80pt 的圆角判断门槛。参考视图随弹窗移除而清理，切换停靠档位、旋转、折叠/展开或窗口尺寸变化后重新计算。
 圆角策略不改变面板的宽度、外边距与档位高度；显式设置半径时不参与自动场景判断。
 

@@ -44,7 +44,7 @@ class SheetDropShadowView: UIView {
     var usesSquareAutomaticBottomCorners = false
 
     /// 独立面板的设计值，不是同心半径的下限，也不是 UIKit 的通用默认值。
-    private static let standaloneCornerRadius: CGFloat = 40
+    private static let standaloneCornerRadius: CGFloat = 32
 
     /// 自定义转场容器可能丢失窗口圆角上下文，参考容器直接挂到窗口，且不参与显示或交互。
     private let windowCornerReferenceView: UIView = {
@@ -224,7 +224,7 @@ class SheetDropShadowView: UIView {
             && horizontalInset < cornerRange - tolerance && verticalInset < cornerRange - tolerance
         guard isNearCorner else { return Self.standaloneCornerRadius }
         let radius = concentricReferenceView.effectiveRadius(corner: corner)
-        // 非对称设备的小角可能被面板边距完全抵消。贴边时保留该设备角，既不变直角，也不补成 40pt。
+        // 非对称设备的小角可能被面板边距完全抵消。贴边时保留该设备角，不改成直角或独立面板圆角。
         if radius == 0, outerRadius < cornerRange { return outerRadius }
         return radius
     }
